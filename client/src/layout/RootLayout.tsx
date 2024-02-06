@@ -1,26 +1,17 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
-export default function RootLayout ( ){
+function RootLayout ( ){
     return (
+      <React.Fragment>
         <div className="root-layout">
-            <header>
-                <nav>
-                    <h1>Navbar</h1>
-                    <NavLink to="home">Home</NavLink>
-                    <NavLink to="about">About</NavLink>
-                    <NavLink to="contact">Contact</NavLink>
-                    <NavLink to="signIn">Sign In</NavLink>
-                    <NavLink to="signUp">Sign Up</NavLink>
-                    {/* <NavLink to="about">About</NavLink> */}
-                </nav>
-            </header>
-
-            <main>
-                <Outlet />
-            </main>
+          <Navbar />
+          
+          <Outlet />
         </div>
+      </React.Fragment>
     )
 }
 
-// export default RootLayout
+export default RootLayout
