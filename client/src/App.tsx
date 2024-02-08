@@ -9,6 +9,7 @@ import SignUp from "./pages/SignUp"
 // import Faq from "./pages/Faq"
 import NotFound from "./pages/NotFound"
 
+
 import RootLayout from "./layout/RootLayout"
 
 const router = createBrowserRouter (
@@ -27,6 +28,7 @@ const router = createBrowserRouter (
 const App = () => {
   return (
     <div className="App">
+      {/* <h1 className='text-3xl font-bold underline text-green-900 bg'>Hello there</h1> */}
       <RouterProvider router={router} />
     </div>
   );

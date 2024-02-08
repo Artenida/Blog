@@ -1,13 +1,15 @@
 import React from "react";
-import { NavLink, Outlet } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import { Outlet } from "react-router-dom";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+
 
 function RootLayout ( ){
     return (
       <React.Fragment>
         <div className="root-layout">
-          <Navbar />
-          
+          <Header />
+          <Footer />
           <Outlet />
         </div>
       </React.Fragment>
