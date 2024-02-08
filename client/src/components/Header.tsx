@@ -1,18 +1,16 @@
 // import React from "react";
 import Account from './Account';
-import Logo from './Logo';
+import Logo from '../components/Logo';
 import Navbar from './Navbar';
 import Searchbar from "./Searchbar";
 
 
 const Header = () => {
     return (
-      <header className='flex items-center px-12'>
+      <header className='flex gap-14 items-center px-12'>
         <Logo />
         <Navbar />
-        <div className='md:flex justify-center align-center gap-2 '>
         <Searchbar />
-        </div>
       </header>
     ) 
 }

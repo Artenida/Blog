@@ -8,6 +8,7 @@ import SignIn from "./pages/SignIn"
 import SignUp from "./pages/SignUp"
 // import Faq from "./pages/Faq"
 import NotFound from "./pages/NotFound"
+import Blog from './pages/Blog'
 
 
 import RootLayout from "./layout/RootLayout"
@@ -20,6 +21,7 @@ const router = createBrowserRouter (
        <Route path='/contact' element={<Contact />}/>       
        <Route path='/signIn' element={<SignIn />}/>       
        <Route path='/signUp' element={<SignUp />}/>
+       <Route path='/blog' element={<Blog />}/>
        <Route path='*' element={<NotFound />}/>
       </Route>
   )
@@ -28,7 +30,6 @@ const router = createBrowserRouter (
 const App = () => {
   return (
     <div className="App">
-      {/* <h1 className='text-3xl font-bold underline text-green-900 bg'>Hello there</h1> */}
       <RouterProvider router={router} />
     </div>
   );

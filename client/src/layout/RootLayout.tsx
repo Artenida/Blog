@@ -9,8 +9,8 @@ function RootLayout ( ){
       <React.Fragment>
         <div className="root-layout">
           <Header />
-          <Footer />
           <Outlet />
+          <Footer />
         </div>
       </React.Fragment>
     )
