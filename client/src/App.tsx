@@ -12,6 +12,8 @@ import Blog from './pages/Blog'
 
 
 import RootLayout from "./layout/RootLayout"
+import MyAccount from './pages/MyAccount'
+import { Sign } from 'crypto'
 
 const router = createBrowserRouter (
   createRoutesFromElements(
@@ -22,6 +24,8 @@ const router = createBrowserRouter (
        <Route path='/signIn' element={<SignIn />}/>       
        <Route path='/signUp' element={<SignUp />}/>
        <Route path='/blog' element={<Blog />}/>
+       <Route path='/' element={<Home ></Home>} />
+       {/* <Route path='/myAccount' element={<MyAccount/>}/> */}
        <Route path='*' element={<NotFound />}/>
       </Route>
   )

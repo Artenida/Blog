@@ -1,18 +1,6 @@
 import { FaUser } from "react-icons/fa";
 import { NavLink, useLocation } from "react-router-dom";
 
-type AccountRoutes = {
-  path: string;
-  name: string;
-}
-
-const navBarRoutes: AccountRoutes[] = [
-{
-  path: '/signIn',
-  name: 'Log In'
-}
-];
-
 const Account = () => {
   const location = useLocation(); // Invoke the useLocation hook
   const active = 'text-lg font-bold text-xl text-custom-color3 leading-6 border-b-2 border-custom-color2'
@@ -24,17 +12,7 @@ const Account = () => {
                         flex items-center justify-center cursor-pointer
                         hover:border-custom-color3 hover:text-custom-color3 transition-all duration-200">
           <NavLink to="/"><FaUser style={{ fontSize: '20px' }}/></NavLink>
-        </div>
-        {/* <NavLink to="signIn"><button>Log In</button></NavLink> */}
-        <ul>
-            {
-              navBarRoutes.map((item, index) => (
-                <NavLink key={index} to={item.path}>
-                  <li className={location.pathname === item.path ? active : inActive}>{item.name}</li>
-                </NavLink>
-              ))
-            }
-          </ul>   
+        </div> 
       </div>     
     </div>
     )
