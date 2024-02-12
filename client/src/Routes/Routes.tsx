@@ -7,10 +7,10 @@ import About from "../pages/About";
 import Contact from "../pages/Contact";
 import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
-import Blog from "../pages/Blog";
 import MyAccount from "../pages/MyAccount";
 import BlogDetails from "../pages/BlogDetails";
 import PrivateRoutes from "../Routes/PrivateRoute";
+import BlogPage from "../pages/BlogPage";
 
 const routes = [
   { path: "/", element: <Home /> },
@@ -18,8 +18,8 @@ const routes = [
   { path: "/contact", element: <Contact /> },
   { path: "/signIn", element: <SignIn /> },
   { path: "/signUp", element: <SignUp /> },
-  { path: "/blog", element: <Blog /> },
-  { path: "/blogDetails", element: <BlogDetails /> },
+  { path: "/blog", element: <BlogPage /> },
+  { path: "/blog/:id", element: <BlogDetails /> },
   { path: "*", element: <Home /> },
 ];
 

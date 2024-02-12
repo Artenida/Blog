@@ -35,7 +35,7 @@ const MySwiperComponent = () => {
         </div>
       </SwiperSlide>
       <SwiperSlide>
-        <div className="relative pt-12 pl-6 pb-12 bg-custom-color2 mt-10 h-full flex flex-col lg:flex-row items-center">
+      <div className="relative pt-12 pl-6 pr-6 lg:pl-36 pb-12 bg-custom-color2 mt-10 h-full flex flex-col lg:flex-row items-center">
           <img
             src={carousel2}
             alt=""
@@ -54,7 +54,7 @@ const MySwiperComponent = () => {
         </div>
       </SwiperSlide>
       <SwiperSlide>
-        <div className="relative pt-12 pl-6 pb-12 bg-custom-color2 mt-10 h-full flex flex-col lg:flex-row items-center">
+      <div className="relative pt-12 pl-6 pr-6 lg:pl-36 pb-12 bg-custom-color2 mt-10 h-full flex flex-col lg:flex-row items-center">
           <img
             src={carousel3}
             alt=""
