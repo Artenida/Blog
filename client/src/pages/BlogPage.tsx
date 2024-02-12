@@ -6,7 +6,7 @@ import Banner from "../components/Banner";
 
 const BlogPage = () => {
     const [blogs, setBlogs] = useState([]);
-    // const [currentPage, ]
+    
     return (
         <div>
             {/* Banner */}
