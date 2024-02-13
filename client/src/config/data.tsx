@@ -1,87 +1,56 @@
-export const data = [
+import blog1 from "../assets/posts/blog1.avif";
+import blog2 from "../assets/posts/blog2.jpg";
+import blog3 from "../assets/posts/blog3.avif";
+import profile from "../assets/posts/profile.webp";
+import profile1 from "../assets/posts/blog1.avif";
+
+const tags = [
   {
     id: 1,
-    title: '7 CSS tools you should be using ',
-    // category: 'development',
-    tags: ['frontend', 'ui/ux', 'design'],
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-    authorName: 'John Doe',
-    authorAvatar: '/assets/about.jpg',
-    createdAt: 'June 03, 2021',
-    cover: '/assets/about.jpg',
+    name: "tag1",
   },
   {
     id: 2,
-    title: 'Milan Places That Highlight The City',
-    // category: 'travel',
-    tags: ['vacation', 'holidays', 'sight seeing'],
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-    authorName: 'John Doe',
-    authorAvatar: '/assets/images/author.jpg',
-    createdAt: 'June 03, 2021',
-    cover: '/assets/images/f67396fc3cfce63a28e07ebb35d974ac.jpg',
+    name: "tag",
   },
   {
     id: 3,
-    title: 'Online Shopping – An Alternative to Shopping in the Mall',
-    // category: 'shopping',
-    tags: ['e-commerce store', 'clothing', 'shopping store'],
+    name: "othertag",
+  },
+];
+
+export const new_blogs = [
+  {
+    id: 1,
+    cover: blog1,
+    title: "Title",
+    tags: tags,
+    authorName: "User",
+    profilePicture: profile,
     description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-    authorName: 'John Doe',
-    authorAvatar: '/assets/images/author.jpg',
-    createdAt: 'June 03, 2021',
-    cover: '/assets/images/fQwuyKJ9qxjSbr6REcgtmW-1200-80.jpg',
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dapibus eu lectus id gravida...",
+    createdAt: new Date(),
   },
   {
-    id: 4,
-    title: 'ADVENTURE IN YOU',
-    // category: 'adventure',
-    tags: ['adrenaline', 'stay-fit', 'lifestyle'],
+    id: 1,
+    cover: blog2,
+    title: "Title",
+    tags: tags,
+    authorName: "User",
+    profilePicture: profile1,
     description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-    authorName: 'John Doe',
-    authorAvatar: '/assets/images/author.jpg',
-    createdAt: 'June 03, 2021',
-    cover: '/assets/images/graphic-design-trends.png',
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dapibus eu lectus id gravida...",
+    createdAt: new Date(),
   },
   {
-    id: 5,
-    title: 'Loaded BBQ Baked Potatoes',
-    // category: 'cooking',
-    tags: ['bbq', 'food', 'lifestyle'],
+    id: 1,
+    cover: blog3,
+    title: "Title",
+    tags: tags,
+    authorName: "User",
+    profilePicture: profile,
     description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-    authorName: 'John Doe',
-    authorAvatar: '/assets/images/author.jpg',
-    createdAt: 'June 03, 2021',
-    cover: '/assets/images/make-it-personal.jpg',
-  },
-  {
-    id: 6,
-    title: 'Beyond the Beach',
-    // category: 'travel',
-    tags: ['beaches', 'sea', 'holidays'],
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-    authorName: 'John Doe',
-    authorAvatar: '/assets/images/author.jpg',
-    createdAt: 'June 03, 2021',
-    cover:
-      '/assets/images/Purple-Combination-colors-graphic-design-predictions-1024x576-1024x576.jpg',
-  },
-  {
-    id: 7,
-    title: 'Art & Perception',
-    // category: 'art',
-    tags: ['skill', 'design', 'passion'],
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-    authorName: 'John Doe',
-    authorAvatar: '/assets/images/author.jpg',
-    createdAt: 'June 03, 2021',
-    cover: '/assets/images/Synthwave-Postmodern.jpg',
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dapibus eu lectus id gravida...",
+    createdAt: new Date(),
   },
 ];
