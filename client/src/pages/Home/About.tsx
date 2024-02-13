@@ -1,5 +1,5 @@
-import about from "../assets/about.jpg";
-import Button from "../components/Buttons";
+import about from "../../assets/about.jpg";
+import Button from "../../components/Buttons";
 import { Link } from "react-router-dom";
 
 const About = () => {

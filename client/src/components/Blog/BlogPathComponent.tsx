@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 interface BlogDetailsItem {
+  id: number;
   name: string;
   link: string;
 }
@@ -9,9 +10,7 @@ interface BlogDetailsComponentsProps {
   data: BlogDetailsItem[];
 }
 
-const BlogDetailsComponents: React.FC<BlogDetailsComponentsProps> = ({
-  data,
-}) => {
+const BlogPathComponent = ({ data }: BlogDetailsComponentsProps) => {
   return (
     <div className="flex items-center py-4 overflow-x-auto whitespace-nowrap">
       {data.map((item, index) => (
@@ -24,4 +23,4 @@ const BlogDetailsComponents: React.FC<BlogDetailsComponentsProps> = ({
   );
 };
 
-export default BlogDetailsComponents;
+export default BlogPathComponent;

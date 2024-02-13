@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import wallpaper from "../assets/wallpaper2.jpg";
-import home from "../assets/home4.webp";
-import Carousel from "../components/Carousel";
+import wallpaper from "../../assets/wallpaper2.jpg";
+import home from "../../assets/home4.webp";
+import Carousel from "../../components/Carousel";
 import { MdOutlineReadMore } from "react-icons/md";
 
 const Home = () => {

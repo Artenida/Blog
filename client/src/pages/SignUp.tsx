@@ -34,13 +34,6 @@ const inputs: Inputs[] = [
         label: 'Email'
     },
     {
-        type: "text",
-        id: "bio",
-        name: 'bio', // 'bio' corresponds to a key of the FormData interface
-        placeholder: " Enter bio...",
-        label: 'Bio'
-    },
-    {
         type: "password",
         id: "password",
         name: 'password', // 'password' corresponds to a key of the FormData interface

@@ -88,7 +88,7 @@ const FormComponent = ({ formProp }: FormProp) => {
                 {input.label}
               </label>
               <input
-                className="border w-full text-base px-2 py-1 focus:outline-none focus:ring-0 focus:border-custom-color2"
+                className="border border-custom-color2 w-full text-base px-2 py-1 focus:outline-none focus:ring-0 focus:border-custom-color3"
                 key={input.id}
                 type={input.type}
                 id={input.id}
