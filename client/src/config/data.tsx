@@ -32,7 +32,7 @@ export const new_blogs = [
     createdAt: new Date(),
   },
   {
-    id: 1,
+    id: 2,
     cover: blog1,
     title: "Title",
     tags: tags,
@@ -43,7 +43,7 @@ export const new_blogs = [
     createdAt: new Date(),
   },
   {
-    id: 1,
+    id: 3,
     cover: blog1,
     title: "Title",
     tags: tags,
@@ -54,7 +54,7 @@ export const new_blogs = [
     createdAt: new Date(),
   },
   {
-    id: 1,
+    id: 4,
     cover: blog1,
     title: "Title",
     tags: tags,
@@ -65,7 +65,7 @@ export const new_blogs = [
     createdAt: new Date(),
   },
   {
-    id: 1,
+    id: 5,
     cover: blog2,
     title: "Title",
     tags: tags,
@@ -76,7 +76,7 @@ export const new_blogs = [
     createdAt: new Date(),
   },
   {
-    id: 1,
+    id: 6,
     cover: blog3,
     title: "Title",
     tags: tags,
