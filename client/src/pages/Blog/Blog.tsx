@@ -1,18 +1,17 @@
 import Banner from "../../components/Banner";
 import BlogPage from "../../components/Blog/BlogPage";
-import { useState} from "react";
-
+import { useState } from "react";
+import Sidebar from "../../components/Sidebar";
 
 const Blog = () => {
-    return (
-        <div>
-            {/* Banner */}
-            <Banner />
-            
-            {/* Blog Page */}
-            <BlogPage/>
-        </div>
-    )
-}
+  const [blogs, setBlogs] = useState();
+
+  return (
+    <div>
+      <Banner />
+      <BlogPage />
+    </div>
+  );
+};
 
 export default Blog;

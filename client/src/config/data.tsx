@@ -33,6 +33,39 @@ export const new_blogs = [
   },
   {
     id: 1,
+    cover: blog1,
+    title: "Title",
+    tags: tags,
+    authorName: "User",
+    profilePicture: profile,
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dapibus eu lectus id gravida...",
+    createdAt: new Date(),
+  },
+  {
+    id: 1,
+    cover: blog1,
+    title: "Title",
+    tags: tags,
+    authorName: "User",
+    profilePicture: profile,
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dapibus eu lectus id gravida...",
+    createdAt: new Date(),
+  },
+  {
+    id: 1,
+    cover: blog1,
+    title: "Title",
+    tags: tags,
+    authorName: "User",
+    profilePicture: profile,
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dapibus eu lectus id gravida...",
+    createdAt: new Date(),
+  },
+  {
+    id: 1,
     cover: blog2,
     title: "Title",
     tags: tags,

@@ -20,10 +20,10 @@ const navBarRoutes: NavBarRoutes[] = [
     path: "/about",
     name: "About",
   },
-  {
-    path: "/contact",
-    name: "Contact",
-  },
+  // {
+  //   path: "/contact",
+  //   name: "Contact",
+  // },
   {
     path: "/blog",
     name: "Blog",
@@ -33,9 +33,9 @@ const navBarRoutes: NavBarRoutes[] = [
 const Navbar = () => {
   const location = useLocation();
   const active =
-    "md:my-0 my-7 text-xl font-bold text-custom-color3 leading-6 border-b-2 border-custom-color3";
+    "md:my-0 my-7 text-xl font-bold text-custom-color3 border-b border-custom-color3";
   const inActive =
-    "md:my-0 my-7 leading-6 text-custom-color3 transition-all duration-200 hover:text-custom-color3 hover:border-b-2 hover:border-custom-color3 text-xl";
+    "md:my-0 my-7 leading-2 text-custom-color3 transition-all duration-200 hover:text-custom-color3 hover:border-b-2 hover:border-custom-color3 text-xl";
 
   const [mobile, setMobile] = useState(false);
 
@@ -48,7 +48,7 @@ const Navbar = () => {
   return (
     <React.Fragment>
       <header className="mx-auto bg-custom-color1 max-w-7xl border-b sticky top-0 z-50">
-        <nav className="flex justify-between items-center p-4 md:p-6 lg:px-8">
+        <nav className="flex justify-between items-center p-4 mr-24 md:p-6 lg:px-8">
           <Logo />
 
           <div className="flex md:hidden">

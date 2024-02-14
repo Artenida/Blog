@@ -14,14 +14,14 @@ const Home = () => {
         <div className="absolute inset-0 bg-black opacity-45"></div>
 
         <div className="absolute inset-0 flex justify-center items-center">
-          <div className="relative md:pl-24">
+          <div className="relative md:pl-18">
             <img
               src={home}
               alt=""
               className="max-w-full h-auto max-h-96 opacity-80"
             />{" "}
             <div className="absolute inset-0 flex justify-center items-center">
-              <div className="text-white text-center md:pl-20 z-10">
+              <div className="text-white text-center md:pl-12 z-10">
                 <h1 className="text-4xl font-bold mb-6">In The Photosphere</h1>
                 <p>
                   "Capture the world through your lens:

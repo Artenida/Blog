@@ -11,6 +11,10 @@ import MyAccount from "../pages/Blog/MyAccount";
 import BlogDetails from "../pages/Blog/BlogDetails";
 import PrivateRoutes from "../Routes/PrivateRoute";
 import Blog from "../pages/Blog/Blog";
+// import AuthorsPage from "../pages/AuthorsPage";
+
+import {new_blogs} from "../config/data"
+
 
 const routes = [
   { path: "/", element: <Home /> },
@@ -19,7 +23,8 @@ const routes = [
   { path: "/signIn", element: <SignIn /> },
   { path: "/signUp", element: <SignUp /> },
   { path: "/blog", element: <Blog /> },
-  { path: "/blog/:id", element: <BlogDetails /> },
+  // { path: "/blogs/authors", element: <AuthorsPage /> },
+  { path: "/blog/:id", element: <BlogDetails blogs={new_blogs}/> },
   { path: "*", element: <Home /> },
 ];
 
