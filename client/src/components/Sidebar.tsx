@@ -9,9 +9,9 @@ const Sidebar = () => {
   const [open, setOpen] = useState(true);
 
   return (
-    <div className="mt-12">
+    <div className="">
       <div
-        className={`bg-custom-color3 p-5 pt-8 ${
+        className={`bg-custom-color3 p-5 pt-8 h-screen fixed ${
           open ? "w-72" : "w-20"
         } duration-300 relative`}
       >

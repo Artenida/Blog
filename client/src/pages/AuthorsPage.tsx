@@ -10,13 +10,13 @@ const AuthorsData = [
     posts: 3,
   },
   {
-    id: 1,
+    id: 2,
     profile: profile,
     name: "Jane",
     posts: 3,
   },
   {
-    id: 1,
+    id: 3,
     profile: profile,
     name: "Nana",
     posts: 3,

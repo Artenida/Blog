@@ -6,12 +6,12 @@ import Home from "../pages/Home/Home";
 import About from "../pages/Home/About";
 import Contact from "../pages/Home/Contact";
 import SignIn from "../pages/SignIn";
-import SignUp from "../pages/SignUp";
+import SignUp from "../pages/Register";
 import MyAccount from "../pages/Blog/MyAccount";
 import BlogDetails from "../pages/Blog/BlogDetails";
 import PrivateRoutes from "../Routes/PrivateRoute";
 import Blog from "../pages/Blog/Blog";
-// import AuthorsPage from "../pages/AuthorsPage";
+import AuthorsPage from "../pages/AuthorsPage";
 
 import {new_blogs} from "../config/data"
 
@@ -23,7 +23,7 @@ const routes = [
   { path: "/signIn", element: <SignIn /> },
   { path: "/signUp", element: <SignUp /> },
   { path: "/blog", element: <Blog /> },
-  // { path: "/blogs/authors", element: <AuthorsPage /> },
+  { path: "/authors", element: <AuthorsPage/> },
   { path: "/blog/:id", element: <BlogDetails blogs={new_blogs}/> },
   { path: "*", element: <Home /> },
 ];

@@ -48,7 +48,7 @@ const Navbar = () => {
   return (
     <React.Fragment>
       <header className="mx-auto bg-custom-color1 max-w-7xl border-b sticky top-0 z-50">
-        <nav className="flex justify-between items-center p-4 mr-24 md:p-6 lg:px-8">
+        <nav className="flex justify-between items-center p-4 lg:mr-24 md:p-6 lg:px-8">
           <Logo />
 
           <div className="flex md:hidden">
