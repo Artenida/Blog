@@ -5,6 +5,7 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react";
 import { Alert } from "@material-tailwind/react";
+import { ImSpinner11 } from "react-icons/im";
 
 interface FormData {
   username: string;
@@ -24,7 +25,8 @@ const Register = () => {
     password: '',
     confirmPassword: ''
   });
-  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,9 +56,25 @@ const Register = () => {
       return;
     }
 
-   
-
-    navigate('/signIn');
+    try {
+      setLoading(true);
+      setErrorMessage(null);
+      const res = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type' : 'application/json'},
+        body: JSON.stringify(formData)  
+      });
+      const data = await res.json();
+      if(data.success === false) {
+        return setErrorMessage(data.message);
+      }
+      setLoading(false);
+      if(res.ok) {
+        navigate('/signIn');
+      }
+    } catch (error: any) { 
+      setErrorMessage(error.message);
+  }
   }
 
   return (
@@ -152,7 +170,15 @@ const Register = () => {
 
         <div className="mt-3 font-semibold cursor-pointer text-custom-color2 bg-custom-color3 active:bg-custom-color2 active:text-custom-color3 border active:border-custom-color3 rounded-lg text-center">
             <button type="submit" className="py-2 px-4" disabled={loading}>
-                Register
+                {/* Register */}
+                {loading ? (
+                  <div className="flex justify-center items-center">
+                    <ImSpinner11 className="text-sm" />
+                    <span  className="pl-3">Loading...</span>
+                  </div>
+                ) : (
+                  'Register'
+                )}
             </button>
         </div>
         {
