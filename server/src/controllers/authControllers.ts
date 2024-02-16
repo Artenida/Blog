@@ -3,6 +3,11 @@ import { db } from "../config";
 import jwt from "jsonwebtoken";
 
 export const register = async (req: Request, res: Response) => {
+  const { username, email, password, confirmPassword } = req.body;
+
+  if (!username || !email || !password || !confirmPassword) {
+    return res.status(400).json("All fields are required");
+  }
   try {
     // Check if user exists
     const checkQuery = "SELECT * FROM users WHERE username = ?";
@@ -45,19 +50,18 @@ export const login = (req: Request, res: Response) => {
       if (data.length === 0) {
         return res.status(404).json("User not found");
       }
-
       // const checkPassword = bcrypt.compareSync(req.body.password, data[0].password)
       const user = data[0]; // Assuming the first row is the user
 
-      if (!req.body.password) {
+      if (req.body.password !== user.password) {
         return res.status(400).json("Wrong password or username!");
-      }
+    }
 
       // if (!process.env.JWT_SECRET) {
       //   return res.status(500).json("JWT secret key is not provided");
       // }
       const token = jwt.sign({
-        userId: user.id, // Assuming user ID is available in the data object
+        userId: user.id, 
       }, '', { algorithm: 'none' }); 
 
       const { password: pass, ...rest } =  user;

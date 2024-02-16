@@ -14,10 +14,6 @@ interface FormData {
   confirmPassword: string;
 }
 
-interface Props {
-  // Define your props if any
-}
-
 const Register = () => {
   const [formData, setFormData] = useState<FormData>({
     username: '',
