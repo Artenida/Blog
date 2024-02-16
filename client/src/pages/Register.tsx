@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react";
 import { Alert } from "@material-tailwind/react";
 import { ImSpinner11 } from "react-icons/im";
+import { useAppSelector, useAppDispatch } from '../store/hooks'
+import { registerStart, registerSuccess, registerFailure } from "../store/user/userSlice";
 
 interface FormData {
   username: string;
@@ -22,8 +24,9 @@ const Register = () => {
     confirmPassword: ''
   });
 
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const { error: errorMessage } = useAppSelector((state) => state.user)
+  const { loading } = useAppSelector((state) => state.user)
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({...formData, [e.target.id]: e.target.value.trim() });
@@ -32,44 +35,45 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
-      setErrorMessage('Please fill out all fields');
+      dispatch(registerFailure('Please fill out all fields'));
       console.log(errorMessage);
       return;
     } 
 
     if (!formData.email.trim()) {
-      setErrorMessage("Email is not valid");
+      dispatch(registerFailure("Email is not valid"));
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      setErrorMessage("Email is not valid");
+      dispatch(registerFailure("Email is not valid"));
     }
 
     if (formData.password.length < 8) {
-      setErrorMessage("Password must be at least 8 characters");
+      dispatch(registerFailure("Password must be at least 8 characters"));
       return;
     }  else if( formData.password !== formData.confirmPassword) {
-      setErrorMessage('Password not matched');
+      dispatch(registerFailure('Password not matched'));
       // console.log(errorMessage);
       return;
     }
 
     try {
-      setLoading(true);
-      setErrorMessage(null);
+      dispatch(registerStart());
       const res = await fetch('http://localhost:5000/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type' : 'application/json'},
         body: JSON.stringify(formData)  
       });
       const data = await res.json();
-      if(data.success === false) {
-        return setErrorMessage(data.message);
+      if(!res.ok) {
+         dispatch(registerFailure(data));
+         return
       }
-      setLoading(false);
+      
       if(res.ok) {
+        dispatch(registerSuccess(data));
         navigate('/signIn');
       }
     } catch (error: any) { 
-      setErrorMessage(error.message);
+      dispatch(registerFailure(error.message));
   }
   }
 

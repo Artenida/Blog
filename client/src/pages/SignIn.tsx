@@ -54,14 +54,8 @@ const SignIn = () => {
       });
 
       const data = await res.json();
-      // if(!data.success) {
-      //   dispatch(signInFailure(data.message));
-      //   return
-      //   // dispatch(signInFailure("Please register before login"));
-      // }
       if(!res.ok) {
         dispatch(signInFailure(data));
-        // dispatch(signInFailure("User doesn't exists"));
         return
       }
 

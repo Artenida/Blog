@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../../store/store'
+import { stat } from "fs";
 
 interface UserState {
     currentUser: any; // Define the type for currentUser
@@ -31,9 +32,22 @@ const userSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         },
+        registerStart: (state) => {
+            state.loading = true;
+            state.error = null;
+        },
+        registerSuccess: (state, action: PayloadAction<UserState>) => {
+            state.currentUser = action.payload;
+            state.loading = false;
+            state.error = null;
+        },
+        registerFailure: (state, action: PayloadAction<string | null>) => {
+            state.loading = false;
+            state.error = action.payload;
+        }
     },
 });
 
-export const { signInStart, signInSuccess, signInFailure } = userSlice.actions; 
+export const { signInStart, signInSuccess, signInFailure, registerFailure, registerStart, registerSuccess } = userSlice.actions; 
 export const selectUser = (state: RootState) => state.user
 export default userSlice.reducer;
