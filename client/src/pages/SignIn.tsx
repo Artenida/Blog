@@ -1,4 +1,3 @@
-import { MdEmail } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
 import { FaUserAstronaut } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
@@ -13,9 +12,9 @@ interface FormData {
   confirmPassword: string;
 }
 
-interface Props {
-  // Define your props if any
-}
+// interface Props {
+//   // Define your props if any
+// }
 
 const SignIn = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -25,7 +24,7 @@ const SignIn = () => {
     confirmPassword: ''
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({...formData, [e.target.id]: e.target.value.trim() });
@@ -106,7 +105,7 @@ const SignIn = () => {
         </div>
 
         <div className="mt-3 font-semibold cursor-pointer text-custom-color2 bg-custom-color3 active:bg-custom-color2 active:text-custom-color3 border active:border-custom-color3 rounded-lg text-center">
-            <button type="submit" className="py-2 px-4" disabled={loading}>
+            <button type="submit" className="py-2 px-4">
                 Login
             </button>
         </div>

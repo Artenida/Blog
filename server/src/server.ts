@@ -17,11 +17,11 @@ app.listen(port, () => {
     console.log("Server running on port: " + port);
 })
 
-// app.use((err, req, res, data) => {
-//     const statusCode = err.statusCode || 500;
-//     const message = err.message || 'Internal Server Error';
+// app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+//     const statusCode: number = err.statusCode || 500;
+//     const message: string = err.message || 'Internal Server Error';
 //     res.status(statusCode).json({
-//         success: false;
+//         success: false,
 //         statusCode,
 //         message
 //     });

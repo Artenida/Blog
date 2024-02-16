@@ -1,5 +1,6 @@
 import { Request, Response, query } from "express";
 import { db } from "../config";
+import jwt from "jsonwebtoken";
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -24,27 +25,54 @@ export const register = async (req: Request, res: Response) => {
         });
       }
     });
-  } catch (err) {
-    return res.status(500).json(err);
+  } catch (error) {
+    return res.status(500).json(error);
   }
 };
 
-export const login = (req: Request, res: Response): void => {
-  // Your code for login endpoint
-  const query = "SELECT * FROM users WHERE username = ?";
+export const login = (req: Request, res: Response) => {
+  const { username, password } = req.body;
 
-  db.query(query, [req.body.username], (err, data) => {
-    if (err) return res.status(500).json(err);
-    if (data.length === 0) {
-      return res.status(404).json("User not found");
-    }
+  if (!username || !password) {
+    return res.status(400).json("All fields are required");
+  }
 
-    // const checkPassword = bcrypt.compareSync(req.body.password, data[0].password)
+  try {
+    const query = "SELECT * FROM users WHERE username = ?";
 
-    if (!req.body.password) {
-      return res.status(400).json("Wrong password or username!");
-    }
-  });
+    db.query(query, [req.body.username], (err, data) => {
+      if (err) return res.status(500).json(err);
+      if (data.length === 0) {
+        return res.status(404).json("User not found");
+      }
+
+      // const checkPassword = bcrypt.compareSync(req.body.password, data[0].password)
+      const user = data[0]; // Assuming the first row is the user
+
+      if (!req.body.password) {
+        return res.status(400).json("Wrong password or username!");
+      }
+
+      // if (!process.env.JWT_SECRET) {
+      //   return res.status(500).json("JWT secret key is not provided");
+      // }
+      const token = jwt.sign({
+        userId: user.id, // Assuming user ID is available in the data object
+      }, '', { algorithm: 'none' }); 
+
+      const { password: pass, ...rest } =  user;
+
+      res.cookie("access_token", token, {
+        httpOnly: true,
+      });
+      res.status(200).json({
+        message: "Sign in successfully",
+        user: rest,
+      });
+    });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
 };
 
 export const logout = (req: Request, res: Response): void => {
