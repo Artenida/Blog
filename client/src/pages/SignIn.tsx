@@ -7,7 +7,6 @@ import { Alert } from "@material-tailwind/react";
 import { ImSpinner11 } from "react-icons/im";
 import { useAppSelector, useAppDispatch } from '../store/hooks'
 import { signInStart, signInSuccess, signInFailure } from "../store/user/userSlice";
-
 interface FormData {
   username: string;
   email: string;
@@ -55,9 +54,17 @@ const SignIn = () => {
       });
 
       const data = await res.json();
-      if(!data.success) {
-        dispatch(signInFailure(data.message));
+      // if(!data.success) {
+      //   dispatch(signInFailure(data.message));
+      //   return
+      //   // dispatch(signInFailure("Please register before login"));
+      // }
+      if(!res.ok) {
+        dispatch(signInFailure(data));
+        // dispatch(signInFailure("User doesn't exists"));
+        return
       }
+
       if(res.ok) {
         dispatch(signInSuccess(data));
         navigate('/');
