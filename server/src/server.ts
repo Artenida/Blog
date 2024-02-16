@@ -16,8 +16,6 @@ app.use("/api/users", userRoutes);
 app.listen(port, () => {
     console.log("Server running on port: " + port);
 })
-// app.use("/api/auth", authRoutes);
-// app.use("/api/users", userRoutes);
 
 // app.use((err, req, res, data) => {
 //     const statusCode = err.statusCode || 500;
