@@ -119,8 +119,8 @@ const Register = () => {
           </Link>
         </div>
 
-        <div className="mt-3 font-semibold cursor-pointer text-custom-color2 bg-custom-color3 active:bg-custom-color2 active:text-custom-color3 border active:border-custom-color3 rounded-lg text-center">
-          <button type="submit" className="py-2 px-4" disabled={loading}>
+        <div className="mt-3 py-2 font-semibold cursor-pointer text-custom-color2 bg-custom-color3 active:bg-custom-color2 active:text-custom-color3 border active:border-custom-color3 rounded-lg text-center">
+          <button type="submit" disabled={loading} className="w-full h-full">
             {/* Register */}
             {loading ? (
               <div className="flex justify-center items-center">

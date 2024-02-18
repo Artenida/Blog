@@ -1,7 +1,6 @@
 import about from "../../assets/about.jpg";
-import background from "../../assets/about1.avif";
-import Button from "../../components/Buttons";
 import { Link } from "react-router-dom";
+import { MediumButton } from "../../components/ButtonComponent";
 
 const About = () => {
   return (
@@ -62,7 +61,7 @@ const About = () => {
             brushstroke on the canvas of time.
           </p>
           <Link to="/blog">
-            <Button>Explore Blog</Button>
+          <MediumButton >Explore Blog</MediumButton>
           </Link>
         </div>
       </div>

@@ -3,9 +3,9 @@ import { NavLink, Link, useLocation } from "react-router-dom";
 import { AiOutlineMenuUnfold } from "react-icons/ai";
 import { AiOutlineMenuFold } from "react-icons/ai";
 import { Dialog } from "@headlessui/react";
-import Button from "./Buttons";
 import Logo from "./Logo";
 import logo from "../assets/logo3.webp";
+import { SmallButton } from "./ButtonComponent";
 
 type NavBarRoutes = {
   path: string;
@@ -69,7 +69,7 @@ const Navbar = () => {
           </div>
 
           <Link to="/signIn">
-            <Button>Login</Button>
+          <SmallButton >Login</SmallButton>
           </Link>
 
           <div className="pr-12 md:hidden">
