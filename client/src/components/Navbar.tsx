@@ -5,6 +5,7 @@ import { AiOutlineMenuFold } from "react-icons/ai";
 import { Dialog } from "@headlessui/react";
 import Button from "./Buttons";
 import Logo from "./Logo";
+import logo from "../assets/logo3.webp";
 
 type NavBarRoutes = {
   path: string;
@@ -51,16 +52,6 @@ const Navbar = () => {
         <nav className="flex justify-between items-center p-4 lg:mr-24 md:p-6 lg:px-8">
           <Logo />
 
-          <div className="flex md:hidden">
-            <button
-              className="-m-2 5 inline-flex items-center justify-center 
-            rounded-md hover:bg-custom-color transition duration-100"
-              onClick={() => setMobile(true)}
-            >
-              <AiOutlineMenuUnfold className="text-xl" />
-            </button>
-          </div>
-
           <div className="hidden md:flex md:space-x-8">
             <ul className="flex space-x-8 gap-8">
               {navBarRoutes.map((item, index) => (
@@ -80,6 +71,16 @@ const Navbar = () => {
           <Link to="/signIn">
             <Button>Login</Button>
           </Link>
+
+          <div className="pr-12 md:hidden">
+            <button
+              className="-m-2 5 inline-flex items-center justify-center 
+            rounded-md hover:bg-custom-color transition duration-100"
+              onClick={() => setMobile(true)}
+            >
+              <AiOutlineMenuUnfold className="text-xl" />
+            </button>
+          </div>
         </nav>
 
         <Dialog
@@ -92,6 +93,7 @@ const Navbar = () => {
             <Dialog.Panel className="fixed inset-y-0 right-0 z-50 overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-text/10 w-full max-w-screen">
               <div className="flex items-center justify-between mb-3">
                 <Logo />
+
                 <button
                   className="-m-2 5 pr-12 inline-flex items-center justify-center rounded-md hover:bg-custom-color transition duration-100"
                   onClick={() => setMobile(false)}

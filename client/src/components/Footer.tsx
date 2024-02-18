@@ -1,85 +1,81 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { IoLogoInstagram } from "react-icons/io";
-import { FaTiktok } from "react-icons/fa";
-import { FaTwitter } from "react-icons/fa6";
-import { FaYoutube } from "react-icons/fa";
+import { FaTiktok, FaTwitter, FaYoutube } from "react-icons/fa";
 
 const Footer = () => {
-    return (
-        <footer className="bg-custom-color3 py-8">
-            <div className="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-4">
-                <div className="grid grid-cols-2 gap-5 lg:col-span-4 md:grid-cols-4">
+  // Define footer data
+  const footerCategories = [
+    {
+      title: "Photography Categories",
+      links: [
+        { title: "Portfolios", url: "/",  icon: " " },
+        { title: "Photography tips", url: "/",  icon: " " },
+        { title: "Gear Reviews", url: "/",  icon: " " },
+      ],
+    },
+    {
+      title: "About Us",
+      links: [
+        { title: "Our Story", url: "/",  icon: " "},
+        { title: "Meet the team", url: "/",  icon: " " },
+        { title: "Contact Us", url: "/",  icon: " " },
+      ],
+    },
+    {
+      title: "Resources",
+      links: [
+        { title: "Photography Shops", url: "/", icon: " " },
+        { title: "Photography Courses", url: "/", icon: " " },
+        { title: "Photography Equipment Store", url: "/", icon: " " },
+      ],
+    },
+    {
+      title: "Follow Us",
+      links: [
+        { title: "Instagram", url: "/", icon: <IoLogoInstagram /> },
+        { title: "TikTok", url: "/", icon: <FaTiktok /> },
+        { title: "YouTube", url: "/", icon: <FaYoutube /> },
+      ],
+    },
+  ];
 
-                    {/* Category 1 */}
-                    <div>
-                        <p className="text-lg  tracking-wide text-custom-color2">Photography Categories</p>
-                        <ul className="mt-2 space-y-2">
-                            <li>
-                            <Link to='/' className="text-custom-color1 duration-300 hover:text-custom-color2">Portfolios</Link>
-                            </li>
-                            <li>
-                            <Link to='/' className="text-custom-color1 duration-300 hover:text-custom-color2">Photography tips</Link>
-                            </li>
-                            <li>
-                            <Link to='/' className="text-custom-color1 duration-300 hover:text-custom-color2">Gear Reviews</Link>
-                            </li>
-                        </ul>
-                    </div>
-
-                    {/* Category 2 */}
-                    <div>
-                        <p className="text-lg  tracking-wide text-custom-color2">About Us</p>
-                        <ul className="mt-2 space-y-2">
-                            <li>
-                            <Link to='/' className="text-custom-color1 duration-300 hover:text-custom-color2">Our Story</Link>
-                            </li>
-                            <li>
-                            <Link to='/' className="text-custom-color1 duration-300 hover:text-custom-color2">Meet the team</Link>
-                            </li>
-                            <li>
-                            <Link to='/' className="text-custom-color1 duration-300 hover:text-custom-color2">Contact Us</Link>
-                            </li>
-                        </ul>
-                    </div>
-
-                    {/* Category 3 */}
-                    <div>
-                        <p className="text-lg tracking-wide text-custom-color2">Resources</p>
-                        <ul className="mt-2 space-y-2">
-                            <li>
-                            <Link to='/' className="text-custom-color1 duration-300 hover:text-custom-color2">Photography Shops</Link>
-                            </li>
-                            <li>
-                            <Link to='/' className="text-custom-color1 duration-300 hover:text-custom-color2">Photography Courses</Link>
-                            </li>
-                            <li>
-                            <Link to='/' className="text-custom-color1 duration-300 hover:text-custom-color2">Photography Equipment Store</Link>
-                            </li>
-                        </ul>
-                    </div>
-
-                    {/* Category 4 */}
-                    <div>
-                        <p className="text-lg tracking-wide text-custom-color2">Follow Us</p>
-                        <ul className="mt-2 space-y-2">
-                            <li>
-                            <Link to='/' className="flex align-center items-center gap-2 text-custom-color1 duration-300 hover:text-custom-color2"><IoLogoInstagram />Instagram</Link>
-                            </li>
-                            <li>
-                            <Link to='/' className="flex align-center items-center gap-2 text-custom-color1 duration-300 hover:text-custom-color2"><FaTiktok />TikTok</Link>
-                            </li>
-                            <li>
-                            <Link to='/' className="flex align-center items-center gap-2 text-custom-color1 duration-300 hover:text-custom-color2"><FaTwitter />Twitter</Link>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+  return (
+    <footer className="bg-custom-color3 py-8">
+      <div className="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-4">
+        <div className="grid grid-cols-2 gap-5 lg:col-span-4 md:grid-cols-4">
+          {/* Map through footer categories */}
+          {footerCategories.map((category, index) => (
+            <div key={index}>
+              <p className="text-lg  tracking-wide text-custom-color2">
+                {category.title}
+              </p>
+              <ul className="mt-2 space-y-2">
+                {/* Map through links within each category */}
+                {category.links.map((link, idx) => (
+                  <li key={idx}>
+                    <Link
+                      to={link.url}
+                      className="text-custom-color1 duration-300 hover:text-custom-color2"
+                    >
+                      <div className="flex gap-1 items-center">
+                        {link.icon}
+                        {link.title}
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <div className='flex justify-center align-center pt-9'>
-                        <p className='text-custom-color2 text-sm'>© 2024 Writer. All Rights Reserved.</p>
-                    </div>
-        </footer>
-    );
-}
+          ))}
+        </div>
+      </div>
+      <div className="flex justify-center align-center pt-9">
+        <p className="text-custom-color2 text-sm">
+          © {new Date().getFullYear()} Writer. All Rights Reserved.
+        </p>
+      </div>
+    </footer>
+  );
+};
 
 export default Footer;

@@ -3,76 +3,48 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import carousel1 from "../assets/carousel2.jpg";
-import carousel2 from "../assets/carousel3.webp";
-import carousel3 from "../assets/carousel4.jpg";
 
-const MySwiperComponent = () => {
+// Define types for the slide object
+interface Slide {
+  title: string;
+  subtitle: string;
+  content: string;
+  image: string;
+}
+
+// Define props interface
+interface MySwiperComponentProps {
+  slides: Slide[];
+}
+
+const MySwiperComponent = ({ slides }: MySwiperComponentProps) => {
   return (
     <Swiper
       spaceBetween={50}
       slidesPerView={1}
       navigation={true}
       modules={[Navigation]}
+      className="swiper-container"
     >
-      <SwiperSlide>
-        <div className="relative pt-12 pl-6 pr-6 lg:pl-36 pb-12 bg-custom-color2 mt-10 h-full flex flex-col lg:flex-row items-center">
-          <img
-            src={carousel1}
-            alt=""
-            className="h-96 w-auto mb-8 lg:mb-0 lg:mr-12 lg:order-2"
-          />
-          <div className="space-y-3 lg:order-1">
-            <h3 className="text-4xl text-custom-color3 font-semibold">
-              Every detail is enough to inspire
-            </h3>
-            <h3 className="text-lg">You just have to look closely</h3>
-            <p className="text-base">
-              The world is filled with countless moments, nuances, and
-              intricacies waiting to ignite creativity and motivation within us.
-            </p>
+      {slides.map((slide, index) => (
+        <SwiperSlide key={index}>
+          <div className="grid gap-4 md:grid-cols-2 md:items-center md:text-left
+                          bg-custom-color2 md:p-24 lg:p-24 mt-12">
+            <div className="flex justify-center items-center p-4">
+              <img
+                src={slide.image}
+                alt=""
+                className="w-96 h-96 rounded-lg"
+              />
+            </div>
+            <div className="p-4">
+              <h3 className="text-4xl font-medium mb-2">{slide.title}</h3>
+              <h3 className="text-lg font-semibold">{slide.subtitle}</h3>
+              <p className="">{slide.content}</p>
+            </div>
           </div>
-        </div>
-      </SwiperSlide>
-      <SwiperSlide>
-      <div className="relative pt-12 pl-6 pr-6 lg:pl-36 pb-12 bg-custom-color2 mt-10 h-full flex flex-col lg:flex-row items-center">
-          <img
-            src={carousel2}
-            alt=""
-            className="h-96 w-auto mb-8 lg:mb-0 lg:mr-12 lg:ml-36"
-          />
-          <div className="space-y-3">
-            <h3 className="text-4xl text-custom-color3 font-semibold">
-              Every place is an art gallery
-            </h3>
-            <h3 className="text-lg">You just have to feel it</h3>
-            <p className="text-base">
-              Beauty and artistic expression can be found everywhere, not just
-              within traditional galleries or museums.
-            </p>
-          </div>
-        </div>
-      </SwiperSlide>
-      <SwiperSlide>
-      <div className="relative pt-12 pl-6 pr-6 lg:pl-36 pb-12 bg-custom-color2 mt-10 h-full flex flex-col lg:flex-row items-center">
-          <img
-            src={carousel3}
-            alt=""
-            className="h-96 w-auto mb-8 lg:mb-0 lg:mr-12 lg:ml-36"
-          />
-          <div className="space-y-3">
-            <h3 className="text-4xl text-custom-color3 font-semibold">
-              Every little thing is a memory
-            </h3>
-            <h3 className="text-lg">You only have to remember it</h3>
-            <p className="text-base">
-              Our lives are composed of countless moments, experiences, and
-              interactions, each imbued to leave a lasting imprint on our hearts
-              and minds.
-            </p>
-          </div>
-        </div>
-      </SwiperSlide>
+        </SwiperSlide>
+      ))}
     </Swiper>
   );
 };

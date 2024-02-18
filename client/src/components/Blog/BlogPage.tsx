@@ -7,9 +7,9 @@ const BlogPage = () => {
   // const [blogs, setBlogs] = useState(data);
   return (
     <div className="flex">
-      <div className="mr-4"> {/* Added margin to create space */}
+      {/* <div className="mr-4"> 
         <Sidebar />
-      </div>
+      </div> */}
       <div className="max-w-7xl mx-auto flex-1">
         <BlogCard blogs={new_blogs} />
       </div>
