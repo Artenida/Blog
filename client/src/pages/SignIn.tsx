@@ -12,6 +12,7 @@ import {
   signInFailure,
 } from "../store/user/userSlice";
 import background from "../assets/about1.avif";
+import FormInputs from "../components/FormInputs";
 interface FormData {
   username: string;
   email: string;
@@ -90,44 +91,8 @@ const SignIn = () => {
       Already Part of Us
     </h2>
 
-    <div className="mt-3">
-      <div className="flex items-center align-center gap-1">
-        <FaUser />
-        <label
-          htmlFor="username"
-          className="font-semibold text-custom-color3"
-        >
-          Username
-        </label>
-      </div>
-      <input
-        autoComplete="off"
-        type="text"
-        placeholder="Username"
-        id="username"
-        className="mt-2 border border-custom-color2 px-3 py-2 rounded-md focus:outline-none focus:border-custom-color3 text-custom-color3 w-[350px]"
-        onChange={handleChange}
-      />
-    </div>
-
-    <div className="mt-3">
-      <div className="flex items-center align-center gap-1">
-        <RiLockPasswordFill />
-        <label
-          htmlFor="password"
-          className="font-semibold text-custom-color3"
-        >
-          Password
-        </label>
-      </div>
-      <input
-        type="password"
-        placeholder="********"
-        id="password"
-        className="mt-2 border border-custom-color2 px-3 py-2 rounded-md focus:outline-none focus:border-custom-color3 w-[350px]"
-        onChange={handleChange}
-      />
-    </div>
+    <FormInputs id="username" label="Username" placeholder="Enter your username" type="text" onChange={handleChange} icon={<FaUser />}/>
+    <FormInputs id="password" label="Password" placeholder="********" type="password" onChange={handleChange}   icon={<RiLockPasswordFill />}/>
 
     <div className="flex gap-2 text-sm mt-3">
       <span>Don't have an account:</span>

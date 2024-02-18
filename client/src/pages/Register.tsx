@@ -13,6 +13,7 @@ import {
   registerFailure,
 } from "../store/user/userSlice";
 import background from "../assets/about1.avif";
+import FormInputs from "../components/FormInputs";
 
 interface FormData {
   username: string;
@@ -103,83 +104,13 @@ const Register = () => {
           <FaUserAstronaut />
         </div>
         <h2 className="flex justify-center text-custom-color3 text-xl font-semibold">
-          Register
+          Become part of us
         </h2>
 
-        <div className="mt-3">
-          <div className="flex items-center align-center gap-1">
-            <FaUser />
-            <label
-              htmlFor="username"
-              className="font-semibold text-custom-color3"
-            >
-              Username
-            </label>
-          </div>
-          <input
-            autoComplete="off"
-            type="text"
-            placeholder="Username"
-            id="username"
-            className="mt-2 border border-custom-color2 px-3 py-2 rounded-md focus:outline-none focus:border-custom-color3 text-custom-color3 w-[350px]"
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="mt-3">
-          <div className="flex items-center align-center gap-1">
-            <MdEmail />
-            <label htmlFor="email" className="font-semibold text-custom-color3">
-              Email
-            </label>
-          </div>
-          <input
-            autoComplete="off"
-            type="email"
-            placeholder="email@email.com"
-            id="email"
-            className="mt-2 border border-custom-color2 px-3 py-2 rounded-md focus:outline-none focus:border-custom-color3 w-[350px]"
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="mt-3">
-          <div className="flex items-center align-center gap-1">
-            <RiLockPasswordFill />
-            <label
-              htmlFor="password"
-              className="font-semibold text-custom-color3"
-            >
-              Password
-            </label>
-          </div>
-          <input
-            type="password"
-            placeholder="********"
-            id="password"
-            className="mt-2 border border-custom-color2 px-3 py-2 rounded-md focus:outline-none focus:border-custom-color3 w-[350px]"
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="mt-3">
-          <div className="flex items-center align-center gap-1">
-            <RiLockPasswordFill />
-            <label
-              htmlFor="confirmPassword"
-              className="font-semibold text-custom-color3"
-            >
-              Confirm Password
-            </label>
-          </div>
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            id="confirmPassword"
-            className="mt-2 border border-custom-color2 px-3 py-2 rounded-md focus:outline-none focus:border-custom-color3 w-[350px]"
-            onChange={handleChange}
-          />
-        </div>
+        <FormInputs id="username" label="Username" placeholder="Enter your username" type="text" onChange={handleChange} icon={<FaUser />}/>
+        <FormInputs id="email" label="Email" placeholder="email@email.com" type="email" onChange={handleChange} icon={<MdEmail />}/>
+        <FormInputs id="password" label="Password" placeholder="********" type="password" onChange={handleChange} icon={<RiLockPasswordFill />}/>
+        <FormInputs id="confirmPassword" label="Confirm Password" placeholder="Confirm Password" type="password" onChange={handleChange} icon={<RiLockPasswordFill />}/>
 
         <div className="flex gap-2 text-sm mt-3">
           <span>Already part of us:</span>

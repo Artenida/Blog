@@ -53,7 +53,7 @@ const Navbar = () => {
           <Logo />
 
           <div className="hidden md:flex md:space-x-8">
-            <ul className="flex space-x-8 gap-8">
+            <ul className="flex space-x-8 gap-8 pr-14">
               {navBarRoutes.map((item, index) => (
                 <NavLink key={index} to={item.path}>
                   <li

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import Account from "./Account";
 import { words } from '../assets/data';
 
 const Searchbar = () => {
