@@ -39,7 +39,7 @@ const AppRoutes = () => {
           ))}
           <Route element={<PrivateRoutes />}>
             <Route element={<Home />} path="/" />
-            <Route element={<MyAccount />} path="/myAccount" />
+            <Route element={<MyAccount />} path="/dashboard" />
           </Route>
         </Routes>
         <Footer />
