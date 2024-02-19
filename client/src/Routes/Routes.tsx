@@ -11,7 +11,7 @@ import MyAccount from "../pages/Blog/MyAccount";
 import BlogDetails from "../pages/Blog/BlogDetails";
 import PrivateRoutes from "../Routes/PrivateRoute";
 import Blog from "../pages/Blog/Blog";
-import AuthorsPage from "../pages/AuthorsPage";
+import AuthorsPage from "../pages/Blog/AuthorsPage";
 
 import {new_blogs} from "../config/data"
 

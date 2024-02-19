@@ -10,6 +10,7 @@ import {
   signInStart,
   signInSuccess,
   signInFailure,
+  selectUser,
 } from "../store/user/userSlice";
 import background from "../assets/about1.avif";
 import FormInputs from "../components/FormInputs";
@@ -29,6 +30,7 @@ const SignIn = () => {
   });
   const { error: errorMessage } = useAppSelector((state) => state.user);
   const { loading } = useAppSelector((state) => state.user);
+  
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -131,7 +133,7 @@ const SignIn = () => {
 
         {errorMessage && (
           <Alert className="mt-3 bg-red-200 py-2 px-6 text-red-500">
-            {errorMessage}
+            {JSON.stringify(errorMessage)}
           </Alert>
         )}
       </form>

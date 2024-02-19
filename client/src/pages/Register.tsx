@@ -133,10 +133,10 @@ const Register = () => {
           </button>
         </div>
         {errorMessage && (
-          <Alert className="mt-3 bg-red-200 py-2 px-6 text-red-500">
-            {errorMessage}
-          </Alert>
-        )}
+  <Alert className="mt-3 bg-red-200 py-2 px-6 text-red-500">
+    {JSON.stringify(errorMessage)}
+  </Alert>
+)}
       </form>
     </div>
   );

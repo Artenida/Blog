@@ -1,6 +1,10 @@
+import Sidebar from "../../components/Sidebar";
+
 const MyAccount = () => {
     return (
-        <div>My Acc</div>
+        <div>
+            <Sidebar />
+        </div>
     )
 }
 
