@@ -2,7 +2,6 @@ import Banner from "../../components/Banner";
 import BlogPage from "../../components/Blog/BlogPage";
 import { useState} from "react";
 
-
 const Blog = () => {
     return (
         <div>
@@ -10,7 +9,9 @@ const Blog = () => {
             <Banner />
             
             {/* Blog Page */}
+            <div className="">
             <BlogPage/>
+            </div>
         </div>
     )
 }

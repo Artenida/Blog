@@ -104,7 +104,7 @@ const Navbar = () => {
 
               <div className="mt-6 flow-root">
                 <div className="-my-2 divide-y divide-gray-500/50">
-                  <ul className="space-y-10 py-8">
+                  <ul className="space-y-10 text-center py-8">
                     {navBarRoutes.map((item, index) => (
                       <NavLink key={index} to={item.path}>
                         <li
