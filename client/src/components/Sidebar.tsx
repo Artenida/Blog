@@ -40,7 +40,7 @@ const Sidebar = () => {
         />
 
         <div className="inline-flex justify-center items-center gap-2">
-          {currentUser.user.profile_picture !== null ? (
+          {currentUser?.user?.profile_picture !== null ? (
             <FaRegUserCircle
               className={`text-white text-4xl rounded cursor-pointer block float-left mr-2 duration-500 ${
                 open && "rotate-[360deg]"
@@ -59,7 +59,7 @@ const Sidebar = () => {
             }`}
           >
             <div className="text-custom-color1 font-semibold text-2xl cursor-pointer">
-              {currentUser.user.username}
+              {currentUser?.user?.username}
             </div>
           </h1>
         </div>

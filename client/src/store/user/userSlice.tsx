@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../../store/store'
-import { stat } from "fs";
+import { login } from "../../api/user";
 
 interface UserState {
     currentUser: any; // Define the type for currentUser
@@ -45,6 +45,18 @@ const userSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         }
+    },
+    extraReducers: (builder) => {
+        builder
+        .addCase(login.pending, (state) => {
+            state.loading = true;
+        })
+        .addCase(login.fulfilled, (state, action) => {
+            state.loading = false;
+        })
+        .addCase(login.rejected, (state, action) => {
+            state.loading = false;
+        })
     },
 });
 

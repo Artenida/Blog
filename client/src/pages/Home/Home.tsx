@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import wallpaper from "../../assets/wallpaper2.jpg";
 import home from "../../assets/home4.webp";
@@ -34,6 +33,7 @@ const Home = () => {
   ];
 
   const newLocal = "flex items-center mt-2 pl-2 lg:pl-[80%] lg:mt-0";
+
   return (
     <div className="relative">
       <div className="relative h-screen">

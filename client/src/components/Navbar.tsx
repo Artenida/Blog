@@ -97,10 +97,10 @@ const Navbar = () => {
                   onClick={toggleDropdown}
                 >
                   <div>
-                    {currentUser.user.profile_picture !== null ? (
+                    {currentUser?.user?.profile_picture !== null ? (
                       <img
                         className="rounded-full w-14 h-14"
-                        src={currentUser.user.profile_picture}
+                        src={currentUser?.user?.profile_picture}
                         alt="User"
                       />
                     ) : (
@@ -109,10 +109,10 @@ const Navbar = () => {
                         src={image}
                         alt="User"
                       />
-                    )}{" "}
+                    )}
                   </div>
                   <div className="text-custom-color3 font-semibold text-2xl cursor-pointer">
-                    {currentUser.user.username}
+                    {currentUser?.user?.username}
                   </div>
                 </div>
               </div>
@@ -208,10 +208,10 @@ const Navbar = () => {
                           onClick={toggleDropdown}
                         >
                           <div>
-                            {currentUser.user.profile_picture !== null ? (
+                            {currentUser?.user?.profile_picture !== null ? (
                               <img
                                 className="rounded-full w-14 h-14"
-                                src={currentUser.user.profile_picture}
+                                src={currentUser?.user?.profile_picture}
                                 alt="User"
                               />
                             ) : (
@@ -223,7 +223,7 @@ const Navbar = () => {
                             )}{" "}
                           </div>
                           <div className="text-custom-color3 font-semibold text-2xl cursor-pointer">
-                            {currentUser.user.username}
+                            {currentUser?.user?.username}
                           </div>
                         </div>
                       </div>
