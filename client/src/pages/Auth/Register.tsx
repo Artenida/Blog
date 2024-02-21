@@ -6,14 +6,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Alert } from "@material-tailwind/react";
 import { ImSpinner11 } from "react-icons/im";
-import { useAppSelector, useAppDispatch } from "../store/hooks";
+import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import {
   registerStart,
   registerSuccess,
   registerFailure,
-} from "../store/user/userSlice";
-import background from "../assets/about1.avif";
-import FormInputs from "../components/FormInputs";
+} from "../../store/user/userSlice";
+import background from "../../assets/about1.avif";
+import FormInputs from "../../components/FormInputs";
 
 interface FormData {
   username: string;
@@ -30,43 +30,67 @@ const Register = () => {
     confirmPassword: "",
   });
 
+  const [formDataErrors, setFormDataErrors] = useState<FormData>({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
   const { error: errorMessage } = useAppSelector((state) => state.user);
   const { loading } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+
+ const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = event.target;
+    setFormData({ ...formData, [id]: value.trim() });
+    setFormDataErrors(validations(id, value));
   };
+
+const validations = (id: string, value: string): FormData => {
+  let errors: FormData = { ...formDataErrors };
+
+  // Reset errors for the field being validated
+  if (id === "username") {
+    errors.username = "";
+  } else if (id === "email") {
+    errors.email = "";
+  } else if (id === "password") {
+    errors.password = "";
+  } else if (id === "confirmPassword") {
+    errors.confirmPassword = "";
+  }
+
+  if (id === "username" && !value.trim()) {
+    errors.username = "Username is required";
+  }
+
+  if (id === "email") {
+    if (!value.trim()) {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(value)) {
+      errors.email = "Email is not valid";
+    }
+  }
+
+  if (id === "password") {
+    if (value.length < 8) {
+      errors.password = "Password must be at least 8 characters";
+    }
+  }
+
+  if (id === "confirmPassword" && value !== formData.password) {
+    errors.confirmPassword = "Passwords do not match";
+  }
+
+  return errors;
+};
 
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     e.preventDefault();
-    if (
-      !formData.username ||
-      !formData.email ||
-      !formData.password ||
-      !formData.confirmPassword
-    ) {
-      dispatch(registerFailure("Please fill out all fields"));
-      console.log(errorMessage);
-      return;
-    }
-
-    if (!formData.email.trim()) {
-      dispatch(registerFailure("Email is not valid"));
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      dispatch(registerFailure("Email is not valid"));
-    }
-
-    if (formData.password.length < 8) {
-      dispatch(registerFailure("Password must be at least 8 characters"));
-      return;
-    } else if (formData.password !== formData.confirmPassword) {
-      dispatch(registerFailure("Password not matched"));
-      // console.log(errorMessage);
-      return;
-    }
 
     try {
       dispatch(registerStart());
@@ -108,9 +132,13 @@ const Register = () => {
         </h2>
 
         <FormInputs id="username" label="Username" placeholder="Enter your username" type="text" onChange={handleChange} icon={<FaUser />}/>
+        {formDataErrors.username && <span className="text-red-600">{formDataErrors.username}</span>}
         <FormInputs id="email" label="Email" placeholder="email@email.com" type="email" onChange={handleChange} icon={<MdEmail />}/>
+        {formDataErrors.username && <span className="text-red-600">{formDataErrors.email}</span>}
         <FormInputs id="password" label="Password" placeholder="********" type="password" onChange={handleChange} icon={<RiLockPasswordFill />}/>
+        {formDataErrors.username && <span className="text-red-600">{formDataErrors.password}</span>}
         <FormInputs id="confirmPassword" label="Confirm Password" placeholder="Confirm Password" type="password" onChange={handleChange} icon={<RiLockPasswordFill />}/>
+        {formDataErrors.username && <span className="text-red-600">{formDataErrors.confirmPassword}</span>}
 
         <div className="flex gap-2 text-sm mt-3">
           <span>Already part of us:</span>

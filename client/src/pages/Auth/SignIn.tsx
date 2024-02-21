@@ -5,53 +5,58 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Alert } from "@material-tailwind/react";
 import { ImSpinner11 } from "react-icons/im";
-import { useAppSelector, useAppDispatch } from "../store/hooks";
+import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import {
   signInStart,
   signInSuccess,
   signInFailure,
   selectUser,
-} from "../store/user/userSlice";
-import background from "../assets/about1.avif";
-import FormInputs from "../components/FormInputs";
+} from "../../store/user/userSlice";
+import background from "../../assets/about1.avif";
+import FormInputs from "../../components/FormInputs";
+
 interface FormData {
   username: string;
-  email: string;
   password: string;
-  confirmPassword: string;
 }
 
 const SignIn = () => {
   const [formData, setFormData] = useState<FormData>({
     username: "",
-    email: "",
     password: "",
-    confirmPassword: "",
   });
-  const { error: errorMessage } = useAppSelector((state) => state.user);
-  const { loading } = useAppSelector((state) => state.user);
-  
+  const [formDataErrors, setFormDataErrors] = useState<FormData>({
+    username: "",
+    password: "",
+  });
+
+  const { error: errorMessage } = useAppSelector(selectUser);
+  const { loading } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = event.target;
+    setFormData({ ...formData, [id]: value.trim() });
+    setFormDataErrors(validations(id, value));
+  };
+
+  const validations = (id: string, value: string): FormData => {
+    let errors: FormData = { ...formDataErrors };
+
+    if (id === "username") {
+      errors.username = value ? "" : "Username is required";
+    } else if (id === "password") {
+      errors.password = value.length < 8 ? "Password must be at least 8 characters" : "";
+    }
+
+    return errors;
   };
 
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     e.preventDefault();
-
-    if (!formData.username || !formData.password) {
-      dispatch(signInFailure("Please fill out all fields"));
-      return;
-    }
-
-    if (formData.password.length < 8) {
-      dispatch(signInFailure("Password must be at least 8 characters"));
-      return;
-    }
 
     try {
       dispatch(signInStart());
@@ -75,7 +80,6 @@ const SignIn = () => {
       dispatch(signInFailure(error.message));
     }
   };
-
   return (
     <div
       className="flex justify-center items-center h-screen"
@@ -101,6 +105,9 @@ const SignIn = () => {
           onChange={handleChange}
           icon={<FaUser />}
         />
+        {formDataErrors.username && <span className="text-red-600">{formDataErrors.username}</span>}
+
+          
         <FormInputs
           id="password"
           label="Password"
@@ -109,6 +116,7 @@ const SignIn = () => {
           onChange={handleChange}
           icon={<RiLockPasswordFill />}
         />
+        {formDataErrors.password && <span className="text-red-600">{formDataErrors.password}</span>}
 
         <div className="flex gap-2 text-sm mt-3">
           <span>Don't have an account:</span>
