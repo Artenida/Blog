@@ -8,11 +8,14 @@ import { MdAddBox } from "react-icons/md";
 import { useAppSelector } from "../store/hooks";
 import { selectUser } from "../store/user/userSlice";
 import image from "../assets/userProfile.jpg";
+import { MdDelete } from "react-icons/md";
 
 const Menus = [
   { title: "Create post", icon: <MdAddBox /> },
   { title: "View posts", icon: <PiCardsFill /> },
   { title: "Sign out", icon: <FaSignOutAlt /> },
+  { title: "Delete account", icon: <MdDelete /> },
+
 ];
 
 const Sidebar = () => {
@@ -25,7 +28,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row ">
+    <div className="max-h-screen flex flex-col md:flex-row ">
       <div
         className={`bg-custom-color2 opacity-90 p-5 pt-8 fixed ${
           open ? "md:w-72" : "w-20"
