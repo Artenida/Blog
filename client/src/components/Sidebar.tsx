@@ -25,15 +25,15 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="">
+    <div className="min-h-screen flex flex-col md:flex-row ">
       <div
-        className={`bg-custom-color3 p-5 pt-8 h-screen fixed ${
-          open ? "w-72" : "w-20"
+        className={`bg-custom-color2 opacity-90 p-5 pt-8 fixed ${
+          open ? "md:w-72" : "w-20"
         } duration-300 relative`}
       >
         <BsArrowLeftShort
           className={`bg-white text-custom-color3 text-3xl rounded-full
-                absolute -right-3 top-9 border border-custom-color3 cursor-pointer ${
+                absolute -right-3 top-9 border border-custom-color3 cursor-pointer mr-3 ${
                   !open && "rotate-180"
                 }`}
           onClick={() => setOpen(!open)}
@@ -42,7 +42,7 @@ const Sidebar = () => {
         <div className="inline-flex justify-center items-center gap-2">
           {currentUser?.user?.profile_picture !== null ? (
             <FaRegUserCircle
-              className={`text-white text-4xl rounded cursor-pointer block float-left mr-2 duration-500 ${
+              className={`text-custom-color3 text-4xl rounded cursor-pointer block float-left mr-2 duration-500 ${
                 open && "rotate-[360deg]"
               }`}
             />
@@ -54,11 +54,11 @@ const Sidebar = () => {
             />
           )}{" "}
           <h1
-            className={`text-white origin-left font-medium text-2xl duration-300 ${
+            className={`text-custom-color3 origin-left font-medium text-2xl duration-300 ${
               !open && "scale-0"
             }`}
           >
-            <div className="text-custom-color1 font-semibold text-2xl cursor-pointer">
+            <div className="text-custom-color3 font-semibold text-2xl cursor-pointer">
               {currentUser?.user?.username}
             </div>
           </h1>
@@ -69,8 +69,8 @@ const Sidebar = () => {
             <>
               <li
                 key={index}
-                className="text-white text-lg flex items-center gap-x-4
-                    cursor-pointer p-2 hover:bg-custom-color2 rounded-md mt-2 hover:text-custom-color3"
+                className="text-custom-color3 text-lg flex items-center gap-x-4
+                    cursor-pointer p-2 hover:bg-custom-color1 rounded-md mt-2"
               >
                 <span className="text-2xl block float-left">{menu.icon}</span>
                 <span
