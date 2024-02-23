@@ -7,7 +7,7 @@ import Logo from "./Logo";
 import { SmallButton } from "./ButtonComponent";
 import { IoHome } from "react-icons/io5";
 import { GrBlog } from "react-icons/gr";
-import { FaHistory } from "react-icons/fa";
+import { FaRegQuestionCircle } from "react-icons/fa";
 import { ReactNode } from "react";
 import { useAppSelector } from "../store/hooks";
 import image from "../assets/userProfile.jpg";
@@ -30,7 +30,7 @@ const navBarRoutes: NavBarRoutes[] = [
   {
     path: "/about",
     name: "About",
-    icon: <FaHistory />,
+    icon: <FaRegQuestionCircle />,
   },
   // {
   //   path: "/contact",
@@ -111,8 +111,13 @@ const Navbar = () => {
                       />
                     )}
                   </div>
-                  <div className="text-custom-color3 font-semibold text-2xl cursor-pointer">
-                    {currentUser?.user?.username}
+                  <div>
+                    <div className="text-custom-color3 font-semibold text-xl cursor-pointer">
+                      {currentUser?.user?.username}
+                    </div>
+                    <div className="text-custom-color3 text-sm cursor-pointer">
+                      {currentUser?.user?.bio}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -200,73 +205,71 @@ const Navbar = () => {
                   </ul>
 
                   <div className="pt-2">
-              {currentUser ? (
-                    <div className="relative">
-                      <div className="flex border shadow-md px-1 sm:w-[240px] rounded-full">
-                        <div
-                          className="flex items-center gap-3"
-                          onClick={toggleDropdown}
-                        >
-                          <div>
-                            {currentUser?.user?.profile_picture !== null ? (
-                              <img
-                                className="rounded-full w-14 h-14"
-                                src={currentUser?.user?.profile_picture}
-                                alt="User"
-                              />
-                            ) : (
-                              <img
-                                className="rounded-full w-14 h-14 cursor-pointer"
-                                src={image}
-                                alt="User"
-                              />
-                            )}{" "}
-                          </div>
-                          <div className="text-custom-color3 font-semibold text-2xl cursor-pointer">
-                            {currentUser?.user?.username}
+                    {currentUser ? (
+                      <div className="relative">
+                        <div className="flex border shadow-md px-1 sm:w-[240px] rounded-full">
+                          <div
+                            className="flex items-center gap-3"
+                            onClick={toggleDropdown}
+                          >
+                            <div>
+                              {currentUser?.user?.profile_picture !== null ? (
+                                <img
+                                  className="rounded-full w-14 h-14"
+                                  src={currentUser?.user?.profile_picture}
+                                  alt="User"
+                                />
+                              ) : (
+                                <img
+                                  className="rounded-full w-14 h-14 cursor-pointer"
+                                  src={image}
+                                  alt="User"
+                                />
+                              )}{" "}
+                            </div>
+                            <div className="text-custom-color3 font-semibold items-center text-xl cursor-pointer">
+                              {currentUser?.user?.username}
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      {isOpen && (
-                        <div className="absolute w-full mt-2 py-2 text-custom-color3 text-xl bg-custom-color1 rounded-lg divide-y divide-gray-100 shadow-lg">
-                          <Link
-                            to="/dashboard"
-                            className="block px-4 py-2 text-gray-700 hover:bg-custom-color2 hover:text-gray-900"
-                            role="menuitem"
-                            onClick={() => setIsOpen(false)}
-                          >
-                            <div className="flex items-center gap-1">
-                              <MdDashboard />
-                              Dashboard
-                            </div>
-                          </Link>
-                          <button
-                            className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-custom-color2 hover:text-gray-900"
-                            role="menuitem"
-                            onClick={() => {
-                              setIsOpen(false);
-                              // Perform sign out action
-                            }}
-                          >
-                            <div className="flex items-center gap-1">
-                              <FaSignOutAlt />
-                              Sign Out
-                            </div>
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <Link to="/signIn">
-                      <SmallButton>Login</SmallButton>
-                    </Link>
-                  )}
-              </div>
+                        {isOpen && (
+                          <div className="absolute w-full mt-2 py-2 text-custom-color3 text-xl bg-custom-color1 rounded-lg divide-y divide-gray-100 shadow-lg">
+                            <Link
+                              to="/dashboard"
+                              className="block px-4 py-2 text-gray-700 hover:bg-custom-color2 hover:text-gray-900"
+                              role="menuitem"
+                              onClick={() => setIsOpen(false)}
+                            >
+                              <div className="flex items-center gap-1">
+                                <MdDashboard />
+                                Dashboard
+                              </div>
+                            </Link>
+                            <button
+                              className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-custom-color2 hover:text-gray-900"
+                              role="menuitem"
+                              onClick={() => {
+                                setIsOpen(false);
+                                // Perform sign out action
+                              }}
+                            >
+                              <div className="flex items-center gap-1">
+                                <FaSignOutAlt />
+                                Sign Out
+                              </div>
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <Link to="/signIn">
+                        <SmallButton>Login</SmallButton>
+                      </Link>
+                    )}
+                  </div>
                 </div>
               </div>
-
-              
             </Dialog.Panel>
           </div>
         </Dialog>

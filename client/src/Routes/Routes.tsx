@@ -9,7 +9,7 @@ import SignIn from "../pages/Auth/SignIn";
 import SignUp from "../pages/Auth/Register";
 import MyAccount from "../pages/Blog/MyAccount";
 import BlogDetails from "../pages/Blog/BlogDetails";
-import PrivateRoutes from "../Routes/PrivateRoute";
+import PrivateRoutes from "./PrivateRoute";
 import Blog from "../pages/Blog/Blog";
 import AuthorsPage from "../pages/Blog/AuthorsPage";
 

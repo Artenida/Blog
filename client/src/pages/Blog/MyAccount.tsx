@@ -18,10 +18,10 @@ const MyAccount = () => {
         backgroundSize: "cover",
       }}
     >
-      <div className="bg-white opacity-30 inset-0"></div>
+      <div className="bg-white opacity-30 inset-0 md:h-screen"></div>
       <Sidebar />
 
-      <div className="mx-auto pb-12 pt-12 md:w-[800px]">
+      <div className="mx-auto pb-12 pt-12 md:w-[800px] flex justify-center items-center">
         <div className="flex flex-col gap-3 w-full">
           <div className="flex gap-4 border-2 p-2 shadow-md">
             <div
@@ -32,16 +32,16 @@ const MyAccount = () => {
               <img src={profile} alt="" className="rounded-full w-32 h-32" />
             </div>
             <div className="p-4">
-              <h2 className="text-2xl font-bold mb-2">
+              <h2 className="text-2xl text-custom-color3 font-bold ml-2">
                 {currentUser.user.username}
               </h2>
-              <div className="mb-2">
-                <span className="text-gray-600">Email:</span>
-                <span className="ml-2">{currentUser.user.email}</span>
+              <div className="">
+                {/* <span className="text-gray-600">Email:</span> */}
+                <span className="ml-2 text-custom-color3">{currentUser?.user?.email}</span>
               </div>
-              <div>
-                <span className="text-gray-600">Bio:</span>
-                <p className="mt-1">{currentUser.user.bio}</p>
+              <div className="">
+                {/* <span className="text-gray-600">Bio:</span> */}
+                <span className="ml-2 text-custom-color3">{currentUser?.user?.bio}</span>
               </div>
             </div>
           </div>
@@ -66,7 +66,7 @@ const MyAccount = () => {
             <FaEdit className="absolute right-3 top-2/3 transform -translate-y-1/2 text-custom-color3" />
           </div>
 
-          <div className="relative">
+          {/* <div className="relative">
             <FormInputs
               id="password"
               label="Password"
@@ -74,7 +74,7 @@ const MyAccount = () => {
               defaultValue={undefined}
             />
             <FaEdit className="absolute right-3 top-2/3 transform -translate-y-1/2 text-custom-color3" />
-          </div>
+          </div> */}
 
           <div className="relative">
             <FormInputs

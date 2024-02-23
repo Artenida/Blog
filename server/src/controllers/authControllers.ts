@@ -50,8 +50,12 @@ export const login = (req: Request, res: Response) => {
       if (data.length === 0) {
         return res.status(400).json("Wrong username or password");
       }
-      // const checkPassword = bcrypt.compareSync(req.body.password, data[0].password)
       const user = data[0]; // Assuming the first row is the user
+
+      if (password !== user.password) {
+        return res.status(400).json("Wrong username or password");
+      }
+      // const checkPassword = bcrypt.compareSync(req.body.password, data[0].password)
       // if (!process.env.JWT_SECRET) {
       //   return res.status(500).json("JWT secret key is not provided");
       // }

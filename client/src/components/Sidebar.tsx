@@ -9,10 +9,12 @@ import { useAppSelector } from "../store/hooks";
 import { selectUser } from "../store/user/userSlice";
 import image from "../assets/userProfile.jpg";
 import { MdDelete } from "react-icons/md";
+import { FaEdit } from "react-icons/fa";
 
 const Menus = [
   { title: "Create post", icon: <MdAddBox /> },
   { title: "View posts", icon: <PiCardsFill /> },
+  { title: "Change password", icon: <FaEdit /> },
   { title: "Sign out", icon: <FaSignOutAlt /> },
   { title: "Delete account", icon: <MdDelete /> },
 

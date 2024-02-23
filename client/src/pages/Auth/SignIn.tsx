@@ -2,18 +2,16 @@ import { FaUser } from "react-icons/fa";
 import { FaUserAstronaut } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Alert } from "@material-tailwind/react";
 import { ImSpinner11 } from "react-icons/im";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
-import {
-  signInStart,
-  signInSuccess,
-  signInFailure,
-  selectUser,
-} from "../../store/user/userSlice";
+import { login } from "../../api/user";
 import background from "../../assets/about1.avif";
 import FormInputs from "../../components/FormInputs";
+// import { selectUserLoading, selectUserError } from "../../store/user/userSlice";
+import { selectUser } from "../../store/user/userSlice";
+
 
 interface FormData {
   username: string;
@@ -30,10 +28,17 @@ const SignIn = () => {
     password: "",
   });
 
-  const { error: errorMessage } = useAppSelector(selectUser);
-  const { loading } = useAppSelector(selectUser);
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const validations = (id: string, value: string): FormData => {
+    let errors: FormData = { ...formDataErrors };
+
+    if (id === "username") {
+      errors.username = value ? "" : "Username is required";
+    } else if (id === "password") {
+      errors.password =
+        value.length < 8 ? "Password must be at least 8 characters" : "";
+    }
+    return errors;
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
@@ -41,45 +46,28 @@ const SignIn = () => {
     setFormDataErrors(validations(id, value));
   };
 
-  const validations = (id: string, value: string): FormData => {
-    let errors: FormData = { ...formDataErrors };
-
-    if (id === "username") {
-      errors.username = value ? "" : "Username is required";
-    } else if (id === "password") {
-      errors.password = value.length < 8 ? "Password must be at least 8 characters" : "";
-    }
-
-    return errors;
-  };
-
+  const { currentUser, loading, error: errorMessage } = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  
   const handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
+    event: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
-    e.preventDefault();
-
+    event.preventDefault();
     try {
-      dispatch(signInStart());
-      const res = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        dispatch(signInFailure(data));
-        return;
-      }
-
-      if (res.ok) {
-        dispatch(signInSuccess(data));
-        navigate("/");
-      }
-    } catch (error: any) {
-      dispatch(signInFailure(error.message));
+      const { username, password } = formData;
+      await dispatch(login({ username, password }));
+    } catch (error) {
+      console.log((error as Error).message);
     }
   };
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate('/');
+    }
+  }, [currentUser]);
+
   return (
     <div
       className="flex justify-center items-center h-screen"
@@ -87,7 +75,7 @@ const SignIn = () => {
     >
       <form
         action=""
-        className="bg-custom-color1 bg-opacity-30 shadow-md backdrop-blur-md px-8 pt-6 pb-8 mb-4 rounded-xl"
+        className="bg-custom-color1 bg-opacity-30 shadow-md backdrop-blur-md px-8 pt-6 pb-8 mb-4 rounded-xl md:w-[400px]"
         onSubmit={handleSubmit}
       >
         <div className="flex justify-center text-custom-color3 text-2xl">
@@ -105,9 +93,10 @@ const SignIn = () => {
           onChange={handleChange}
           icon={<FaUser />}
         />
-        {formDataErrors.username && <span className="text-red-600">{formDataErrors.username}</span>}
+        {formDataErrors.username && (
+          <span className="text-red-600 pl-1">{formDataErrors.username}</span>
+        )}
 
-          
         <FormInputs
           id="password"
           label="Password"
@@ -116,7 +105,9 @@ const SignIn = () => {
           onChange={handleChange}
           icon={<RiLockPasswordFill />}
         />
-        {formDataErrors.password && <span className="text-red-600">{formDataErrors.password}</span>}
+        {formDataErrors.password && (
+          <span className="text-red-600 pl-1">{formDataErrors.password}</span>
+        )}
 
         <div className="flex gap-2 text-sm mt-3">
           <span>Don't have an account:</span>

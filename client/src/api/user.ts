@@ -1,18 +1,48 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createAPI } from "../utils/api/createApi";
+import { json } from "stream/consumers";
 
 type UserBodyType = {
     username: string;
     password: string;
 }
 
+type UserBodyTypeRegister = {
+  username: string;
+  password: string;
+  email: string;
+  confirmPassword: string;
+}
+
 export const login = createAsyncThunk(
-  'login',
-  async (body: UserBodyType) => {
+  'api/auth/login',
+  async (body: UserBodyType, { rejectWithValue }) => {
     try {
-      const response = await createAPI('login', { method: 'POST' })(body);
+      const response = await createAPI('api/auth/login', { method: 'POST' })(body);
+      // if (!response.ok) {
+      //   throw new Error('Wrong username or password');
+      // }
       return response.json();
-    } catch (error) {
+    } catch (error: any) { // Explicitly specify the type of 'error' as 'any'
+      return rejectWithValue(error.message);
     }
-  },
+  }
 );
+
+export const registerUser = createAsyncThunk(
+  'api/auth/register',
+  async (body: UserBodyTypeRegister, { rejectWithValue }) => {
+    try {
+      // Assuming createAPI returns a promise that resolves with a response object
+      const response = await createAPI('api/auth/register', { method: 'POST' })(body);
+      
+      // Assuming the server returns a JSON response with user data upon successful registration
+      const data = await response.json();
+
+      return data;
+    } catch (error:any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+

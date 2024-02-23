@@ -26,8 +26,8 @@ const FormInputs: React.FC<FormInputProps> = ({ id, label, placeholder, type, ic
         id={id}
         className="mt-2 border border-custom-color2 px-3 py-2 rounded-md focus:outline-none focus:border-custom-color3 w-full"
         onChange={onChange}
-        value={defaultValue || ''}
-      />
+        value={defaultValue}
+        />
     </div>
   );
 };
