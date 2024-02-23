@@ -2,6 +2,8 @@ import express from "express";
 import cors from 'cors';
 import userRoutes from "./routes/userRoutes";
 import authRoutes from "./routes/authRoutes";
+import { Request, Response, NextFunction } from 'express';
+
 const app = express();
 const port = 5000;
 
@@ -17,13 +19,13 @@ app.listen(port, () => {
     console.log("Server running on port: " + port);
 })
 
-// app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-//     const statusCode: number = err.statusCode || 500;
-//     const message: string = err.message || 'Internal Server Error';
-//     res.status(statusCode).json({
-//         success: false,
-//         statusCode,
-//         message
-//     });
-// });
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+    const statusCode: number = error.statusCode || 500;
+    const message: string = error.message || 'Internal Server Error';
+    res.status(statusCode).json({
+        success: false,
+        statusCode,
+        message
+    });
+});
 
