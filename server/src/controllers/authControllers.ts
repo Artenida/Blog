@@ -2,65 +2,68 @@ import { Request, Response, NextFunction } from "express";
 import { db } from "../config";
 import jwt from "jsonwebtoken";
 import { CustomError } from "../utils/error";
-// import errorHandler from "../middleware/userMiddlewares";
 // import bcrypt from 'bcryptjs';
 
-export const register = async (req: Request, res: Response, next: NextFunction) => {
+export const register = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { username, email, password, confirmPassword } = req.body;
-  // console.log(req.body);
   if (!username || !email || !password || !confirmPassword) {
-    return res.status(400).json("All fields are required");
+    const customError = new CustomError(400, "All fields are required");
+    return next(customError);
   }
   try {
-    // Check if user exists
     const checkQuery = "SELECT * FROM users WHERE username = ?";
-    db.query(checkQuery, [req.body.username], (err, data) => {
-      if (err) {
-        return res.status(500).json(err);
+    db.query(checkQuery, [req.body.username], (error, data) => {
+      if (error) {
+        return next(error);
       }
       if (data.length > 0) {
-        const customError = new CustomError(409, 'User already exists');
+        const customError = new CustomError(409, "User already exists");
         return next(customError);
       } else {
-        // Create a new user
-          // const hashedPassword = bcrypt.hashSync(password,10);
+        // const hashedPassword = bcrypt.hashSync(password,10);
         const insertQuery =
           "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
         const values = [req.body.username, req.body.email, req.body.password];
         db.query(insertQuery, values, (error) => {
           if (error) {
-            return next(error)
+            return next(error);
           }
           return res.status(201).json("User has been created");
         });
       }
     });
   } catch (error) {
-    return next(error);  
+    return next(error);
   }
 };
 
-export const login = (req: Request, res: Response) => {
+export const login = (req: Request, res: Response, next: NextFunction) => {
   const { username, password } = req.body;
-
   if (!username || !password) {
-    return res.status(400).json("All fields are required");
+    const customError = new CustomError(400, "All fields are required");
+    return next(customError);
   }
 
   try {
     const query = "SELECT * FROM users WHERE username = ?";
 
-    db.query(query, [req.body.username], (err, data) => {
+    db.query(query, [req.body.username], (error, data) => {
       console.log(data);
-      if (err) return res.status(500).json(err);
+      if (error) return next(error);
 
       if (data.length === 0) {
-        return res.status(400).json("Wrong username or password");
+        const customError = new CustomError(400, "Wrong username or password");
+        return next(customError);
       }
       const user = data[0]; // Assuming the first row is the user
 
       if (password !== user.password) {
-        return res.status(400).json("Wrong username or password");
+        const customError = new CustomError(400, "Wrong password");
+        return next(customError);
       }
       // const checkPassword = bcrypt.compareSync(req.body.password, data[0].password)
       // if (!process.env.JWT_SECRET) {
@@ -85,7 +88,7 @@ export const login = (req: Request, res: Response) => {
       });
     });
   } catch (error) {
-    return res.status(500).json(error);
+    return next(error);
   }
 };
 
