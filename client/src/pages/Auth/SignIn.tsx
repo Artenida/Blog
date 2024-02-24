@@ -47,26 +47,20 @@ const SignIn = () => {
   };
 
   const { currentUser, loading, error: errorMessage } = useAppSelector(selectUser);
-  const dispatch = useAppDispatch();
+  console.log(currentUser?.user);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     event.preventDefault();
     try {
-      const { username, password } = formData;
-      await dispatch(login({ username, password }));
+      await dispatch(login(formData));
+      navigate('/')
     } catch (error) {
-      console.log((error as Error).message);
     }
   };
-
-  useEffect(() => {
-    if (currentUser) {
-      navigate('/');
-    }
-  }, [currentUser]);
 
   return (
     <div

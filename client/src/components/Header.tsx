@@ -5,23 +5,30 @@ import { Dialog } from "@headlessui/react";
 import Logo from "./Logo";
 import NavLinks from "./Navlink";
 import Account from "./Account";
+import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom"
+import { SmallButton } from "./ButtonComponent";
 
 const Navbar = () => {
   const [mobile, setMobile] = useState(false);
-  const [path, setPath] = useState(location.pathname);
+  const location = useLocation();
+
+  const toggleMobileMenu = () => {
+    setMobile(!mobile);
+  };
+
   useEffect(() => {
-    setPath(location.pathname);
     setMobile(false);
   }, [location]);
 
   return (
-    <React.Fragment>
+    <>
       <header className="mx-auto bg-custom-color1 max-w-7xl sticky top-0 z-50">
-        <nav className="flex justify-between items-center p-3 ">
+        <nav className="flex justify-between items-center p-3">
           <Logo />
           <div className="hidden md:flex ">
-            <ul className="flex space-x-8 gap-8 pr-14">
-              <NavLinks />
+            <ul className="flex space-x-8 gap-8">
+              <NavLinks closeMobileMenu={toggleMobileMenu} />
             </ul>
           </div>
 
@@ -42,31 +49,29 @@ const Navbar = () => {
           open={mobile}
           onClose={setMobile}
         >
-          <div>
-            <Dialog.Panel className="fixed inset-y-0 right-0 z-50 overflow-y-auto bg-white px-3 py-3 sm:max-w-sm sm:ring-1 sm:ring-text/10 w-full max-w-screen">
-              <div className="flex items-center justify-between">
-                <Logo />
-                <button
-                  className=" mr-4 inline-flex items-center justify-center rounded-md hover:bg-custom-color transition duration-100"
-                  onClick={() => setMobile(false)}
-                >
-                  <IoClose className="text-2xl" />
-                </button>
-              </div>
+          <div className="fixed inset-y-0 right-0 z-50 overflow-y-auto bg-white px-3 py-3 sm:max-w-sm sm:ring-1 sm:ring-text/10 w-full max-w-screen">
+            <div className="flex items-center justify-between">
+              <Logo />
+              <button
+                className=" mr-4 inline-flex items-center justify-center rounded-md hover:bg-custom-color transition duration-100"
+                onClick={() => setMobile(false)}
+              >
+                <IoClose className="text-2xl" />
+              </button>
+            </div>
 
-                <div className="-my-2 divide-y divide-gray-500/50">
-                  <ul className="py-8 ml-4">
-                    <NavLinks />
-                  </ul>
-                  <div className="pt-2">
-                    <Account />
-                  </div>
+            <div className="-my-2 divide-y divide-gray-500/50">
+              <ul className="py-8 ml-4">
+                <NavLinks closeMobileMenu={toggleMobileMenu} />
+              </ul>
+              <div className="pt-2">
+                <Account />
               </div>
-            </Dialog.Panel>
+            </div>
           </div>
         </Dialog>
       </header>
-    </React.Fragment>
+    </>
   );
 };
 

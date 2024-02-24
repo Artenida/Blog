@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BlogCard from "./BlogCard";
-import { new_blogs } from "../../config/data";
+import { new_blogs } from "../../constants/data";
 import Sidebar from "../Sidebar";
 import Pagination from "../../components/pagination/PaginationButtons";
 

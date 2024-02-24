@@ -73,11 +73,11 @@ const Account = () => {
           )}
         </div>
       ) : (
-        <>
+        <div className="">
           <Link to="/signIn">
             <SmallButton>Login</SmallButton>
           </Link>
-        </>
+        </ div>
       )}
     </>
   );

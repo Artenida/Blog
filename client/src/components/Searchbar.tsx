@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { words } from '../assets/data';
+import { words } from '../constants/constants';
 
 const Searchbar = () => {
   const [isFocused, setIsFocused] = useState(false);

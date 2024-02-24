@@ -6,11 +6,7 @@ const About = () => {
   return (
     <div
       className="min-h-screen pb-14 pt-14 relative bg-custom-color2"
-      // style={{ backgroundImage: `url(${background})`, backgroundSize: "cover" }}
     >
-      {/* Overlay */}
-      {/* <div className="absolute inset-0 bg-black opacity-50"></div> */}
-
       <h1 className="text-4xl text-center font-semibold z-10 relative text-black">
         In the Photosphere
       </h1>

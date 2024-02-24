@@ -1,27 +1,6 @@
 import { useState } from "react";
-import profile from "../../assets/posts/profile2.png";
 import { Link } from "react-router-dom";
-
-const AuthorsData = [
-  {
-    id: 1,
-    profile: profile,
-    name: "Ernest",
-    posts: 3,
-  },
-  {
-    id: 2,
-    profile: profile,
-    name: "Jane",
-    posts: 3,
-  },
-  {
-    id: 3,
-    profile: profile,
-    name: "Nana",
-    posts: 3,
-  },
-];
+import { AuthorsData } from "../../constants/constants";
 
 const AuthorsPage = () => {
   const [authors, setAuthors] = useState(AuthorsData);

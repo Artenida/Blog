@@ -12,7 +12,7 @@ import BlogDetails from "../pages/Blog/BlogDetails";
 import PrivateRoutes from "./PrivateRoute";
 import Blog from "../pages/Blog/Blog";
 import AuthorsPage from "../pages/Blog/AuthorsPage";
-import {new_blogs} from "../config/data"
+import {new_blogs} from "../constants/data"
 
 const routes = [
   { path: "/", element: <Home /> },

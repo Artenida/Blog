@@ -1,24 +1,10 @@
 import { useState } from "react";
 import { BsArrowLeftShort } from "react-icons/bs";
 import { FaRegUserCircle } from "react-icons/fa";
-// import { MdDashboard } from "react-icons/md";
-import { FaSignOutAlt } from "react-icons/fa";
-import { PiCardsFill } from "react-icons/pi";
-import { MdAddBox } from "react-icons/md";
 import { useAppSelector } from "../store/hooks";
 import { selectUser } from "../store/user/userSlice";
 import image from "../assets/userProfile.jpg";
-import { MdDelete } from "react-icons/md";
-import { FaEdit } from "react-icons/fa";
-
-const Menus = [
-  { title: "Create post", icon: <MdAddBox /> },
-  { title: "View posts", icon: <PiCardsFill /> },
-  { title: "Change password", icon: <FaEdit /> },
-  { title: "Sign out", icon: <FaSignOutAlt /> },
-  { title: "Delete account", icon: <MdDelete /> },
-
-];
+import { Menus } from "../constants/constants"
 
 const Sidebar = () => {
   const [open, setOpen] = useState(true);
@@ -75,7 +61,7 @@ const Sidebar = () => {
               <li
                 key={index}
                 className="text-custom-color3 text-lg flex items-center gap-x-4
-                    cursor-pointer p-2 hover:bg-custom-color1 rounded-md mt-2"
+                    cursor-pointer p-4 hover:bg-custom-color1 rounded-md mt-2"
               >
                 <span className="text-2xl block float-left">{menu.icon}</span>
                 <span
