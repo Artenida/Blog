@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Home from "../pages/Home/Home";
 import About from "../pages/Home/About";
@@ -12,9 +12,7 @@ import BlogDetails from "../pages/Blog/BlogDetails";
 import PrivateRoutes from "./PrivateRoute";
 import Blog from "../pages/Blog/Blog";
 import AuthorsPage from "../pages/Blog/AuthorsPage";
-
 import {new_blogs} from "../config/data"
-
 
 const routes = [
   { path: "/", element: <Home /> },
@@ -32,7 +30,7 @@ const AppRoutes = () => {
   return (
     <div className="App">
       <Router>
-        <Navbar />
+        <Header />
         <Routes>
           {routes.map((route, index) => (
             <Route key={index} path={route.path} element={route.element} />
