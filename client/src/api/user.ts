@@ -19,12 +19,8 @@ export const login = createAsyncThunk(
   async (body: UserBodyType, { rejectWithValue }) => {
     try {
       const response = await createAPI('api/auth/login', { method: 'POST' })(body);
-      // if (!response.ok) {
-      //   throw new Error('Wrong username or password');
-      // }
       return response.json();
-    } catch (error: any) { // Explicitly specify the type of 'error' as 'any'
-      return rejectWithValue(error.message);
+    } catch (error: any) {
     }
   }
 );
