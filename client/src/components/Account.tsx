@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../store/hooks";
 import { selectUser } from "../store/user/userSlice";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SmallButton } from "./ButtonComponent";
 import image from "../assets/userProfile.jpg";
 import { MdDashboard } from "react-icons/md";
@@ -10,15 +10,38 @@ import { FaSignOutAlt } from "react-icons/fa";
 const Account = () => {
   const { currentUser } = useAppSelector(selectUser);
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, []);
   return (
     <>
       {currentUser ? (
         <div className="relative">
-          <div className="shadow-md px-1 sm:w-[240px] rounded-full">
-            <div className="flex items-center gap-3" onClick={toggleDropdown}>
+          <div className="shadow-md px-1 sm:w-full md:w-[240px] rounded-full">
+            <div
+              className="flex items-center gap-3"
+              onClick={toggleDropdown}
+              ref={dropdownRef}
+            >
               <div>
                 {currentUser?.user?.profile_picture !== null ? (
                   <img
@@ -73,11 +96,11 @@ const Account = () => {
           )}
         </div>
       ) : (
-        <div className="">
+        <div className="pr-14">
           <Link to="/signIn">
             <SmallButton>Login</SmallButton>
           </Link>
-        </ div>
+        </div>
       )}
     </>
   );
