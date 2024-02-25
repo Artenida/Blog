@@ -1,14 +1,17 @@
 import { Request, Response, NextFunction } from "express";
-import { db } from "../config";
+import DatabaseConnection from "../config";
 import jwt from "jsonwebtoken";
 import { CustomError } from "../utils/error";
 // import bcrypt from 'bcryptjs';
 
-export const register = async (
+export const register = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+  const connection = new DatabaseConnection();
+  const db = connection.getConnection();
+
   const { username, email, password, confirmPassword } = req.body;
   if (!username || !email || !password || !confirmPassword) {
     const customError = new CustomError(400, "All fields are required");
@@ -42,6 +45,9 @@ export const register = async (
 };
 
 export const login = (req: Request, res: Response, next: NextFunction) => {
+  const connection = new DatabaseConnection();
+  const db = connection.getConnection();
+  
   const { username, password } = req.body;
   if (!username || !password) {
     const customError = new CustomError(400, "All fields are required");
