@@ -14,30 +14,53 @@ type UserBodyTypeRegister = {
   confirmPassword: string;
 }
 
-export const login = createAsyncThunk(
+interface UserState {
+  currentUser: any;
+  loading: boolean;
+  error: string | null;
+  token: any;
+  isLoggedIn: boolean;
+}
+
+const initialState: UserState = {
+  currentUser: null,
+  error: null,
+  loading: false,
+  token: null,
+  isLoggedIn: false,
+};
+
+export const loginUser = createAsyncThunk(
   'api/auth/login',
   async (body: UserBodyType, { rejectWithValue }) => {
     try {
       const response = await createAPI('api/auth/login', { method: 'POST' })(body);
-      return response.json();
+      const data = await response.json();
+      return !response.ok ? rejectWithValue(data.message) : data.user[0];
     } catch (error: any) {
+      return rejectWithValue(error); // Pass error response data to reducer
     }
   }
 );
 
 export const registerUser = createAsyncThunk(
   'api/auth/register',
-  async (body: UserBodyTypeRegister, { rejectWithValue }) => {
+  async (body: UserBodyTypeRegister, { dispatch, rejectWithValue }) => {
     try {
       // Assuming createAPI returns a promise that resolves with a response object
       const response = await createAPI('api/auth/register', { method: 'POST' })(body);
-      
-      // Assuming the server returns a JSON response with user data upon successful registration
-      const data = await response.json();
+      if( response.ok ) {
+        const loginFields = {
+          username: body.username,
+          password: body.password,
+        }
 
-      return data;
-    } catch (error:any) {
-      return rejectWithValue(error.message);
+        dispatch(loginUser(loginFields))
+      } else {
+        const error = await response.json();
+        return rejectWithValue(error.message);
+      }
+    } catch (error) {
     }
   }
 );

@@ -35,11 +35,7 @@ const Register = () => {
     confirmPassword: "",
   });
 
-  const {
-    currentUser,
-    loading,
-    error: errorMessage,
-  } = useAppSelector(selectUser);
+  const { currentUser, isLoggedIn, loading, registerError } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -59,10 +55,10 @@ const Register = () => {
 
     // Perform validations for each field
     if (id === "username") {
-        errors.username = value.trim() ? "" : "Username is required";
+      errors.username = value.trim() ? "" : "Username is required";
     } else if (id === "email") {
-        errors.email = value.trim() ? " " : "Email is required";
-       if (!/\S+@\S+\.\S+/.test(value)) {
+      errors.email = value.trim() ? " " : "Email is required";
+      if (!/\S+@\S+\.\S+/.test(value)) {
         errors.email = "Email is not valid";
       }
     }
@@ -92,9 +88,14 @@ const Register = () => {
     setFormDataErrors(validations(id, value));
   };
 
+  useEffect(() => {
+    if (isLoggedIn) {
+        navigate('/signIn');
+    }
+}, [isLoggedIn]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
       const { username, email, password, confirmPassword } = formData;
       await dispatch(
@@ -195,9 +196,9 @@ const Register = () => {
             )}
           </button>
         </div>
-        {errorMessage && (
+        {registerError && (
           <Alert className="mt-3 bg-red-200 py-2 px-6 text-red-500">
-            {JSON.stringify(errorMessage)}
+            {JSON.stringify(registerError)}
           </Alert>
         )}
       </form>

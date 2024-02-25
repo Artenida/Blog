@@ -1,58 +1,63 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../../store/store";
-import { login } from "../../api/user";
+import { loginUser } from "../../api/user";
 import { registerUser } from "../../api/user";
 interface UserState {
   currentUser: any; // Define the type for currentUser
   loading: boolean;
-  error: string | null;
+  loginError: string | null;
+  registerError: string | null;
   token: any;
+  isLoggedIn: boolean; // Define the 'isLoggedIn' property
 }
 
 const initialState: UserState = {
   currentUser: null,
-  error: null,
+  loginError: null,
+  registerError: null,
   loading: false,
   token: null,
+  isLoggedIn: false
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+    logoutUser: (state) => {
+      state.isLoggedIn = false;
+      state.currentUser = null;
+      state.loginError = null;
+      state.loading = false;
+    }
   },
 
   extraReducers: (builder) => {
     builder
-      .addCase(login.pending, (state) => {
+      .addCase(loginUser.pending, (state) => {
+        state.isLoggedIn = false;
         state.loading = true;
-        state.error = null;
+        state.loginError = null;
       })
-      .addCase(login.fulfilled, (state, action) => {
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.isLoggedIn = true;
+        state.loading = false;
+        state.loginError = null;
         state.currentUser = action.payload;
-        state.loading = false;
-        state.error = null;
+        state.token = action.payload.token;
       })
-      .addCase(login.rejected, (state, action) => {
+      .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
-      })
-
-     .addCase(registerUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(registerUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = null;
+        state.loginError = action.payload as string;
+        state.isLoggedIn = false;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
-      });
+        state.registerError = action.payload as string;
+      })
   },
 });
 
+export const { logoutUser } = userSlice.actions;
 export const selectUser = (state: RootState) => state.user;
 export default userSlice.reducer;

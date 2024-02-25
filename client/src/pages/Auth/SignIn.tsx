@@ -5,13 +5,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { FormEvent, useEffect, useState } from "react";
 import { Alert } from "@material-tailwind/react";
 import { ImSpinner11 } from "react-icons/im";
+import { useDispatch, useSelector } from "react-redux";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
-import { login } from "../../api/user";
+import { loginUser } from "../../api/user";
 import background from "../../assets/about1.avif";
 import FormInputs from "../../components/FormInputs";
+import { AppDispatch, RootState } from "../../store/store";
 // import { selectUserLoading, selectUserError } from "../../store/user/userSlice";
 import { selectUser } from "../../store/user/userSlice";
-
 
 interface FormData {
   username: string;
@@ -46,19 +47,28 @@ const SignIn = () => {
     setFormDataErrors(validations(id, value));
   };
 
-  const { currentUser, loading, error: errorMessage } = useAppSelector(selectUser);
-  console.log(currentUser?.user);
+  const { isLoggedIn, loading, loginError } = useAppSelector(selectUser);
+  // const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn)
+  // const error = useSelector((state: RootState) => state.user.loginError)
+  // const loading = useSelector((state: RootState) => state.user.loading)
+
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/");
+    }
+  }, [isLoggedIn]);
+
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     event.preventDefault();
     try {
-      await dispatch(login(formData));
-      navigate('/')
+      await dispatch(loginUser(formData));
     } catch (error) {
+      // console.log(error);
     }
   };
 
@@ -124,9 +134,9 @@ const SignIn = () => {
           </button>
         </div>
 
-        {errorMessage && (
+        {loginError && (
           <Alert className="mt-3 bg-red-200 py-2 px-6 text-red-500">
-            {JSON.stringify(errorMessage)}
+            {JSON.stringify(loginError)}
           </Alert>
         )}
       </form>
