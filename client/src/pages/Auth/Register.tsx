@@ -12,13 +12,13 @@ import FormInputs from "../../components/FormInputs";
 import { selectUser } from "../../store/user/userSlice";
 import { registerUser } from "../../api/user";
 import { useEffect } from "react";
+
 interface FormData {
   username: string;
   email: string;
   password: string;
   confirmPassword: string; // Add confirmPassword property
 }
-
 
 const Register = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -88,19 +88,21 @@ const Register = () => {
     setFormDataErrors(validations(id, value));
   };
 
-  useEffect(() => {
-    if (isLoggedIn) {
-        navigate('/signIn');
-    }
-}, [isLoggedIn]);
-
-const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
+const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  event.preventDefault();
   try {
     const { username, email, password, confirmPassword } = formData;
-    await dispatch(
+    const resultAction = await dispatch(
       registerUser({ username, email, password, confirmPassword })
     );
+   // Check if the action has been fulfilled successfully
+   if (registerUser.fulfilled.match(resultAction)) {
+    // If the action is fulfilled, navigate to signIn
+    navigate("/signIn");
+  } else if (registerUser.rejected.match(resultAction)) {
+    // If the action is rejected, the error message will be available in `resultAction.error`
+    console.error(resultAction.error.message);
+  }
   } catch (error: any) {
     console.log(error.message);
   }
