@@ -18,7 +18,7 @@ const Sidebar = () => {
   return (
     <div className="max-h-screen flex flex-col md:flex-row ">
       <div
-        className={`bg-custom-color2 opacity-90 p-5 pt-8 fixed ${
+        className={`pacity-90 p-5 pt-8 fixed ${
           open ? "md:w-72" : "w-20"
         } duration-300 relative`}
       >
@@ -43,7 +43,7 @@ const Sidebar = () => {
               src={image}
               alt="User"
             />
-          )}{" "}
+          )}
           <h1
             className={`text-custom-color3 origin-left font-medium text-2xl duration-300 ${
               !open && "scale-0"
@@ -61,7 +61,7 @@ const Sidebar = () => {
               <li
                 key={index}
                 className="text-custom-color3 text-lg flex items-center gap-x-4
-                    cursor-pointer p-4 hover:bg-custom-color1 rounded-md mt-2"
+                    cursor-pointer p-4 hover:bg-custom-color2 rounded-md mt-2"
               >
                 <span className="text-2xl block float-left">{menu.icon}</span>
                 <span
