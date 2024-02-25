@@ -48,10 +48,6 @@ const SignIn = () => {
   };
 
   const { isLoggedIn, loading, loginError } = useAppSelector(selectUser);
-  // const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn)
-  // const error = useSelector((state: RootState) => state.user.loginError)
-  // const loading = useSelector((state: RootState) => state.user.loading)
-
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -68,7 +64,6 @@ const SignIn = () => {
     try {
       await dispatch(loginUser(formData));
     } catch (error) {
-      // console.log(error);
     }
   };
 

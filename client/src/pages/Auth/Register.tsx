@@ -12,13 +12,13 @@ import FormInputs from "../../components/FormInputs";
 import { selectUser } from "../../store/user/userSlice";
 import { registerUser } from "../../api/user";
 import { useEffect } from "react";
-
 interface FormData {
   username: string;
-  password: string;
   email: string;
-  confirmPassword: string;
+  password: string;
+  confirmPassword: string; // Add confirmPassword property
 }
+
 
 const Register = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -94,23 +94,23 @@ const Register = () => {
     }
 }, [isLoggedIn]);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const { username, email, password, confirmPassword } = formData;
-      await dispatch(
-        registerUser({ username, email, password, confirmPassword })
-      );
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  };
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  try {
+    const { username, email, password, confirmPassword } = formData;
+    await dispatch(
+      registerUser({ username, email, password, confirmPassword })
+    );
+  } catch (error: any) {
+    console.log(error.message);
+  }
+};
 
-  useEffect(() => {
-    if (currentUser) {
-      navigate("/signIn");
-    }
-  }, [currentUser]);
+useEffect(() => {
+  if (currentUser) {
+    navigate("/signIn");
+  }
+}, [currentUser]);
 
   return (
     <div
@@ -170,7 +170,7 @@ const Register = () => {
           onChange={handleChange}
           icon={<RiLockPasswordFill />}
         />
-        {formDataErrors.username && (
+        {formDataErrors.confirmPassword && (
           <span className="text-red-600 pl-1">
             {formDataErrors.confirmPassword}
           </span>
