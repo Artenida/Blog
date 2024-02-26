@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { useAppSelector } from "../store/hooks";
-import { selectUser } from "../store/user/userSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { logoutUser, selectUser } from "../store/user/userSlice";
 import { useState, useEffect, useRef } from "react";
 import { SmallButton } from "./ButtonComponent";
 import image from "../assets/userProfile.jpg";
@@ -11,6 +11,7 @@ const Account = () => {
   const { currentUser } = useAppSelector(selectUser);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const dispatch = useAppDispatch(); // Dispatch function to dispatch actions
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -32,6 +33,24 @@ const Account = () => {
       document.removeEventListener("click", handleOutsideClick);
     };
   }, []);
+
+  const handleSignOut = async () => {
+    try {
+      const response = await fetch('/api/user/signout', {
+        method: 'POST',
+      });
+      const data = await response.json();
+      if(!response.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(logoutUser());
+        setIsOpen(false);
+      }
+    } catch (error: any) {
+      console.log(error.message)
+    }
+  }
+
   return (
     <>
       {currentUser ? (
@@ -83,11 +102,10 @@ const Account = () => {
               <button
                 className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-custom-color2 hover:text-gray-900"
                 role="menuitem"
-                onClick={() => {
-                  setIsOpen(false);
-                }}
               >
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1"  onClick={() => {
+                  handleSignOut
+                }}>
                   <FaSignOutAlt />
                   Sign Out
                 </div>

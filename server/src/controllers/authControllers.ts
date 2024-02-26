@@ -58,7 +58,7 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
     const query = "SELECT * FROM users WHERE username = ?";
 
     db.query(query, [req.body.username, req.body.password], (error, data) => {
-      console.log(data);
+      // console.log(data);
       if (error) return next(error);
 
       if (data.length === 0) {
@@ -79,15 +79,15 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
         {
           userId: user.id,
         },
-        "",
+        null,
         { algorithm: "none" }
       );
-
-      const { password: pass, ...rest } = user;
 
       res.cookie("access_token", token, {
         httpOnly: true,
       });
+      const { password: pass, ...rest } = user;
+
       res.status(200).json({
         message: "Sign in successfully",
         user: rest,
@@ -98,6 +98,10 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export const logout = (req: Request, res: Response): void => {
-  // Your code for logout endpoint
+export const signout = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.clearCookie("access_token").status(200).json("User has been sign out");
+  } catch (error) {
+    next(error);
+  }
 };
