@@ -5,15 +5,28 @@ import { useAppSelector } from "../store/hooks";
 import { selectUser } from "../store/user/userSlice";
 import image from "../assets/userProfile.jpg";
 import { Menus } from "../constants/constants"
+import { NavLink, useNavigate } from "react-router-dom";
+import { signOutSuccess } from "../store/user/userSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store/store";
+import { loginUser } from "../api/user";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(true);
   const { currentUser } = useAppSelector(selectUser);
-  const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+  const handleDeleteAccount = () => {
+
+  }
+
+  const handleSignOut = async () => {
+    try {
+      await dispatch(signOutSuccess());
+      navigate('/signIn');
+    } catch (error) {}
+  }
 
   return (
     <div className="max-h-screen flex flex-col md:flex-row ">
@@ -56,25 +69,42 @@ const Sidebar = () => {
         </div>
 
         <ul className="pt-2">
-          {Menus.map((menu, index) => (
-            <>
-              <li
-                key={index}
-                className="text-custom-color3 text-lg flex items-center gap-x-4
-                    cursor-pointer p-4 hover:bg-custom-color2 rounded-md mt-2"
+      {Menus.map((menu, index: number) => (
+        <div key={index}>
+          {menu.title === "Sign out" || menu.title === "Delete account" ? (
+            <div
+              onClick={menu.title === "Sign out" ? handleSignOut : handleDeleteAccount}
+              className="text-custom-color3 text-lg flex items-center gap-x-4
+              cursor-pointer p-4 hover:bg-custom-color2 rounded-md mt-2"
+            >
+              <span className="text-2xl block float-left">{menu.icon}</span>
+              <span
+                className={`text-base font-medium flex-1 duration-200 ${
+                  !open && "hidden"
+                }`}
               >
-                <span className="text-2xl block float-left">{menu.icon}</span>
-                <span
-                  className={`text-base font-medium flex-1 duration-200 ${
-                    !open && "hidden"
-                  }`}
-                >
-                  {menu.title}
-                </span>
-              </li>
-            </>
-          ))}
-        </ul>
+                {menu.title}
+              </span>
+            </div>
+          ) : (
+            <NavLink
+              to={menu.path}
+              className="text-custom-color3 text-lg flex items-center gap-x-4
+              cursor-pointer p-4 hover:bg-custom-color2 rounded-md mt-2"
+            >
+              <span className="text-2xl block float-left">{menu.icon}</span>
+              <span
+                className={`text-base font-medium flex-1 duration-200 ${
+                  !open && "hidden"
+                }`}
+              >
+                {menu.title}
+              </span>
+            </NavLink>
+          )}
+        </div>
+      ))}
+    </ul>
       </div>
     </div>
   );

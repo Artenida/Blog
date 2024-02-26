@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { logoutUser, selectUser } from "../store/user/userSlice";
+import { signOutSuccess, selectUser } from "../store/user/userSlice";
 import { useState, useEffect, useRef } from "react";
 import { SmallButton } from "./ButtonComponent";
 import image from "../assets/userProfile.jpg";
@@ -12,6 +12,7 @@ const Account = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch(); // Dispatch function to dispatch actions
+  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -36,21 +37,11 @@ const Account = () => {
 
   const handleSignOut = async () => {
     try {
-      const response = await fetch('/api/user/signout', {
-        method: 'POST',
-      });
-      const data = await response.json();
-      if(!response.ok) {
-        console.log(data.message);
-      } else {
-        dispatch(logoutUser());
-        setIsOpen(false);
-      }
-    } catch (error: any) {
-      console.log(error.message)
-    }
+      await dispatch(signOutSuccess());
+      setIsOpen(false);
+      navigate('/signIn');
+    } catch (error) {}
   }
-
   return (
     <>
       {currentUser ? (
@@ -104,7 +95,7 @@ const Account = () => {
                 role="menuitem"
               >
                 <div className="flex items-center gap-1"  onClick={() => {
-                  handleSignOut
+                  handleSignOut()
                 }}>
                   <FaSignOutAlt />
                   Sign Out

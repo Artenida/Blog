@@ -39,12 +39,19 @@ export const navBarRoutes: NavBarRoutes[] = [
 ];
 
 export const Menus = [
-  { title: "Create post", icon: <MdAddBox /> },
-  { title: "View posts", icon: <PiCardsFill /> },
-  { title: "Change password", icon: <FaEdit /> },
-  { title: "Sign out", icon: <FaSignOutAlt /> },
-  { title: "Delete account", icon: <MdDelete /> },
-
+  { title: "Create post", icon: <MdAddBox />, path: "/createPost" },
+  { title: "View posts", icon: <PiCardsFill />, path: "/viewPosts"},
+  { title: "Change password", icon: <FaEdit />, path: "/changePassword"},
+  // { 
+  //   title: "Sign out", 
+  //   icon: <FaSignOutAlt />, 
+  //   onClick: handleSignOut 
+  // },
+  // { 
+  //   title: "Delete account", 
+  //   icon: <MdDelete />, 
+  //   onClick: handleDeleteAccount
+  // },
 ];
 
 export const footerCategories = [

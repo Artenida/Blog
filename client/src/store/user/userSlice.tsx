@@ -24,7 +24,7 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    logoutUser: (state) => {
+    signOutSuccess: (state) => {
       state.isLoggedIn = false;
       state.currentUser = null;
       state.loginError = null;
@@ -58,6 +58,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { logoutUser } = userSlice.actions;
+export const { signOutSuccess } = userSlice.actions;
 export const selectUser = (state: RootState) => state.user;
 export default userSlice.reducer;

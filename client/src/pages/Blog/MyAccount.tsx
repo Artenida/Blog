@@ -5,7 +5,6 @@ import profile from "../../assets/posts/profile.webp";
 import FormInputs from "../../components/FormInputs";
 import { MediumButton } from "../../components/ButtonComponent";
 import { FaEdit } from "react-icons/fa";
-import { useState } from "react";
 
 const MyAccount = () => {
   const { currentUser } = useSelector(selectUser);

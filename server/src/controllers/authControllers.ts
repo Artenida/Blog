@@ -72,20 +72,6 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
         return next(customError);
       }
       // const checkPassword = bcrypt.compareSync(req.body.password, data[0].password)
-      // if (!process.env.JWT_SECRET) {
-      //   return res.status(500).json("JWT secret key is not provided");
-      // }
-      const token = jwt.sign(
-        {
-          userId: user.id,
-        },
-        null,
-        { algorithm: "none" }
-      );
-
-      res.cookie("access_token", token, {
-        httpOnly: true,
-      });
       const { password: pass, ...rest } = user;
 
       res.status(200).json({
@@ -94,14 +80,6 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
       });
     });
   } catch (error) {
-    return next(error);
-  }
-};
-
-export const signout = (req: Request, res: Response, next: NextFunction) => {
-  try {
-    res.clearCookie("access_token").status(200).json("User has been sign out");
-  } catch (error) {
-    next(error);
+    return next(error); 
   }
 };
