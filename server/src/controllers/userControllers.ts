@@ -28,9 +28,11 @@ export const updateUser = (req: Request, res: Response, next: NextFunction) => {
       "UPDATE users SET username = ?, email = ?, bio = ? WHERE id = ?";
     db.query(query, [username, email, bio, id], (error, result) => {
       if (error) {
-        console.log("Error updating user:", error);
+        // console.log("Error updating user:", error);
         res.status(500).json({ message: "Internal Server Error" });
-      } else if (result.changedRows === 1) {
+      } else if(result.changedRows === 0) {
+        res.status(404).json({ message: "User not found" });
+      }else if (result.changedRows === 1) {
         res.status(200).json({
           message: "User updated successfully",
           user: {
