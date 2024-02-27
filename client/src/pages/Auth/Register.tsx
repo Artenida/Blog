@@ -10,7 +10,7 @@ import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import background from "../../assets/about1.avif";
 import FormInputs from "../../components/FormInputs";
 import { selectUser } from "../../store/user/userSlice";
-import { registerUser } from "../../api/user";
+import { registerUser } from "../../api/userThunk";
 import { useEffect } from "react";
 
 interface FormData {
@@ -88,19 +88,15 @@ const Register = () => {
     setFormDataErrors(validations(id, value));
   };
 
-const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-  event.preventDefault();
+const handleSubmit = async () => {
   try {
     const { username, email, password, confirmPassword } = formData;
     const resultAction = await dispatch(
       registerUser({ username, email, password, confirmPassword })
     );
-   // Check if the action has been fulfilled successfully
    if (registerUser.fulfilled.match(resultAction)) {
-    // If the action is fulfilled, navigate to signIn
     navigate("/signIn");
   } else if (registerUser.rejected.match(resultAction)) {
-    // If the action is rejected, the error message will be available in `resultAction.error`
     console.error(resultAction.error.message);
   }
   } catch (error: any) {

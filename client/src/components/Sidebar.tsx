@@ -9,7 +9,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { signOutSuccess } from "../store/user/userSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
-import { loginUser } from "../api/user";
+import { deleteUser } from "../api/userThunk";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(true);
@@ -17,21 +17,30 @@ const Sidebar = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const handleDeleteAccount = () => {
-
-  }
+  console.log(currentUser.user.id);
 
   const handleSignOut = async () => {
     try {
       await dispatch(signOutSuccess());
-      navigate('/signIn');
+      navigate('/');
     } catch (error) {}
   }
 
+  const handleDeleteAccount = async () => {
+    try {
+      await dispatch(deleteUser(currentUser.user.id));
+      console.log("User account deleted successfully");
+      await dispatch(signOutSuccess());
+      navigate('/')
+    } catch (error) {
+      console.error("Error deleting user account: ", error);
+    }
+  };
+  
   return (
-    <div className="max-h-screen flex flex-col md:flex-row ">
+    <div className="sm:max-h-screen md:h-[900px] flex flex-col md:flex-row ">
       <div
-        className={`pacity-90 p-5 pt-8 fixed ${
+        className={`opacity-90 p-5 pt-8 fixed ${
           open ? "md:w-72" : "w-20"
         } duration-300 relative`}
       >
@@ -74,7 +83,7 @@ const Sidebar = () => {
           {menu.title === "Sign out" || menu.title === "Delete account" ? (
             <div
               onClick={menu.title === "Sign out" ? handleSignOut : handleDeleteAccount}
-              className="text-custom-color3 text-lg flex items-center gap-x-4
+              className="text-red-600 text-lg flex items-center gap-x-4
               cursor-pointer p-4 hover:bg-custom-color2 rounded-md mt-2"
             >
               <span className="text-2xl block float-left">{menu.icon}</span>

@@ -1,17 +1,15 @@
-import { FaUser } from "react-icons/fa";
-import { FaUserAstronaut } from "react-icons/fa";
+import { FaUser, FaUserAstronaut } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert } from "@material-tailwind/react";
 import { ImSpinner11 } from "react-icons/im";
-import { useDispatch, useSelector } from "react-redux";
-import { useAppSelector, useAppDispatch } from "../../store/hooks";
-import { loginUser } from "../../api/user";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "../../store/hooks";
+import { loginUser } from "../../api/userThunk";
 import background from "../../assets/about1.avif";
 import FormInputs from "../../components/FormInputs";
-import { AppDispatch, RootState } from "../../store/store";
-// import { selectUserLoading, selectUserError } from "../../store/user/userSlice";
+import { AppDispatch } from "../../store/store";
 import { selectUser } from "../../store/user/userSlice";
 
 interface FormData {

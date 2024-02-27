@@ -12,6 +12,7 @@ import BlogDetails from "../pages/Blog/BlogDetails";
 import PrivateRoutes from "./PrivateRoute";
 import Blog from "../pages/Blog/Blog";
 import AuthorsPage from "../pages/Blog/AuthorsPage";
+import CreatePost from "../pages/Blog/CreatePost";
 import {new_blogs} from "../constants/data"
 
 const routes = [
@@ -23,6 +24,7 @@ const routes = [
   { path: "/blog", element: <Blog /> },
   { path: "/authors", element: <AuthorsPage/> },
   { path: "/blog/:id", element: <BlogDetails blogs={new_blogs}/> },
+  { path: "/createPost/:id", element: <CreatePost/> },
   { path: "*", element: <Home /> },
 ];
 

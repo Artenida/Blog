@@ -1,12 +1,13 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "../../store/store";
-import { loginUser } from "../../api/user";
-import { registerUser } from "../../api/user";
+import { deleteUser, loginUser } from "../../api/userThunk";
+import { registerUser } from "../../api/userThunk";
 interface UserState {
   currentUser: any; // Define the type for currentUser
   loading: boolean;
   loginError: string | null;
   registerError: string | null;
+  deleteError: string | null;
   token: any;
   isLoggedIn: boolean; // Define the 'isLoggedIn' property
 }
@@ -15,6 +16,7 @@ const initialState: UserState = {
   currentUser: null,
   loginError: null,
   registerError: null,
+  deleteError: null,
   loading: false,
   token: null,
   isLoggedIn: false
@@ -29,7 +31,7 @@ const userSlice = createSlice({
       state.currentUser = null;
       state.loginError = null;
       state.loading = false;
-    }
+    },
   },
 
   extraReducers: (builder) => {
@@ -54,6 +56,19 @@ const userSlice = createSlice({
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.registerError = action.payload as string;
+      })
+      .addCase(deleteUser.pending, (state) => {
+        state.deleteError = null;
+        state.loading = true;
+      })
+      .addCase(deleteUser.fulfilled, (state) => {
+        state.currentUser = null;
+        state.deleteError = null;
+        state.loading = false;
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.loading = false;
+        state.deleteError = action.payload as string;
       })
   },
 });

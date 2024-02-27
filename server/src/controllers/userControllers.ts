@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import DatabaseConnection from "../config";
 import jwt from "jsonwebtoken";
+import { CustomError } from "../utils/error";
 
 export const getUser = (
   req: Request,
@@ -62,11 +63,13 @@ export const deleteUser = async (
   db.query(query, [id], (error, result) => {
     if (error) {
       console.error("Error deleting user:", error);
-      return res.status(500).json({ message: "Internal Server Error" });
+      const customError = new CustomError(500, "Internal Server Error");
+      return next(customError);
     }
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ message: "User not found" });
+      const customError = new CustomError(400, "User not found");
+      return next(customError);
     }
 
     return res.status(200).json({ message: "User deleted successfully" });

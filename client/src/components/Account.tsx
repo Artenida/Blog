@@ -39,7 +39,7 @@ const Account = () => {
     try {
       await dispatch(signOutSuccess());
       setIsOpen(false);
-      navigate('/signIn');
+      navigate('/');
     } catch (error) {}
   }
   return (
@@ -105,7 +105,7 @@ const Account = () => {
           )}
         </div>
       ) : (
-        <div className="pr-14">
+        <div>
           <Link to="/signIn">
             <SmallButton>Login</SmallButton>
           </Link>
