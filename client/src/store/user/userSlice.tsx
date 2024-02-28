@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "../../store/store";
-import { deleteUser, loginUser } from "../../api/userThunk";
+import { deleteUser, loginUser, updateUser } from "../../api/userThunk";
 import { registerUser } from "../../api/userThunk";
 interface UserState {
   currentUser: any; // Define the type for currentUser
@@ -8,6 +8,7 @@ interface UserState {
   loginError: string | null;
   registerError: string | null;
   deleteError: string | null;
+  updateError: string | null;
   token: any;
   isLoggedIn: boolean; // Define the 'isLoggedIn' property
 }
@@ -17,9 +18,10 @@ const initialState: UserState = {
   loginError: null,
   registerError: null,
   deleteError: null,
+  updateError: null,
   loading: false,
   token: null,
-  isLoggedIn: false
+  isLoggedIn: false,
 };
 
 const userSlice = createSlice({
@@ -70,6 +72,20 @@ const userSlice = createSlice({
         state.loading = false;
         state.deleteError = action.payload as string;
       })
+      .addCase(updateUser.pending, (state) => {
+        state.loading = true;
+        state.updateError = null;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.updateError = null;
+        state.isLoggedIn = true;
+        state.currentUser = action.payload;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.loading = true;
+        state.updateError = action.payload as string | null;
+      });
   },
 });
 

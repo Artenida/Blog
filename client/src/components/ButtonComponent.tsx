@@ -2,6 +2,7 @@ import React from 'react';
 
 interface ButtonProps {
   children: React.ReactNode;
+  onClick?: () => void;
 }
 
 // Small Button Component
@@ -14,9 +15,11 @@ const SmallButton: React.FC<ButtonProps> = ({ children }) => {
 };
 
 // Medium Button Component
-const MediumButton: React.FC<ButtonProps> = ({ children }) => {
+const MediumButton: React.FC<ButtonProps> = ({ children, onClick }) => {
   return (
-    <button className="block w-full rounded bg-custom-color3 px-6 py-3 text-xl font-medium text-custom-color1 hover:bg-custom-color1 hover:text-custom-color3 hover:border-2 hover:border-custom-color3 active:bg-custom-color1 sm:w-auto">
+    <button className="block w-full rounded bg-custom-color3 px-6 py-3 text-xl font-medium text-custom-color1 hover:bg-custom-color1 hover:text-custom-color3 hover:border-2 hover:border-custom-color3 active:bg-custom-color1 sm:w-auto"
+    onClick={onClick}
+    >
       {children}
     </button>
   );

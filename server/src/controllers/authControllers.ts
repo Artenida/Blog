@@ -42,6 +42,7 @@ export const register = (
   } catch (error) {
     return next(error);
   }
+  connection.closeConnection();
 };
 
 export const login = (req: Request, res: Response, next: NextFunction) => {
@@ -82,4 +83,5 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
   } catch (error) {
     return next(error); 
   }
+  connection.closeConnection();
 };

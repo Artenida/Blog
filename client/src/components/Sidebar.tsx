@@ -30,8 +30,9 @@ const Sidebar = () => {
     try {
       await dispatch(deleteUser(currentUser.user.id));
       console.log("User account deleted successfully");
-      await dispatch(signOutSuccess());
-      navigate('/')
+      // await dispatch(signOutSuccess());
+      // navigate('/')
+      handleSignOut();
     } catch (error) {
       console.error("Error deleting user account: ", error);
     }

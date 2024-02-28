@@ -1,26 +1,34 @@
 import { createAsyncThunk, current } from "@reduxjs/toolkit";
-import { createAPI, deleteAPI } from "../utils/api/createApi";
+import { createAPI, deleteAPI, editAPI } from "../utils/api/createApi";
 
 type UserBodyType = {
-    username: string;
-    password: string;
-}
+  username: string;
+  password: string;
+};
 
 type UserBodyTypeRegister = {
   username: string;
   password: string;
   email: string;
   confirmPassword: string;
-}
+};
+
+type UserBodyTypeUpdate = {
+  username: string;
+  email: string;
+  bio: string;
+  userId: number;
+};
 
 export const loginUser = createAsyncThunk(
-  'api/auth/login',
+  "api/auth/login",
   async (body: UserBodyType, { rejectWithValue }) => {
     try {
-      const response = await createAPI('api/auth/login', { method: 'POST' })(body);
-      // return response.json();
+      const response = await createAPI("api/auth/login", { method: "POST" })(
+        body
+      );
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       return !response.ok ? rejectWithValue(data.message) : data;
     } catch (error: any) {
       return rejectWithValue(error);
@@ -29,15 +37,20 @@ export const loginUser = createAsyncThunk(
 );
 
 type RegisterUserResponse = {
-  data: any; // Define the type based on your actual response data
-  error?: string; // Optional error message
+  data: any;
+  error?: string;
 };
 
-export const registerUser = createAsyncThunk<RegisterUserResponse, UserBodyTypeRegister>(
-  'api/auth/register',
+export const registerUser = createAsyncThunk<
+  RegisterUserResponse,
+  UserBodyTypeRegister
+>(
+  "api/auth/register",
   async (body: UserBodyTypeRegister, { rejectWithValue }) => {
     try {
-      const response = await createAPI('api/auth/register', { method: 'POST' })(body);
+      const response = await createAPI("api/auth/register", { method: "POST" })(
+        body
+      );
       if (response.status === 201) {
         const data = await response.json();
         return data;
@@ -52,12 +65,14 @@ export const registerUser = createAsyncThunk<RegisterUserResponse, UserBodyTypeR
 );
 
 export const deleteUser = createAsyncThunk(
-  'api/users/delete',
+  "api/users/delete",
   async (userId: number, { rejectWithValue }) => {
     try {
-      const response = await deleteAPI(`api/users/delete/${userId}`, { method: 'DELETE' })();
+      const response = await deleteAPI(`api/users/delete/${userId}`, {
+        method: "DELETE",
+      })();
       if (!response.ok) {
-        const errorMessage = await response.text(); 
+        const errorMessage = await response.text();
         return rejectWithValue(errorMessage);
       }
       return { success: true };
@@ -67,3 +82,19 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
+export const updateUser = createAsyncThunk(
+  "api/users/update",
+  async (body: UserBodyTypeUpdate, { rejectWithValue }) => {
+    try {
+      const response = await editAPI(`api/users/update/${body.userId}`, {
+        method: "PUT",
+        body: JSON.stringify(body),
+      })(body);
+      const data = await response.json();
+      console.log(data);
+      return !response.ok ? rejectWithValue(data.message) : data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);

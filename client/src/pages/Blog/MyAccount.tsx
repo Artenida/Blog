@@ -1,13 +1,88 @@
 import Sidebar from "../../components/Sidebar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../store/user/userSlice";
 import profile from "../../assets/posts/profile.webp";
 import FormInputs from "../../components/FormInputs";
 import { MediumButton } from "../../components/ButtonComponent";
 import { FaEdit } from "react-icons/fa";
+import { updateUser } from "../../api/userThunk";
+import { useEffect, useState } from "react";
+import { AppDispatch } from "../../store/store";
+import { useNavigate } from "react-router-dom";
 
 const MyAccount = () => {
   const { currentUser } = useSelector(selectUser);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
+  const currentId = currentUser?.user?.id;
+  const [valid, setValid] = useState(false);
+  const [errors, setErrors] = useState({
+    username: "",
+    email: "",
+    bio: "",
+  });
+
+  const [data, setData] = useState({
+    username: currentUser?.user?.username ?? "",
+    email: currentUser?.user?.email ?? "",
+    bio: currentUser?.user?.bio ?? "",
+  });
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = event.target;
+    setData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+
+  const validations = () => {
+    let isValid = true;
+    const newErrors = { ...errors };
+
+    if (!data.username.trim()) {
+      errors.username = "Username is required";
+      isValid = false;
+    } else {
+      errors.username = "";
+    }
+
+    if (!data.email.trim()) {
+      errors.email = "Email is required";
+      isValid = false;
+    } else {
+      errors.email = "";
+    }
+
+    if (!data.bio.trim()) {
+      errors.bio = "Bio is required";
+      isValid = false;
+    } else {
+      errors.bio = "";
+    }
+
+    setErrors(newErrors);
+    setValid(isValid);
+  };
+
+  const handleUpdate = async () => {
+    validations();
+  };
+
+  useEffect(() => {
+    if (valid) {
+      const newUser = {
+        username: data.username,
+        email: data.email,
+        bio: data.bio,
+        userId: currentUser?.user?.id,
+      };
+      dispatch(updateUser(newUser)).then(() => {
+        navigate(`/myAccount/${currentId}`);
+      });
+    }
+  }, [valid, data, dispatch, currentUser, currentId, navigate]);
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -18,26 +93,30 @@ const MyAccount = () => {
           My profile
         </h2>
         <div className="flex flex-col sm:flex-row gap-3 p-4 border-2 rounded-xl border-custom-color2">
-      <div className="w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full border-4">
-        <img src={profile} alt="Profile" className="rounded-full w-32 h-32" />
-      </div>
+          <div className="w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full border-4">
+            <img
+              src={profile}
+              alt="Profile"
+              className="rounded-full w-32 h-32"
+            />
+          </div>
 
-      <div className="p-4">
-        <h2 className="text-xl text-custom-color3 font-bold ml-2">
-          {currentUser.user.username}
-        </h2>
-        <div className="pt-2">
-          <span className="ml-2 text-lg text-custom-color3">
-            {currentUser?.user?.email}
-          </span>
+          <div className="p-4">
+            <h2 className="text-xl text-custom-color3 font-bold ml-2">
+              {currentUser?.user?.username}
+            </h2>
+            <div className="pt-2">
+              <span className="ml-2 text-lg text-custom-color3">
+                {currentUser?.user?.email}
+              </span>
+            </div>
+            <div className="">
+              <span className="ml-2 text-custom-color3">
+                {currentUser?.user?.bio}
+              </span>
+            </div>
+          </div>
         </div>
-        <div className="">
-          <span className="ml-2 text-custom-color3">
-            {currentUser?.user?.bio}
-          </span>
-        </div>
-      </div>
-    </div>
 
         <div className="flex flex-col gap-3 p-4 border-2 rounded-xl border-custom-color2">
           <div className="relative">
@@ -52,13 +131,17 @@ const MyAccount = () => {
                 </span>
               </div>
             </div>
+          </div>
 
+          <div className="relative">
             <FormInputs
               id="username"
               label="Username"
               placeholder="Username"
-              defaultValue={currentUser?.user?.username}
+              value={data.username}
+              onChange={handleInputChange}
             />
+            <span className="text-red-500">{errors.username}</span>
           </div>
 
           <div className="relative">
@@ -66,8 +149,10 @@ const MyAccount = () => {
               id="email"
               label="Email"
               placeholder="Email"
-              defaultValue={currentUser?.user?.email}
+              value={data.email}
+              onChange={handleInputChange}
             />
+            <span className="text-red-500">{errors.email}</span>
           </div>
 
           <div className="relative mb-3">
@@ -75,11 +160,12 @@ const MyAccount = () => {
               id="bio"
               label="Bio"
               placeholder="Bio"
-              defaultValue={currentUser?.user?.bio}
+              value={data.bio}
+              onChange={handleInputChange}
             />
+            <span className="text-red-500">{errors.bio}</span>
           </div>
-
-          <MediumButton>Update</MediumButton>
+          <MediumButton onClick={handleUpdate}>Update</MediumButton>
         </div>
       </div>
     </div>

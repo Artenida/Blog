@@ -17,6 +17,7 @@ export const getUser = (
     }
     res.json(result);
   });
+  connection.closeConnection();
 };
 
 export const updateUser = (req: Request, res: Response, next: NextFunction) => {
@@ -47,6 +48,7 @@ export const updateUser = (req: Request, res: Response, next: NextFunction) => {
         res.status(400).json({ message: "Data not updated" });
       }
     });
+    connection.closeConnection();
 };
 
 export const deleteUser = async (
@@ -74,4 +76,5 @@ export const deleteUser = async (
 
     return res.status(200).json({ message: "User deleted successfully" });
   });
+  connection.closeConnection();
 };
