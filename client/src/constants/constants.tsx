@@ -41,7 +41,7 @@ export const navBarRoutes: NavBarRoutes[] = [
 export const Menus = [
   { title: "Create post", icon: <MdAddBox />, path: "/CreatePost/:id" },
   { title: "View posts", icon: <PiCardsFill />, path: "/viewPosts/:id" },
-  { title: "Change password", icon: <FaEdit />, path: "/changePassword/:id" },
+  // { title: "Change password", icon: <FaEdit />, path: "/changePassword/:id" },
   {
     title: "Sign out",
     icon: <FaSignOutAlt />,

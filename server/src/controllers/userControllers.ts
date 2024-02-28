@@ -24,11 +24,11 @@ export const updateUser = (req: Request, res: Response, next: NextFunction) => {
   const connection = new DatabaseConnection();
   const db = connection.getConnection();
 
-  const { username, email, bio } = req.body;
+  const { username, email, password, bio } = req.body;
     const { id } = req.params; 
     const query =
-      "UPDATE users SET username = ?, email = ?, bio = ? WHERE id = ?";
-    db.query(query, [username, email, bio, id], (error, result) => {
+      "UPDATE users SET username = ?, email = ?, password = ?, bio = ? WHERE id = ?";
+    db.query(query, [username, email, password, bio, id], (error, result) => {
       if (error) {
         // console.log("Error updating user:", error);
         res.status(500).json({ message: "Internal Server Error" });

@@ -21,12 +21,14 @@ const MyAccount = () => {
     username: "",
     email: "",
     bio: "",
+    password: "",
   });
 
   const [data, setData] = useState({
     username: currentUser?.user?.username ?? "",
     email: currentUser?.user?.email ?? "",
     bio: currentUser?.user?.bio ?? "",
+    password: "",
   });
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,6 +64,13 @@ const MyAccount = () => {
       errors.bio = "";
     }
 
+    if (!data.password.trim()) {
+      errors.password = "Bio is required";
+      isValid = false;
+    } else {
+      errors.password = "";
+    }
+
     setErrors(newErrors);
     setValid(isValid);
   };
@@ -75,6 +84,7 @@ const MyAccount = () => {
       const newUser = {
         username: data.username,
         email: data.email,
+        password: data.password,
         bio: data.bio,
         userId: currentUser?.user?.id,
       };
@@ -164,6 +174,17 @@ const MyAccount = () => {
               onChange={handleInputChange}
             />
             <span className="text-red-500">{errors.bio}</span>
+          </div>
+
+          <div className="relative mb-3">
+            <FormInputs
+              id="password"
+              label="Password"
+              placeholder="Password"
+              value={data.password}
+              onChange={handleInputChange}
+            />
+            <span className="text-red-500">{errors.password}</span>
           </div>
           <MediumButton onClick={handleUpdate}>Update</MediumButton>
         </div>

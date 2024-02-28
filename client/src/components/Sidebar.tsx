@@ -17,7 +17,7 @@ const Sidebar = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  console.log(currentUser.user.id);
+  // console.log(currentUser.user.id);
 
   const handleSignOut = async () => {
     try {
