@@ -88,7 +88,8 @@ const Register = () => {
     setFormDataErrors(validations(id, value));
   };
 
-const handleSubmit = async () => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
   try {
     const { username, email, password, confirmPassword } = formData;
     const resultAction = await dispatch(
