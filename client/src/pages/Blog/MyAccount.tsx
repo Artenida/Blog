@@ -1,5 +1,5 @@
 import Sidebar from "../../components/Sidebar";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { selectUser } from "../../store/user/userSlice";
 import profile from "../../assets/posts/profile.webp";
 import FormInputs from "../../components/FormInputs";
@@ -7,12 +7,12 @@ import { MediumButton } from "../../components/ButtonComponent";
 import { FaEdit } from "react-icons/fa";
 import { updateUser } from "../../api/userThunk";
 import { useEffect, useState } from "react";
-import { AppDispatch } from "../../store/store";
+import { useAppDispatch } from "../../store/hooks";
 import { useNavigate } from "react-router-dom";
 
 const MyAccount = () => {
   const { currentUser } = useSelector(selectUser);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch(); // Dispatch function to dispatch actions
   const navigate = useNavigate();
 
   const currentId = currentUser?.user?.id;
@@ -136,7 +136,7 @@ const MyAccount = () => {
               </h2>
               <div className="flex gap-1 items-center border-2 border-gray-300 px-3 py-1 rounded-full">
                 <FaEdit className="text-gray-400" />
-                <span className="cursor-pointer text-sm sm:text-base text-gray-400">
+                <span className="text-sm sm:text-base text-gray-400">
                   Edit
                 </span>
               </div>

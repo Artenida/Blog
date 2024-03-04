@@ -1,5 +1,5 @@
 import { createAsyncThunk, current } from "@reduxjs/toolkit";
-import { createAPI, deleteAPI, editAPI } from "../utils/api/createApi";
+import { createAPI, deleteAPI } from "../utils/api/createApi";
 
 type UserBodyType = {
   username: string;
@@ -64,6 +64,31 @@ export const registerUser = createAsyncThunk<
   }
 );
 
+// type UserBodyTypeDelete = {
+//   userId: number;
+// };
+
+// export const deleteUser = createAsyncThunk(
+//   "api/users/delete",
+//   async (body: UserBodyTypeDelete, { rejectWithValue }) => {
+//     try {
+//       const { userId } = body;
+
+//       const response = await createAPI<{}>(`api/users/delete/${userId}`, {
+//         method: "DELETE",
+//       })(body);
+      
+//       if (!response.ok) {
+//         const errorMessage = await response.text();
+//         return rejectWithValue(errorMessage);
+//       }
+      
+//       return { success: true };
+//     } catch (error: any) {
+//       return rejectWithValue(error.message);
+//     }
+//   }
+// );
 export const deleteUser = createAsyncThunk(
   "api/users/delete",
   async (userId: number, { rejectWithValue }) => {
@@ -82,11 +107,12 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
+
 export const updateUser = createAsyncThunk(
   "api/users/update",
   async (body: UserBodyTypeUpdate, { rejectWithValue }) => {
     try {
-      const response = await editAPI(`api/users/update/${body.userId}`, {
+      const response = await createAPI(`api/users/update/${body.userId}`, {
         method: "PUT",
         body: JSON.stringify(body),
       })(body);

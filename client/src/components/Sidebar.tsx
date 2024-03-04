@@ -8,13 +8,13 @@ import { Menus } from "../constants/constants"
 import { NavLink, useNavigate } from "react-router-dom";
 import { signOutSuccess } from "../store/user/userSlice";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../store/store";
 import { deleteUser } from "../api/userThunk";
+import { useAppDispatch } from "../store/hooks";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(true);
   const { currentUser } = useAppSelector(selectUser);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch(); // Dispatch function to dispatch actions
   const navigate = useNavigate();
 
   // console.log(currentUser.user.id);

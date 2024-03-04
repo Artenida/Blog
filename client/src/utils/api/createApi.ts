@@ -39,14 +39,3 @@ export const deleteAPI = (endpoint: string, options: APIOptions) => {
   };
 };
 
-export const editAPI = <FormBody>(endpoint: string, options: APIOptions) => {
-  return async (body: FormBody) => {
-    body ? (options.body = JSON.stringify(body)) : undefined;
-
-    return fetch(`http://localhost:5000/${endpoint}`, {
-      method: options.method ?? "PUT",
-      headers,
-      body: options.body,
-    });
-  };
-};

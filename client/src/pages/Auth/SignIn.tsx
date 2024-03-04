@@ -4,12 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Alert } from "@material-tailwind/react";
 import { ImSpinner11 } from "react-icons/im";
-import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../store/hooks";
 import { loginUser } from "../../api/userThunk";
 import background from "../../assets/about1.avif";
 import FormInputs from "../../components/FormInputs";
-import { AppDispatch } from "../../store/store";
+import { useAppDispatch } from "../../store/hooks";
 import { selectUser } from "../../store/user/userSlice";
 
 interface FormData {
@@ -47,7 +46,8 @@ const SignIn = () => {
 
   const { isLoggedIn, loading, loginError } = useAppSelector(selectUser);
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch(); // Dispatch function to dispatch actions
+
 
   useEffect(() => {
     if (isLoggedIn) {
