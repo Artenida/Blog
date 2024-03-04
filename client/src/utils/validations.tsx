@@ -18,7 +18,12 @@ interface FormUpdateErrors {
 }
 
 const validateUsername = (value: string): string => {
-  return value.trim() ? "" : "Username is required";
+  if (!value.trim()) {
+    return "Username is required";
+  } else if (value.length > 16) {
+    return "Username must be at most 16 characters";
+  }
+  return "";
 };
 
 const validateEmail = (value: string): string => {

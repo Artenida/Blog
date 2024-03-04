@@ -19,10 +19,13 @@ export const getUser = (
   connection.closeConnection();
 };
 
-export const updateUser = (req: Request, res: Response, next: NextFunction) => {
+export const updateUser = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const connection = new DatabaseConnection();
   const db = connection.getConnection();
-
   const { username, email, password, bio } = req.body;
   const { id } = req.params;
 
@@ -31,7 +34,7 @@ export const updateUser = (req: Request, res: Response, next: NextFunction) => {
   db.query(checkQuery, [username, email, id], (checkError, checkResult) => {
     if (checkError) {
       console.log("Error checking username/email:", checkError);
-      res.status(500).json({ message: "Internal Server Error" });
+      res.status(400).json({ message: "Error checking username/email" });
       connection.closeConnection();
       return;
     }
@@ -41,30 +44,26 @@ export const updateUser = (req: Request, res: Response, next: NextFunction) => {
       connection.closeConnection();
       return;
     }
-  });
 
-  const query =
-    "UPDATE users SET username = ?, email = ?, password = ?, bio = ? WHERE id = ?";
-  db.query(query, [username, email, password, bio, id], (error, result) => {
-    if (error) {
-      res.status(500).json({ message: "Internal Server Error" });
-    } else if (result.changedRows === 0) {
-      res.status(404).json({ message: "User not found" });
-    } else if (result.changedRows === 1) {
-      res.status(200).json({
-        message: "User updated successfully",
-        user: {
-          id: id,
-          username: username,
-          email: email,
-          bio: bio,
-        },
-      });
-    } else {
-      res.status(400).json({ message: "Data not updated" });
-    }
+    const query =
+      "UPDATE users SET username = ?, email = ?, password = ?, bio = ? WHERE id = ?";
+    db.query(query, [username, email, password, bio, id], (error, result) => {
+      if (error) {
+        res.status(500).json({ message: "Internal Server Error" });
+      } else if (result.changedRows === 1) {
+        res.status(200).json({
+          message: "User updated successfully",
+          user: {
+            id: id,
+            username: username,
+            email: email,
+            bio: bio,
+          },
+        });
+      }
+      connection.closeConnection();
+    });
   });
-  connection.closeConnection();
 };
 
 export const deleteUser = async (
