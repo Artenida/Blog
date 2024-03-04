@@ -23,11 +23,11 @@ const validateUsername = (value: string): string => {
 
 const validateEmail = (value: string): string => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(value) ? "" : "Invalid email format";
+  return emailRegex.test(value) ? "" : "Email format isn't valid";
 };
 
 const validateBio = (value: string): string => {
-  return value.trim().length <= 30 ? "" : "Bio must be at most 100 characters";
+  return value.trim().length <= 30 ? "" : "Bio must be at most 30 characters";
 };
 
 const validatePassword = (value: string): string => {
@@ -104,7 +104,7 @@ export const validateUpdateForm = (
     errors.username = validateUsername(value);
   }
   if (id === "email") {
-    errors.email = validateUsername(value);
+    errors.email = validateEmail(value);
   }
   if (id === "bio") {
     errors.bio = validateBio(value);

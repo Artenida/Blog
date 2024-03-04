@@ -38,4 +38,3 @@ export const deleteAPI = (endpoint: string, options: APIOptions) => {
     }
   };
 };
-

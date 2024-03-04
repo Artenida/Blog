@@ -2,98 +2,10 @@ import Sidebar from "../../components/Sidebar";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/user/userSlice";
 import profile from "../../assets/posts/profile.webp";
-import FormInputs from "../../components/FormInputs";
-import { MediumButton } from "../../components/ButtonComponent";
-import { FaEdit } from "react-icons/fa";
-import { updateUser } from "../../api/userThunk";
-import { useEffect, useState } from "react";
-import { useAppDispatch } from "../../store/hooks";
-import { useNavigate } from "react-router-dom";
+import { UpdateUserForm } from "../../components/UpdateUserForm";
 
 const MyAccount = () => {
   const { currentUser } = useSelector(selectUser);
-  const dispatch = useAppDispatch(); // Dispatch function to dispatch actions
-  const navigate = useNavigate();
-
-  const currentId = currentUser?.user?.id;
-  const [valid, setValid] = useState(false);
-  const [errors, setErrors] = useState({
-    username: "",
-    email: "",
-    bio: "",
-    password: "",
-  });
-
-  const [data, setData] = useState({
-    username: currentUser?.user?.username ?? "",
-    email: currentUser?.user?.email ?? "",
-    bio: currentUser?.user?.bio ?? "",
-    password: "",
-  });
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = event.target;
-    setData((prevData) => ({
-      ...prevData,
-      [id]: value,
-    }));
-  };
-
-  const validations = () => {
-    let isValid = true;
-    const newErrors = { ...errors };
-
-    if (!data.username.trim()) {
-      errors.username = "Username is required";
-      isValid = false;
-    } else {
-      errors.username = "";
-    }
-
-    if (!data.email.trim()) {
-      errors.email = "Email is required";
-      isValid = false;
-    } else {
-      errors.email = "";
-    }
-
-    if (!data.bio.trim()) {
-      errors.bio = "Bio is required";
-      isValid = false;
-    } else {
-      errors.bio = "";
-    }
-
-    if (!data.password.trim()) {
-      errors.password = "Bio is required";
-      isValid = false;
-    } else {
-      errors.password = "";
-    }
-
-    setErrors(newErrors);
-    setValid(isValid);
-  };
-
-  const handleUpdate = async () => {
-    validations();
-  };
-
-  useEffect(() => {
-    if (valid) {
-      const newUser = {
-        username: data.username,
-        email: data.email,
-        password: data.password,
-        bio: data.bio,
-        userId: currentUser?.user?.id,
-      };
-      dispatch(updateUser(newUser)).then(() => {
-        navigate(`/myAccount/${currentId}`);
-      });
-    }
-  }, [valid, data, dispatch, currentUser, currentId, navigate]);
-
   return (
     <div className="flex flex-col md:flex-row">
       <Sidebar />
@@ -128,66 +40,7 @@ const MyAccount = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 p-4 border-2 rounded-xl border-custom-color2">
-          <div className="relative">
-            <div className="flex justify-between items-center px-2">
-              <h2 className="text-lg sm:text-xl lg:text-2xl text-custom-color3 font-semibold">
-                Personal Information
-              </h2>
-              <div className="flex gap-1 items-center border-2 border-gray-300 px-3 py-1 rounded-full">
-                <FaEdit className="text-gray-400" />
-                <span className="text-sm sm:text-base text-gray-400">
-                  Edit
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="relative">
-            <FormInputs
-              id="username"
-              label="Username"
-              placeholder="Username"
-              value={data.username}
-              onChange={handleInputChange}
-            />
-            <span className="text-red-500">{errors.username}</span>
-          </div>
-
-          <div className="relative">
-            <FormInputs
-              id="email"
-              label="Email"
-              placeholder="Email"
-              value={data.email}
-              onChange={handleInputChange}
-            />
-            <span className="text-red-500">{errors.email}</span>
-          </div>
-
-          <div className="relative mb-3">
-            <FormInputs
-              id="bio"
-              label="Bio"
-              placeholder="Bio"
-              value={data.bio}
-              onChange={handleInputChange}
-            />
-            <span className="text-red-500">{errors.bio}</span>
-          </div>
-
-          <div className="relative mb-3">
-            <FormInputs
-              id="password"
-              label="Password"
-              placeholder="Password"
-              value={data.password}
-              onChange={handleInputChange}
-            />
-            <span className="text-red-500">{errors.password}</span>
-          </div>
-          <MediumButton onClick={handleUpdate}>Update</MediumButton>
-        </div>
+        <UpdateUserForm />
       </div>
     </div>
   );

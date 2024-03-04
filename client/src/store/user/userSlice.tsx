@@ -10,7 +10,8 @@ interface UserState {
   deleteError: string | null;
   updateError: string | null;
   token: any;
-  isLoggedIn: boolean; // Define the 'isLoggedIn' property
+  isLoggedIn: boolean;
+  isUpdated: boolean;
 }
 
 const initialState: UserState = {
@@ -22,6 +23,7 @@ const initialState: UserState = {
   loading: false,
   token: null,
   isLoggedIn: false,
+  isUpdated: false,
 };
 
 const userSlice = createSlice({
@@ -74,16 +76,19 @@ const userSlice = createSlice({
       })
       .addCase(updateUser.pending, (state) => {
         state.loading = true;
+        state.isUpdated = true;
         state.updateError = null;
       })
       .addCase(updateUser.fulfilled, (state, action) => {
         state.loading = false;
+        state.isUpdated = true;
         state.updateError = null;
         state.isLoggedIn = true;
         state.currentUser = action.payload;
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.loading = true;
+        state.isUpdated = false;
         state.updateError = action.payload as string | null;
       });
   },

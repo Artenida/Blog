@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import DatabaseConnection from "../config";
-import jwt from "jsonwebtoken";
 import { CustomError } from "../utils/error";
 
 export const getUser = (
