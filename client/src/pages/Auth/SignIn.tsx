@@ -10,6 +10,7 @@ import background from "../../assets/about1.avif";
 import FormInputs from "../../components/FormInputs";
 import { useAppDispatch } from "../../store/hooks";
 import { selectUser } from "../../store/user/userSlice";
+import { validateLoginForm } from "../../utils/validations"; // Import validateForm and FormErrors from errors.tsx
 
 interface FormData {
   username: string;
@@ -21,33 +22,22 @@ const SignIn = () => {
     username: "",
     password: "",
   });
+
   const [formDataErrors, setFormDataErrors] = useState<FormData>({
     username: "",
     password: "",
   });
 
-  const validations = (id: string, value: string): FormData => {
-    let errors: FormData = { ...formDataErrors };
-
-    if (id === "username") {
-      errors.username = value ? "" : "Username is required";
-    } else if (id === "password") {
-      errors.password =
-        value.length < 8 ? "Password must be at least 8 characters" : "";
-    }
-    return errors;
-  };
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
+    const updatedErrors = validateLoginForm(id, value, formDataErrors);
     setFormData({ ...formData, [id]: value.trim() });
-    setFormDataErrors(validations(id, value));
+    setFormDataErrors(updatedErrors);
   };
 
   const { isLoggedIn, loading, loginError } = useAppSelector(selectUser);
   const navigate = useNavigate();
-  const dispatch = useAppDispatch(); // Dispatch function to dispatch actions
-
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -61,8 +51,7 @@ const SignIn = () => {
     event.preventDefault();
     try {
       await dispatch(loginUser(formData));
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   return (

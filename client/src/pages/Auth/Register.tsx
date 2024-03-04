@@ -12,6 +12,7 @@ import FormInputs from "../../components/FormInputs";
 import { selectUser } from "../../store/user/userSlice";
 import { registerUser } from "../../api/userThunk";
 import { useEffect } from "react";
+import { validateRegisterForm } from "../../utils/validations";
 
 interface FormData {
   username: string;
@@ -39,77 +40,35 @@ const Register = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const validations = (id: string, value: string): FormData => {
-    let errors: FormData = { ...formDataErrors };
-
-    // Reset errors for the field being validated
-    // if (id === "username") {
-    //   errors.username = "";
-    // } else if (id === "email") {
-    //   errors.email = "";
-    // } else if (id === "password") {
-    //   errors.password = "";
-    // } else if (id === "confirmPassword") {
-    //   errors.confirmPassword = "";
-    // }
-
-    // Perform validations for each field
-    if (id === "username") {
-      errors.username = value.trim() ? "" : "Username is required";
-    } else if (id === "email") {
-      errors.email = value.trim() ? " " : "Email is required";
-      if (!/\S+@\S+\.\S+/.test(value)) {
-        errors.email = "Email is not valid";
-      }
-    }
-
-    if (id === "password") {
-      if (!value.trim()) {
-        errors.password = "Password is required";
-      } else if (value.length < 8) {
-        errors.password = "Password must be at least 8 characters";
-      }
-    }
-
-    if (id === "confirmPassword") {
-      if (!value.trim()) {
-        errors.confirmPassword = "Confirm Password is required";
-      } else if (value !== formData.password) {
-        errors.confirmPassword = "Passwords do not match";
-      }
-    }
-
-    return errors;
-  };
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
+    const updatedErrors = validateRegisterForm(id, value, formDataErrors);
     setFormData({ ...formData, [id]: value.trim() });
-    setFormDataErrors(validations(id, value));
+    setFormDataErrors(updatedErrors);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  try {
-    const { username, email, password, confirmPassword } = formData;
-    const resultAction = await dispatch(
-      registerUser({ username, email, password, confirmPassword })
-    );
-   if (registerUser.fulfilled.match(resultAction)) {
-    navigate("/signIn");
-  } else if (registerUser.rejected.match(resultAction)) {
-    console.error(resultAction.error.message);
-  }
-  } catch (error: any) {
-    console.log(error.message);
-  }
-};
+    try {
+      const { username, email, password, confirmPassword } = formData;
+      const resultAction = await dispatch(
+        registerUser({ username, email, password, confirmPassword })
+      );
+      if (registerUser.fulfilled.match(resultAction)) {
+        navigate("/signIn");
+      } else if (registerUser.rejected.match(resultAction)) {
+        console.error(resultAction.error.message);
+      }
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
 
-useEffect(() => {
-  if (currentUser) {
-    navigate("/signIn");
-  }
-}, [currentUser]);
+  useEffect(() => {
+    if (currentUser) {
+      navigate("/signIn");
+    }
+  }, [currentUser]);
 
   return (
     <div
@@ -147,7 +106,7 @@ useEffect(() => {
           onChange={handleChange}
           icon={<MdEmail />}
         />
-        {formDataErrors.username && (
+        {formDataErrors.email && (
           <span className="text-red-600 pl-1">{formDataErrors.email}</span>
         )}
         <FormInputs
@@ -158,7 +117,7 @@ useEffect(() => {
           onChange={handleChange}
           icon={<RiLockPasswordFill />}
         />
-        {formDataErrors.username && (
+        {formDataErrors.password && (
           <span className="text-red-600 pl-1">{formDataErrors.password}</span>
         )}
         <FormInputs
