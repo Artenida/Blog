@@ -45,10 +45,22 @@ export const updateUser = (
       return;
     }
 
-    const query =
-      "UPDATE users SET username = ?, email = ?, password = ?, bio = ? WHERE id = ?";
-    db.query(query, [username, email, password, bio, id], (error, result) => {
+    let query;
+    const queryParams = [];
+
+    // Determine the appropriate update query based on whether password is provided
+    if (password) {
+      query =
+        "UPDATE users SET username = ?, email = ?, password = ?, bio = ? WHERE id = ?";
+      queryParams.push(username, email, password, bio, id);
+    } else {
+      query = "UPDATE users SET username = ?, email = ?, bio = ? WHERE id = ?";
+      queryParams.push(username, email, bio, id);
+    }
+
+    db.query(query, queryParams, (error, result) => {
       if (error) {
+        console.error("Error updating user:", error);
         res.status(500).json({ message: "Internal Server Error" });
       } else if (result.changedRows === 1) {
         res.status(200).json({
@@ -60,11 +72,14 @@ export const updateUser = (
             bio: bio,
           },
         });
+      } else {
+        res.status(404).json({ message: "User not found" });
       }
       connection.closeConnection();
     });
   });
 };
+
 
 export const deleteUser = async (
   req: Request,
