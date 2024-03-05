@@ -45,9 +45,21 @@ export const updateUser = (
       return;
     }
 
-    const query =
-      "UPDATE users SET username = ?, email = ?, password = ?, bio = ? WHERE id = ?";
-    db.query(query, [username, email, password, bio, id], (error, result) => {
+    let query;
+    let queryParams;
+
+    if (password.trim() === "") {
+      // If the password field is empty, don't update the password in the database
+      query = "UPDATE users SET username = ?, email = ?, bio = ? WHERE id = ?";
+      queryParams = [username, email, bio, id];
+    } else {
+      // If the password field is not empty, update all fields including the password
+      query =
+        "UPDATE users SET username = ?, email = ?, password = ?, bio = ? WHERE id = ?";
+      queryParams = [username, email, password, bio, id];
+    }
+
+    db.query(query, queryParams, (error, result) => {
       if (error) {
         res.status(500).json({ message: "Internal Server Error" });
       } else if (result.changedRows === 1) {
@@ -65,6 +77,7 @@ export const updateUser = (
     });
   });
 };
+
 
 export const deleteUser = async (
   req: Request,

@@ -56,9 +56,7 @@ export const UpdateUserForm = () => {
         bio: data.bio,
         userId: currentUser?.user?.id,
       };
-      dispatch(updateUser(newUser)).then(() => {
-        if (isUpdated) navigate(`/myAccount/${currentId}`);
-      });
+      dispatch(updateUser(newUser))
     }
   }, [valid, data, dispatch, currentUser, currentId, navigate]);
 
