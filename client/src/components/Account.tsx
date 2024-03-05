@@ -35,13 +35,11 @@ const Account = () => {
     };
   }, []);
 
-  const handleSignOut = async () => {
-    try {
-      await dispatch(signOutSuccess());
-      setIsOpen(false);
-      navigate('/');
-    } catch (error) {}
-  }
+  const handleSignOut = () => {
+    dispatch(signOutSuccess());
+    setIsOpen(false);
+    navigate("/");
+  };
   return (
     <>
       {currentUser ? (
@@ -94,9 +92,12 @@ const Account = () => {
                 className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-custom-color2 hover:text-gray-900"
                 role="menuitem"
               >
-                <div className="flex items-center gap-1"  onClick={() => {
-                  handleSignOut()
-                }}>
+                <div
+                  className="flex items-center gap-1"
+                  onClick={() => {
+                    handleSignOut();
+                  }}
+                >
                   <FaSignOutAlt />
                   Sign Out
                 </div>

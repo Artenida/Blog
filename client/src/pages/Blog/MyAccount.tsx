@@ -6,8 +6,9 @@ import { UpdateUserForm } from "../../components/UpdateUserForm";
 
 const MyAccount = () => {
   const { currentUser } = useSelector(selectUser);
+
   return (
-    <div className="flex flex-col md:flex-row">
+    <div className="flex flex-col md:flex-row -z-50">
       <Sidebar />
       <div className="border-r-4 border-opacity-50 my-12 ml-4 border-custom-color2"></div>
       <div className="mx-auto flex flex-col gap-4 p-12 w-full">

@@ -85,7 +85,7 @@ export const UpdateUserForm = () => {
         </div>
       </div>
 
-      <div className="relative">
+      <div className="relative -z-30">
         <FormInputs
           id="username"
           label="Username"
@@ -95,10 +95,10 @@ export const UpdateUserForm = () => {
         />
         {formDataErrors.username && (
           <span className="text-red-600 pl-1">{formDataErrors.username}</span>
-        )}{" "}
+        )}
       </div>
 
-      <div className="relative">
+      <div className="relative -z-30">
         <FormInputs
           id="email"
           label="Email"
@@ -108,10 +108,10 @@ export const UpdateUserForm = () => {
         />
         {formDataErrors.email && (
           <span className="text-red-600 pl-1">{formDataErrors.email}</span>
-        )}{" "}
+        )}
       </div>
 
-      <div className="relative mb-3">
+      <div className="relative mb-3 -z-30">
         <FormInputs
           id="bio"
           label="Bio"
@@ -121,10 +121,10 @@ export const UpdateUserForm = () => {
         />
         {formDataErrors.bio && (
           <span className="text-red-600 pl-1">{formDataErrors.bio}</span>
-        )}{" "}
+        )}
       </div>
 
-      <div className="relative mb-3">
+      <div className="relative mb-3 -z-30">
         <FormInputs
           id="password"
           label="Password"
@@ -134,7 +134,7 @@ export const UpdateUserForm = () => {
         />
         {formDataErrors.password && (
           <span className="text-red-600 pl-1">{formDataErrors.password}</span>
-        )}{" "}
+        )}
       </div>
       <MediumButton onClick={handleUpdate}>Update</MediumButton>
       {!hasErrors && updateError && (

@@ -20,7 +20,7 @@ const FormInputs: React.FC<FormInputProps> = ({
   onChange,
 }) => {
   return (
-    <div className="mt-3">
+    <div className="mt-3" style={{ zIndex: 0 }}> {/* Set a lower z-index */}
       <div className="flex items-center align-center gap-1 pl-1">
         {icon}
         <label htmlFor={id} className="font-semibold text-custom-color3 pl-1">

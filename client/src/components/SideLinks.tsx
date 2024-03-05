@@ -5,29 +5,46 @@ import { deleteUser } from "../api/userThunk";
 import { useAppDispatch } from "../store/hooks";
 import { useAppSelector } from "../store/hooks";
 import { selectUser } from "../store/user/userSlice";
+import { useState } from "react";
+import { Dialog } from "../components/Dialog";
 
 export const SideLinks = () => {
   const dispatch = useAppDispatch(); // Dispatch function to dispatch actions
   const navigate = useNavigate();
   const { currentUser } = useAppSelector(selectUser);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  const handleDeleteAccount = async () => {
-    try {
-      await dispatch(deleteUser(currentUser.user.id));
-      console.log("User account deleted successfully");
-      // await dispatch(signOutSuccess());
-      // navigate('/')
-      handleSignOut();
-    } catch (error) {
-      console.error("Error deleting user account: ", error);
-    }
+  const handleDeleteAccount = () => {
+    setIsDeleteDialogOpen(true);
   };
 
-  const handleSignOut = async () => {
-    try {
-      await dispatch(signOutSuccess());
-      navigate("/");
-    } catch (error) {}
+  const handleCancelDelete = () => {
+    setIsDeleteDialogOpen(false);
+  };
+
+  const handleConfirmDelete = () => {
+    dispatch(deleteUser(currentUser.user.id));
+    console.log("User account deleted successfully");
+    dispatch(signOutSuccess());
+    navigate("/");
+    setIsDeleteDialogOpen(false);
+  };
+
+  // const handleDeleteAccount = async () => {
+  //   try {
+  //     await dispatch(deleteUser(currentUser.user.id));
+  //     console.log("User account deleted successfully");
+  //     // await dispatch(signOutSuccess());
+  //     // navigate('/')
+  //     handleSignOut();
+  //   } catch (error) {
+  //     console.error("Error deleting user account: ", error);
+  //   }
+  // };
+
+  const handleSignOut = () => {
+    dispatch(signOutSuccess());
+    navigate("/");
   };
 
   return (
@@ -69,6 +86,12 @@ export const SideLinks = () => {
           )}
         </div>
       ))}
+      <Dialog
+        isOpen={isDeleteDialogOpen}
+        message="Are you sure you want to delete your account?"
+        onCancel={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 };
