@@ -85,7 +85,7 @@ export const UpdateUserForm = () => {
         </div>
       </div>
 
-      <div className="relative -z-30">
+      <div className="">
         <FormInputs
           id="username"
           label="Username"
@@ -98,7 +98,7 @@ export const UpdateUserForm = () => {
         )}
       </div>
 
-      <div className="relative -z-30">
+      <div className="">
         <FormInputs
           id="email"
           label="Email"
@@ -111,7 +111,7 @@ export const UpdateUserForm = () => {
         )}
       </div>
 
-      <div className="relative mb-3 -z-30">
+      <div className="">
         <FormInputs
           id="bio"
           label="Bio"
@@ -124,7 +124,7 @@ export const UpdateUserForm = () => {
         )}
       </div>
 
-      <div className="relative mb-3 -z-30">
+      <div className="mb-3">
         <FormInputs
           id="password"
           label="Password"
