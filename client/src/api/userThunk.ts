@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { createAPI, deleteAPI } from "../utils/api/createApi";
+import { createAPI } from "../utils/api/createApi";
 
 type UserBodyType = {
   username: string;
@@ -64,38 +64,13 @@ export const registerUser = createAsyncThunk<
   }
 );
 
-// type UserBodyTypeDelete = {
-//   userId: number;
-// };
-
-// export const deleteUser = createAsyncThunk(
-//   "api/users/delete",
-//   async (body: UserBodyTypeDelete, { rejectWithValue }) => {
-//     try {
-//       const { userId } = body;
-
-//       const response = await createAPI<{}>(`api/users/delete/${userId}`, {
-//         method: "DELETE",
-//       })(body);
-
-//       if (!response.ok) {
-//         const errorMessage = await response.text();
-//         return rejectWithValue(errorMessage);
-//       }
-
-//       return { success: true };
-//     } catch (error: any) {
-//       return rejectWithValue(error.message);
-//     }
-//   }
-// );
 export const deleteUser = createAsyncThunk(
   "api/users/delete",
   async (userId: number, { rejectWithValue }) => {
     try {
-      const response = await deleteAPI(`api/users/delete/${userId}`, {
+      const response = await createAPI(`api/users/delete/${userId}`, {
         method: "DELETE",
-      })();
+      })(null);
       if (!response.ok) {
         const errorMessage = await response.text();
         return rejectWithValue(errorMessage);

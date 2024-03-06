@@ -30,18 +30,6 @@ export const SideLinks = () => {
     setIsDeleteDialogOpen(false);
   };
 
-  // const handleDeleteAccount = async () => {
-  //   try {
-  //     await dispatch(deleteUser(currentUser.user.id));
-  //     console.log("User account deleted successfully");
-  //     // await dispatch(signOutSuccess());
-  //     // navigate('/')
-  //     handleSignOut();
-  //   } catch (error) {
-  //     console.error("Error deleting user account: ", error);
-  //   }
-  // };
-
   const handleSignOut = () => {
     dispatch(signOutSuccess());
     navigate("/");

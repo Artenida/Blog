@@ -22,19 +22,3 @@ export const createAPI = <FormBody>(endpoint: string, options: APIOptions) => {
     });
   };
 };
-
-export const deleteAPI = (endpoint: string, options: APIOptions) => {
-  return async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/${endpoint}`, {
-        method: options.method ?? "DELETE",
-        headers,
-        // body: options.body ? JSON.stringify(options.body) : undefined,
-      });
-
-      return response;
-    } catch (error: any) {
-      throw new Error("Error deleting user: " + error.message);
-    }
-  };
-};
