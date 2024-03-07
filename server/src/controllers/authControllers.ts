@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import DatabaseConnection from "../config";
 import jwt from "jsonwebtoken";
 import { CustomError } from "../utils/error";
-// import bcrypt from 'bcryptjs';
+// import bcrypt from 'bcryptjs'; -> remove
 
 export const register = (
   req: Request,
@@ -49,6 +49,8 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
   const db = connection.getConnection();
   
   const { username, password } = req.body;
+
+  // use validation middleware and use this function, login, only for login functionality
   if (!username || !password) {
     const customError = new CustomError(400, "All fields are required");
     return next(customError);
@@ -60,6 +62,12 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
     db.query(query, [req.body.username, req.body.password], (error, data) => {
       // console.log(data);
       if (error) return next(error);
+
+      /**
+       * DRY (don't repeat yourself) & DIE (dublication is evil)
+       * from the 2 condition blocks the only thing that changes is the meesage 
+       * "Wrong username or password" & "Wrong password"
+       */
 
       if (data.length === 0) {
         const customError = new CustomError(400, "Wrong username or password");
@@ -79,7 +87,8 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
       const token = jwt.sign({
         userId: user.id,
       }, process.env.ACCESS_TOKEN_SECRET); 
-
+      
+      //do not return password back
       const { password: pass, ...rest } =  user;
 
       res.cookie("access_token", token, {
@@ -95,3 +104,8 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
   }
   connection.closeConnection();
 };
+
+/** SOC separate concerns
+ * use a repo or model for queries
+ * that will make it easier to change from query to orm, or change database to no-sql
+*/

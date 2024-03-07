@@ -37,6 +37,10 @@ class DatabaseConnection {
   }
 }
 
-export default DatabaseConnection;
+// do not export the bluprint , class, export the instance of the class 
+// example 
+const databaseConnection = new DatabaseConnection;
+
+export default databaseConnection;
 //Nderto objektin ketu edhe e eksporton ketu 
 //Duhet te ndryshosh klase me vete per querry mund te jene te models, ne menyre qe controllers te jene te pa prekur
