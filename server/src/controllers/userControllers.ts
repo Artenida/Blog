@@ -7,20 +7,24 @@ export const getUser = (
   res: Response,
   next: NextFunction
 ): void => {
-  const connection = databaseConnection;
+  const connection = databaseConnection();
   const db = connection.getConnection();
 
   db.query("SELECT * FROM data", (error, result) => {
     if (error) {
+      console.error("Error retrieving user data:", error);
+      const customError = new CustomError(500, "Internal Server Error");
       connection.closeConnection();
+      return next(customError);
     }
+
     res.json(result);
     connection.closeConnection();
   });
 };
 
 export const updateUser = (req: Request, res: Response, next: NextFunction) => {
-  const connection = databaseConnection;
+  const connection = databaseConnection();
   const db = connection.getConnection();
   const { username, email, password, bio } = req.body;
   const { id } = req.params;
@@ -29,7 +33,7 @@ export const updateUser = (req: Request, res: Response, next: NextFunction) => {
     "SELECT id FROM users WHERE (username = ? OR email = ?) AND id != ?";
   db.query(checkQuery, [username, email, id], (checkError, checkResult) => {
     if (checkError) {
-      console.log("Error checking username/email:", checkError);
+      console.error("Error checking username/email:", checkError);
       res.status(400).json({ message: "Error checking username/email" });
       return connection.closeConnection(); // Close connection on error
     }
@@ -55,6 +59,7 @@ export const updateUser = (req: Request, res: Response, next: NextFunction) => {
 
     db.query(query, queryParams, (error, result) => {
       if (error) {
+        console.error("Error updating user:", error);
         res.status(500).json({ message: "Internal Server Error" });
         return connection.closeConnection(); // Close connection on error
       } else if (result.changedRows === 1) {
@@ -78,7 +83,7 @@ export const deleteUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  const connection = databaseConnection;
+  const connection = databaseConnection();
   const db = connection.getConnection();
 
   const { id } = req.params;
