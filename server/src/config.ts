@@ -7,9 +7,9 @@ class DatabaseConnection {
       this.connection = mysql.createConnection (
         {
             host: "localhost", 
-    user: "root",
-    password: "artenidanew",
-    database: "blog"
+            user: "root",
+            password: "artenidanew",
+            database: "blog"
         }
       );
 
@@ -37,5 +37,8 @@ class DatabaseConnection {
     }
 }
 
-export default DatabaseConnection;
+// do not export the bluprint , class, export the instance of the class 
+// example 
+const databaseConnection = new DatabaseConnection;
 
+export default databaseConnection;
