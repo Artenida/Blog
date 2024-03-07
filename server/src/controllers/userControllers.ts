@@ -35,23 +35,21 @@ export const updateUser = (req: Request, res: Response, next: NextFunction) => {
     if (checkError) {
       console.error("Error checking username/email:", checkError);
       res.status(400).json({ message: "Error checking username/email" });
-      return connection.closeConnection(); // Close connection on error
+      return connection.closeConnection();
     }
 
     if (checkResult && checkResult.length > 0) {
       res.status(400).json({ message: "Username or email already exists" });
-      return connection.closeConnection(); // Close connection if username/email exists
+      return connection.closeConnection();
     }
 
     let query;
     let queryParams;
 
     if (password.trim() === "") {
-      // If the password field is empty, don't update the password in the database
       query = "UPDATE users SET username = ?, email = ?, bio = ? WHERE id = ?";
       queryParams = [username, email, bio, id];
     } else {
-      // If the password field is not empty, update all fields including the password
       query =
         "UPDATE users SET username = ?, email = ?, password = ?, bio = ? WHERE id = ?";
       queryParams = [username, email, password, bio, id];
@@ -61,7 +59,7 @@ export const updateUser = (req: Request, res: Response, next: NextFunction) => {
       if (error) {
         console.error("Error updating user:", error);
         res.status(500).json({ message: "Internal Server Error" });
-        return connection.closeConnection(); // Close connection on error
+        return connection.closeConnection();
       } else if (result.changedRows === 1) {
         res.status(200).json({
           message: "User updated successfully",
@@ -72,7 +70,7 @@ export const updateUser = (req: Request, res: Response, next: NextFunction) => {
             bio: bio,
           },
         });
-        connection.closeConnection(); // Close connection after handling the result
+        connection.closeConnection();
       }
     });
   });
