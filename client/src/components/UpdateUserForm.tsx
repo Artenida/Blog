@@ -56,7 +56,7 @@ export const UpdateUserForm = () => {
         bio: data.bio,
         userId: currentUser?.user?.id,
       };
-      dispatch(updateUser(newUser))
+      dispatch(updateUser(newUser));
     }
   }, [valid, data, dispatch, currentUser, currentId, navigate]);
 
@@ -71,7 +71,7 @@ export const UpdateUserForm = () => {
 
   return (
     <div className="flex flex-col gap-3 p-4 border-2 rounded-xl border-custom-color2">
-      <div className="relative">
+      <div className="">
         <div className="flex justify-between items-center px-2">
           <h2 className="text-lg sm:text-xl lg:text-2xl text-custom-color3 font-semibold">
             Personal Information
@@ -90,10 +90,8 @@ export const UpdateUserForm = () => {
           placeholder="Username"
           value={data.username}
           onChange={handleInputChange}
+          errorMessage={formDataErrors.username}
         />
-        {formDataErrors.username && (
-          <span className="text-red-600 pl-1">{formDataErrors.username}</span>
-        )}
       </div>
 
       <div className="">
@@ -103,10 +101,8 @@ export const UpdateUserForm = () => {
           placeholder="Email"
           value={data.email}
           onChange={handleInputChange}
+          errorMessage={formDataErrors.email}
         />
-        {formDataErrors.email && (
-          <span className="text-red-600 pl-1">{formDataErrors.email}</span>
-        )}
       </div>
 
       <div className="">
@@ -116,10 +112,8 @@ export const UpdateUserForm = () => {
           placeholder="Bio"
           value={data.bio}
           onChange={handleInputChange}
+          errorMessage={formDataErrors.bio}
         />
-        {formDataErrors.bio && (
-          <span className="text-red-600 pl-1">{formDataErrors.bio}</span>
-        )}
       </div>
 
       <div className="mb-3">
@@ -129,10 +123,8 @@ export const UpdateUserForm = () => {
           placeholder="Password"
           value={data.password}
           onChange={handleInputChange}
+          errorMessage={formDataErrors.password}
         />
-        {formDataErrors.password && (
-          <span className="text-red-600 pl-1">{formDataErrors.password}</span>
-        )}
       </div>
       <MediumButton onClick={handleUpdate}>Update</MediumButton>
       {!hasErrors && updateError && (

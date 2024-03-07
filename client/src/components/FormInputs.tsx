@@ -8,6 +8,7 @@ interface FormInputProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   icon?: React.ReactNode;
   value?: string | number | undefined;
+  errorMessage?: string;
 }
 
 const FormInputs: React.FC<FormInputProps> = ({
@@ -18,9 +19,10 @@ const FormInputs: React.FC<FormInputProps> = ({
   value,
   icon,
   onChange,
+  errorMessage,
 }) => {
   return (
-    <div className="mt-3" style={{ zIndex: 0 }}> {/* Set a lower z-index */}
+    <div className="mt-3">
       <div className="flex items-center align-center gap-1 pl-1">
         {icon}
         <label htmlFor={id} className="font-semibold text-custom-color3 pl-1">
@@ -36,6 +38,11 @@ const FormInputs: React.FC<FormInputProps> = ({
         onChange={onChange}
         value={value}
       />
+      <p
+        className={`text-md text-red-600 ${errorMessage ? "block" : "hidden"}`}
+      >
+        {errorMessage}
+      </p>
     </div>
   );
 };
