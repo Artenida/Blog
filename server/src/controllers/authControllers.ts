@@ -1,104 +1,109 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { CustomError } from "../utils/error";
+import databaseConnection from "../config";
 import createDatabaseConnection from "../config";
-import mysql from "mysql";
+// import bcrypt from 'bcryptjs';
 
-export const register = async (req: Request, res: Response, next: NextFunction) => {
+export const register = (req: Request, res: Response, next: NextFunction) => {
+  const connection = createDatabaseConnection();
+  const db = connection.getConnection();
+
   const { username, email, password, confirmPassword } = req.body;
   if (!username || !email || !password || !confirmPassword) {
     const customError = new CustomError(400, "All fields are required");
     return next(customError);
   }
-
-  const dbConnection = createDatabaseConnection();
-  const connection = dbConnection.getConnection();
-
   try {
     const checkQuery = "SELECT * FROM users WHERE username = ?";
-    const data = await queryAsync(connection, checkQuery, [req.body.username]);
-
-    if (data.length > 0) {
-      dbConnection.closeConnection();
-      const customError = new CustomError(409, "User already exists");
-      return next(customError);
-    } else {
-      const insertQuery = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
-      await queryAsync(connection, insertQuery, [username, email, password]);
-      dbConnection.closeConnection();
-      return res.status(201).json("User has been created");
-    }
+    db.query(checkQuery, [req.body.username], (error, data) => {
+      if (error) {
+        connection.closeConnection();
+        return next(error);
+      }
+      if (data.length > 0) {
+        connection.closeConnection();
+        const customError = new CustomError(409, "User already exists");
+        return next(customError);
+      } else {
+        // const hashedPassword = bcrypt.hashSync(password,10);
+        const insertQuery =
+          "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+        const values = [req.body.username, req.body.email, req.body.password];
+        db.query(insertQuery, values, (error) => {
+          connection.closeConnection();
+          if (error) {
+            return next(error);
+          }
+          return res.status(201).json("User has been created");
+        });
+      }
+    });
   } catch (error) {
-    dbConnection.closeConnection();
+    connection.closeConnection();
     return next(error);
   }
 };
 
-export const login = async (req: Request, res: Response, next: NextFunction) => {
+export const login = (req: Request, res: Response, next: NextFunction) => {
+  const connection = createDatabaseConnection();
+  const db = connection.getConnection();
+
   const { username, password } = req.body;
   if (!username || !password) {
     const customError = new CustomError(400, "All fields are required");
     return next(customError);
   }
 
-  const dbConnection = createDatabaseConnection();
-  const connection = dbConnection.getConnection();
-
   try {
     const query = "SELECT * FROM users WHERE username = ?";
-    const data = await queryAsync(connection, query, [username]);
 
-    if (data.length === 0) {
-      dbConnection.closeConnection(); 
-      const customError = new CustomError(400, "Wrong username or password");
-      return next(customError);
-    }
+    db.query(query, [req.body.username], (error, data) => {
+      if (error) {
+        connection.closeConnection(); 
+        return next(error);
+      }
 
-    const user = data[0];
+      if (data.length === 0) {
+        connection.closeConnection(); 
+        const customError = new CustomError(400, "Wrong username or password");
+        return next(customError);
+      }
 
-    if (password !== user.password) {
-      dbConnection.closeConnection(); 
-      const customError = new CustomError(400, "Wrong password");
-      return next(customError);
-    }
+      const user = data[0];
 
-    if (!process.env.ACCESS_TOKEN_SECRET) {
-      dbConnection.closeConnection(); 
-      return res.status(500).json("JWT secret key is not provided");
-    }
+      if (password !== user.password) {
+        connection.closeConnection(); 
+        const customError = new CustomError(400, "Wrong password");
+        return next(customError);
+      }
 
-    const token = jwt.sign(
-      {
-        userId: user.id,
-      },
-      process.env.ACCESS_TOKEN_SECRET
-    );
+      if (!process.env.ACCESS_TOKEN_SECRET) {
+        connection.closeConnection(); 
+        return res.status(500).json("JWT secret key is not provided");
+      }
 
-    const { password: pass, ...rest } = user;
+      const token = jwt.sign(
+        {
+          userId: user.id,
+        },
+        process.env.ACCESS_TOKEN_SECRET
+      );
 
-    res.cookie("access_token", token, {
-      httpOnly: true,
+      const { password: pass, ...rest } = user;
+
+      res.cookie("access_token", token, {
+        httpOnly: true,
+      });
+      res.status(200).json({
+        message: "Sign in successfully",
+        user: rest,
+      });
+
+      connection.closeConnection(); 
     });
-    res.status(200).json({
-      message: "Sign in successfully",
-      user: rest,
-    });
-
-    dbConnection.closeConnection(); 
   } catch (error) {
-    dbConnection.closeConnection();
+    connection.closeConnection();
     return next(error);
   }
 };
-
-async function queryAsync(connection: mysql.Connection, query: string, values: any[]): Promise<any[]> {
-  return new Promise<any[]>((resolve, reject) => {
-    connection.query(query, values, (error: mysql.MysqlError | null, results: any[]) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(results);
-      }
-    });
-  });
-}

@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomError } from "../utils/error";
-import databaseConnection from "../config";
+import createDatabaseConnection from "../config";
 
 export const getUser = (
   req: Request,
   res: Response,
   next: NextFunction
 ): void => {
-  const connection = databaseConnection();
+  const connection = createDatabaseConnection();
   const db = connection.getConnection();
 
   db.query("SELECT * FROM data", (error, result) => {
@@ -24,7 +24,7 @@ export const getUser = (
 };
 
 export const updateUser = (req: Request, res: Response, next: NextFunction) => {
-  const connection = databaseConnection();
+  const connection = createDatabaseConnection();
   const db = connection.getConnection();
   const { username, email, password, bio } = req.body;
   const { id } = req.params;
@@ -83,7 +83,7 @@ export const deleteUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  const connection = databaseConnection();
+  const connection = createDatabaseConnection();
   const db = connection.getConnection();
 
   const { id } = req.params;
