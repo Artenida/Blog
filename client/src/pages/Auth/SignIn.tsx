@@ -78,10 +78,8 @@ const SignIn = () => {
           type="text"
           onChange={handleChange}
           icon={<FaUser />}
+          errorMessage={formDataErrors.username}
         />
-        {formDataErrors.username && (
-          <span className="text-red-600 pl-1">{formDataErrors.username}</span>
-        )}
 
         <FormInputs
           id="password"
@@ -90,10 +88,8 @@ const SignIn = () => {
           type="password"
           onChange={handleChange}
           icon={<RiLockPasswordFill />}
+          errorMessage={formDataErrors.password}
         />
-        {formDataErrors.password && (
-          <span className="text-red-600 pl-1">{formDataErrors.password}</span>
-        )}
 
         <div className="flex gap-2 text-sm mt-3">
           <span>Don't have an account:</span>
@@ -104,7 +100,6 @@ const SignIn = () => {
 
         <div className="mt-3 py-2 font-semibold cursor-pointer text-custom-color2 bg-custom-color3 active:bg-custom-color2 active:text-custom-color3 border active:border-custom-color3 rounded-lg text-center">
           <button type="submit" disabled={loading} className="w-full h-full">
-            {/* Register */}
             {loading ? (
               <div className="flex justify-center items-center">
                 <ImSpinner11 className="text-sm" />

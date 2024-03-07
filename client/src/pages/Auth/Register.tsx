@@ -94,10 +94,9 @@ const Register = () => {
           type="text"
           onChange={handleChange}
           icon={<FaUser />}
+          errorMessage={formDataErrors.username}
         />
-        {formDataErrors.username && (
-          <span className="text-red-600 pl-1">{formDataErrors.username}</span>
-        )}
+
         <FormInputs
           id="email"
           label="Email"
@@ -105,10 +104,9 @@ const Register = () => {
           type="email"
           onChange={handleChange}
           icon={<MdEmail />}
+          errorMessage={formDataErrors.email}
         />
-        {formDataErrors.email && (
-          <span className="text-red-600 pl-1">{formDataErrors.email}</span>
-        )}
+
         <FormInputs
           id="password"
           label="Password"
@@ -116,10 +114,9 @@ const Register = () => {
           type="password"
           onChange={handleChange}
           icon={<RiLockPasswordFill />}
+          errorMessage={formDataErrors.password}
         />
-        {formDataErrors.password && (
-          <span className="text-red-600 pl-1">{formDataErrors.password}</span>
-        )}
+
         <FormInputs
           id="confirmPassword"
           label="Confirm Password"
@@ -127,12 +124,8 @@ const Register = () => {
           type="password"
           onChange={handleChange}
           icon={<RiLockPasswordFill />}
+          errorMessage={formDataErrors.confirmPassword}
         />
-        {formDataErrors.confirmPassword && (
-          <span className="text-red-600 pl-1">
-            {formDataErrors.confirmPassword}
-          </span>
-        )}
 
         <div className="flex gap-2 text-sm mt-3">
           <span>Already part of us:</span>
@@ -143,7 +136,6 @@ const Register = () => {
 
         <div className="mt-3 py-2 font-semibold cursor-pointer text-custom-color2 bg-custom-color3 active:bg-custom-color2 active:text-custom-color3 border active:border-custom-color3 rounded-lg text-center">
           <button type="submit" disabled={loading} className="w-full h-full">
-            {/* Register */}
             {loading ? (
               <div className="flex justify-center items-center">
                 <ImSpinner11 className="text-sm" />
