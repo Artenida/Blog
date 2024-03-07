@@ -1,13 +1,14 @@
-import FormInputs from "../components/FormInputs";
-import { MediumButton } from "../components/ButtonComponent";
+import { useRef, useEffect, useState, useCallback } from "react";
+import { Alert } from "@material-tailwind/react";
 import { FaEdit } from "react-icons/fa";
-import { validateUpdateForm } from "../utils/validations";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { selectUser } from "../store/user/userSlice";
 import { updateUser } from "../api/userThunk";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAppSelector, useAppDispatch } from "../store/hooks";
-import { Alert } from "@material-tailwind/react";
+import FormInputs from "../components/FormInputs"
+import { MediumButton } from "./ButtonComponent";
+import { validateUpdateForm } from "../utils/validations";
+import { emplace } from "@reduxjs/toolkit/dist/utils";
 
 interface FormData {
   username: string;
@@ -19,7 +20,7 @@ interface FormData {
 export const UpdateUserForm = () => {
   const dispatch = useAppDispatch(); // Dispatch function to dispatch actions
   const navigate = useNavigate();
-  const { currentUser, updateError, isUpdated } = useAppSelector(selectUser);
+  const { currentUser, updateError } = useAppSelector(selectUser);
 
   const currentId = currentUser?.user?.id;
   const [valid, setValid] = useState(false);
@@ -37,7 +38,7 @@ export const UpdateUserForm = () => {
     password: "",
   });
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = useCallback( (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
     setData((prevData) => ({
       ...prevData,
@@ -45,10 +46,15 @@ export const UpdateUserForm = () => {
     }));
     const updatedErrors = validateUpdateForm(id, value, formDataErrors);
     setFormDataErrors(updatedErrors);
-  };
+  },
+  [formDataErrors]
+  );
 
-  useEffect(() => {
-    if (valid) {
+  const hasErrors = Object.values(formDataErrors).some((error) => error !== "");
+  const handleUpdate = useCallback(() => {
+    if(hasErrors) {
+      console.log("Form has errors. Please fix them before updating")
+    } else {
       const newUser = {
         username: data.username,
         email: data.email,
@@ -58,16 +64,7 @@ export const UpdateUserForm = () => {
       };
       dispatch(updateUser(newUser));
     }
-  }, [valid, data, dispatch, currentUser, currentId, navigate]);
-
-  const hasErrors = Object.values(formDataErrors).some((error) => error !== "");
-  const handleUpdate = async () => {
-    if (hasErrors) {
-      console.log("Form has errors. Please fix them before updating.");
-    } else {
-      setValid(true);
-    }
-  };
+},[hasErrors, data, currentUser, dispatch]);;
 
   return (
     <div className="flex flex-col gap-3 p-4 border-2 rounded-xl border-custom-color2">
