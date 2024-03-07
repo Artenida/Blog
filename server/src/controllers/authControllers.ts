@@ -65,15 +65,26 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
         const customError = new CustomError(400, "Wrong username or password");
         return next(customError);
       }
-      const user = data[0]; // Assuming the first row is the user
+      const user = data[0];
 
       if (password !== user.password) {
         const customError = new CustomError(400, "Wrong password");
         return next(customError);
       }
       // const checkPassword = bcrypt.compareSync(req.body.password, data[0].password)
-      const { password: pass, ...rest } = user;
+      
+       if (!process.env.ACCESS_TOKEN_SECRET) {
+        return res.status(500).json("JWT secret key is not provided");
+      }
+      const token = jwt.sign({
+        userId: user.id,
+      }, process.env.ACCESS_TOKEN_SECRET); 
 
+      const { password: pass, ...rest } =  user;
+
+      res.cookie("access_token", token, {
+        httpOnly: true,
+      });
       res.status(200).json({
         message: "Sign in successfully",
         user: rest,
