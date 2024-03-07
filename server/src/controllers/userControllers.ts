@@ -1,30 +1,26 @@
 import { NextFunction, Request, Response } from "express";
-import DatabaseConnection from "../config";
 import { CustomError } from "../utils/error";
+import databaseConnection from "../config";
 
 export const getUser = (
   req: Request,
   res: Response,
   next: NextFunction
 ): void => {
-  const connection = new DatabaseConnection();
+  const connection = databaseConnection;
   const db = connection.getConnection();
 
   db.query("SELECT * FROM data", (error, result) => {
     if (error) {
-      return next(error);
+      connection.closeConnection();
     }
     res.json(result);
+    connection.closeConnection();
   });
-  connection.closeConnection();
 };
 
-export const updateUser = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const connection = new DatabaseConnection();
+export const updateUser = (req: Request, res: Response, next: NextFunction) => {
+  const connection = databaseConnection;
   const db = connection.getConnection();
   const { username, email, password, bio } = req.body;
   const { id } = req.params;
@@ -35,14 +31,12 @@ export const updateUser = (
     if (checkError) {
       console.log("Error checking username/email:", checkError);
       res.status(400).json({ message: "Error checking username/email" });
-      connection.closeConnection();
-      return;
+      return connection.closeConnection(); // Close connection on error
     }
 
     if (checkResult && checkResult.length > 0) {
       res.status(400).json({ message: "Username or email already exists" });
-      connection.closeConnection();
-      return;
+      return connection.closeConnection(); // Close connection if username/email exists
     }
 
     let query;
@@ -62,6 +56,7 @@ export const updateUser = (
     db.query(query, queryParams, (error, result) => {
       if (error) {
         res.status(500).json({ message: "Internal Server Error" });
+        return connection.closeConnection(); // Close connection on error
       } else if (result.changedRows === 1) {
         res.status(200).json({
           message: "User updated successfully",
@@ -72,19 +67,18 @@ export const updateUser = (
             bio: bio,
           },
         });
+        connection.closeConnection(); // Close connection after handling the result
       }
-      connection.closeConnection();
     });
   });
 };
-
 
 export const deleteUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const connection = new DatabaseConnection();
+  const connection = databaseConnection;
   const db = connection.getConnection();
 
   const { id } = req.params;
@@ -94,15 +88,17 @@ export const deleteUser = async (
     if (error) {
       console.error("Error deleting user:", error);
       const customError = new CustomError(500, "Internal Server Error");
+      connection.closeConnection();
       return next(customError);
     }
 
     if (result.affectedRows === 0) {
       const customError = new CustomError(400, "User not found");
+      connection.closeConnection();
       return next(customError);
     }
 
-    return res.status(200).json({ message: "User deleted successfully" });
+    res.status(200).json({ message: "User deleted successfully" });
+    connection.closeConnection();
   });
-  connection.closeConnection();
 };

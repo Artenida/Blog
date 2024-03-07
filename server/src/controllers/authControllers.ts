@@ -1,15 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-import DatabaseConnection from "../config";
 import jwt from "jsonwebtoken";
 import { CustomError } from "../utils/error";
+import databaseConnection from "../config";
 // import bcrypt from 'bcryptjs';
 
-export const register = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const connection = new DatabaseConnection();
+export const register = (req: Request, res: Response, next: NextFunction) => {
+  const connection = databaseConnection;
   const db = connection.getConnection();
 
   const { username, email, password, confirmPassword } = req.body;
@@ -21,9 +17,11 @@ export const register = (
     const checkQuery = "SELECT * FROM users WHERE username = ?";
     db.query(checkQuery, [req.body.username], (error, data) => {
       if (error) {
+        connection.closeConnection();
         return next(error);
       }
       if (data.length > 0) {
+        connection.closeConnection();
         const customError = new CustomError(409, "User already exists");
         return next(customError);
       } else {
@@ -32,6 +30,7 @@ export const register = (
           "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
         const values = [req.body.username, req.body.email, req.body.password];
         db.query(insertQuery, values, (error) => {
+          connection.closeConnection();
           if (error) {
             return next(error);
           }
@@ -40,14 +39,15 @@ export const register = (
       }
     });
   } catch (error) {
+    connection.closeConnection();
     return next(error);
   }
 };
 
 export const login = (req: Request, res: Response, next: NextFunction) => {
-  const connection = new DatabaseConnection();
+  const connection = databaseConnection;
   const db = connection.getConnection();
-  
+
   const { username, password } = req.body;
   if (!username || !password) {
     const customError = new CustomError(400, "All fields are required");
@@ -57,30 +57,39 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
   try {
     const query = "SELECT * FROM users WHERE username = ?";
 
-    db.query(query, [req.body.username, req.body.password], (error, data) => {
-      // console.log(data);
-      if (error) return next(error);
+    db.query(query, [req.body.username], (error, data) => {
+      if (error) {
+        connection.closeConnection(); 
+        return next(error);
+      }
 
       if (data.length === 0) {
+        connection.closeConnection(); 
         const customError = new CustomError(400, "Wrong username or password");
         return next(customError);
       }
+
       const user = data[0];
 
       if (password !== user.password) {
+        connection.closeConnection(); 
         const customError = new CustomError(400, "Wrong password");
         return next(customError);
       }
-      // const checkPassword = bcrypt.compareSync(req.body.password, data[0].password)
-      
-       if (!process.env.ACCESS_TOKEN_SECRET) {
+
+      if (!process.env.ACCESS_TOKEN_SECRET) {
+        connection.closeConnection(); 
         return res.status(500).json("JWT secret key is not provided");
       }
-      const token = jwt.sign({
-        userId: user.id,
-      }, process.env.ACCESS_TOKEN_SECRET); 
 
-      const { password: pass, ...rest } =  user;
+      const token = jwt.sign(
+        {
+          userId: user.id,
+        },
+        process.env.ACCESS_TOKEN_SECRET
+      );
+
+      const { password: pass, ...rest } = user;
 
       res.cookie("access_token", token, {
         httpOnly: true,
@@ -89,9 +98,11 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
         message: "Sign in successfully",
         user: rest,
       });
+
+      connection.closeConnection(); 
     });
   } catch (error) {
-    return next(error); 
+    connection.closeConnection();
+    return next(error);
   }
-  connection.closeConnection();
 };

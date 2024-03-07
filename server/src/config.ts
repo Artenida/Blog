@@ -37,6 +37,5 @@ class DatabaseConnection {
   }
 }
 
-export default DatabaseConnection;
-//Nderto objektin ketu edhe e eksporton ketu 
-//Duhet te ndryshosh klase me vete per querry mund te jene te models, ne menyre qe controllers te jene te pa prekur
+const databaseConnection = new DatabaseConnection();
+export default databaseConnection;
