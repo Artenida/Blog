@@ -91,7 +91,7 @@ const SignIn = () => {
           errorMessage={formDataErrors.password}
         />
 
-        <div className="flex gap-2 text-sm mt-3">
+        <div className="flex gap-2 text-sm mt-4">
           <span>Don't have an account:</span>
           <Link to="/signUp" className="text-blue-500 font-semibold">
             Register
