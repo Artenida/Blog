@@ -49,6 +49,8 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
   const db = connection.getConnection();
   
   const { username, password } = req.body;
+
+  // use validation middleware and use this function, login, only for login functionality
   if (!username || !password) {
     const customError = new CustomError(400, "All fields are required");
     return next(customError);
@@ -61,6 +63,12 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
       // console.log(data);
       if (error) return next(error);
 
+      /**
+       * DRY (don't repeat yourself) & DIE (dublication is evil)
+       * from the 2 condition blocks the only thing that changes is the meesage 
+       * "Wrong username or password" & "Wrong password"
+       */
+
       if (data.length === 0) {
         const customError = new CustomError(400, "Wrong username or password");
         return next(customError);
@@ -72,6 +80,8 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
         return next(customError);
       }
       // const checkPassword = bcrypt.compareSync(req.body.password, data[0].password)
+
+      //do not return password back
       const { password: pass, ...rest } = user;
 
       res.status(200).json({
@@ -84,3 +94,8 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
   }
   connection.closeConnection();
 };
+
+/** SOC separate concerns
+ * use a repo or model for queries
+ * that will make it easier to change from query to orm, or change database to no-sql
+*/

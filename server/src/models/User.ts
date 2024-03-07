@@ -29,3 +29,5 @@ export class User {
         return this.confirmPassword;
     }
 }
+
+// Yagni (You aren't gonna need it), Do not create something unless you are using it
