@@ -59,9 +59,6 @@ const userSlice = createSlice({
         state.isLoggedIn = false;
         state.token = null;
       })
-      .addCase(registerUser.pending, (state) => {
-        state.loading = true;
-      })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.registerError = action.payload as string;

@@ -64,11 +64,6 @@ const Register = () => {
     }
   };
 
-  useEffect(() => {
-    if (currentUser) {
-      navigate("/signIn");
-    }
-  }, [currentUser]);
 
   return (
     <div
