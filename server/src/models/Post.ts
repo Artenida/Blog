@@ -88,6 +88,26 @@ class Post {
       });
     });
   }
+
+  static updatePost(image: string, title: string, description: string, postId: number, userId: number): Promise<any> {
+    const connection = createDatabaseConnection();
+    const db = connection.getConnection();
+
+    return new Promise((resolve, reject) => {
+      const q = "UPDATE posts SET `image` = ?, `title` = ?, `description` = ? WHERE `id` = ? AND `user_id` = ?";
+      const values = [image, title, description, postId, userId];
+      
+      db.query(q, values, (error, data) => {
+        if (error) {
+          connection.closeConnection();
+          reject(error);
+        } else {
+          connection.closeConnection();
+          resolve(data);
+        }
+      });
+    });
+  }
 }
 
 export default Post;
