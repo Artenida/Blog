@@ -29,8 +29,9 @@ class Post {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
 
-    const query = "SELECT u.username, p.title, p.description, p.createdAt FROM users u JOIN posts p ON u.id = p.user_id WHERE p.id = ?";
-    
+    const query =
+      "SELECT p.id, u.username, p.title, p.description, p.createdAt FROM users u JOIN posts p ON u.id = p.user_id WHERE p.id = ?";
+
     try {
       const post = await new Promise((resolve, reject) => {
         db.query(query, [postId, userId], (error, result) => {
@@ -57,6 +58,26 @@ class Post {
     return new Promise((resolve, reject) => {
       const q = "DELETE FROM posts WHERE `id` = ? AND `user_id` = ?";
       db.query(q, [postId, userId], (error, data) => {
+        if (error) {
+          connection.closeConnection();
+          reject(error);
+        } else {
+          connection.closeConnection();
+          resolve(data);
+        }
+      });
+    });
+  }
+
+ static createPost(image: string, title: string, description: string, createdAt: string, userId: number): Promise<any> {
+    const connection = createDatabaseConnection();
+    const db = connection.getConnection();
+
+    return new Promise((resolve, reject) => {
+      const q = "INSERT INTO posts (`image`, `title`, `description`, `createdAt`, `user_id`) VALUES (?, ?, ?, ?, ?)";
+      const values = [image, title, description, createdAt, userId];
+      
+      db.query(q, values, (error, data) => {
         if (error) {
           connection.closeConnection();
           reject(error);
