@@ -19,7 +19,7 @@ export class User {
   static async findByUsername(username: string): Promise<UserData[]> {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
-  
+
     try {
       const checkQuery = "SELECT * FROM users WHERE username = ?";
       const data = await new Promise<UserData[]>((resolve, reject) => {
@@ -37,33 +37,33 @@ export class User {
       return data;
     } catch (error) {
       console.error("Error in findByUsername:", error);
-      throw error; 
+      throw error;
     }
   }
-  
 
   static async createUser(username: string, email: string, password: string) {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
 
     try {
-      const insertQuery = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+      const insertQuery =
+        "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
       const values = [username, email, password];
-      
+
       await db.query(insertQuery, values);
       connection.closeConnection();
-      
+
       return true;
     } catch (error) {
       connection.closeConnection();
-      throw error; 
+      throw error;
     }
   }
 
   static async getAllUserData(): Promise<any[]> {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
-  
+
     try {
       const data = await new Promise<any[]>((resolve, reject) => {
         db.query("SELECT * FROM users", (error, result) => {
@@ -75,14 +75,13 @@ export class User {
           connection.closeConnection();
         });
       });
-  
+
       return data;
     } catch (error) {
       console.error("Error in getAllUserData:", error);
       throw error;
     }
   }
-  
 
   static async updateUser(
     id: string,
@@ -93,7 +92,7 @@ export class User {
   ): Promise<UpdateResult> {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
-  
+
     try {
       const checkQuery =
         "SELECT id FROM users WHERE (username = ? OR email = ?) AND id != ?";
@@ -111,15 +110,15 @@ export class User {
           }
         );
       });
-  
+
       if (checkResult && checkResult.length > 0) {
         connection.closeConnection();
         throw new Error("Username or email already exists");
       }
-  
+
       let query: string;
       let queryParams: (string | number)[];
-  
+
       if (password.trim() === "") {
         query =
           "UPDATE users SET username = ?, email = ?, bio = ? WHERE id = ?";
@@ -129,7 +128,7 @@ export class User {
           "UPDATE users SET username = ?, email = ?, password = ?, bio = ? WHERE id = ?";
         queryParams = [username, email, password, bio, id];
       }
-  
+
       const result: any = await new Promise((resolve, reject) => {
         db.query(query, queryParams, (error, result) => {
           if (error) {
@@ -143,13 +142,13 @@ export class User {
           }
         });
       });
-  
+
       connection.closeConnection();
-  
+
       if (!result) {
         throw new Error("User update failed");
       }
-  
+
       return result;
     } catch (error) {
       console.error("Error updating user:", error);
@@ -161,7 +160,7 @@ export class User {
   static async deleteUser(id: number): Promise<boolean> {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
-  
+
     try {
       const query = "DELETE FROM users WHERE id = ?";
       const result: DeleteResult = await new Promise((resolve, reject) => {
@@ -175,18 +174,17 @@ export class User {
           }
         });
       });
-  
+
       connection.closeConnection();
-  
+
       if (result && result.affectedRows === 0) {
         return false;
       }
-  
+
       return true;
     } catch (error) {
       console.error("Error deleting user:", error);
       throw error;
     }
   }
-  
 }

@@ -6,6 +6,7 @@ import { Request, Response, NextFunction } from "express";
 import { getUser } from "./controllers/userControllers";
 import postRoutes from "./routes/postRoutes"
 import dotenv from 'dotenv';
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ const base_url = process.env.BASE_URL;
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 app.use(`${base_url}auth`, authRoutes);
 app.use(`${base_url}users`, userRoutes);
 app.use(`${base_url}posts`, postRoutes)

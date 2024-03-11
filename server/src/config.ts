@@ -1,5 +1,5 @@
 import mysql from "mysql";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -35,7 +35,7 @@ const createDatabaseConnection = () => {
 
   return {
     getConnection,
-    closeConnection
+    closeConnection,
   };
 };
 

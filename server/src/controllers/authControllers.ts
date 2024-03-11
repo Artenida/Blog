@@ -1,14 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { Secret } from "jsonwebtoken";
 import { CustomError } from "../utils/error";
-import databaseConnection from "../config";
-import createDatabaseConnection from "../config";
-import {
-  validateLogin,
-  validateRegistration,
-} from "../middleware/validationMiddleware";
 import { User } from "../models/User";
-// import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -17,7 +11,10 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
       const customError = new CustomError(409, "User already exists");
       return next(customError);
     } else {
-      const success = await User.createUser(req.body.username, req.body.email, req.body.password);
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(req.body.password, salt);
+
+      const success = await User.createUser(req.body.username, req.body.email, hash);
       if (success) {
         return res.status(201).json("User has been created");
       } else {
@@ -31,41 +28,24 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
 
 export const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { password } = req.body;
     const userData: any[] = await User.findByUsername(req.body.username);
-
     if (userData.length === 0) {
-      const customError = new CustomError(400, "Wrong username or password");
+      const customError = new CustomError(400, "User not found");
       return next(customError);
     }
+    const isPasswordCorrect = bcrypt.compareSync(req.body.password, userData[0].password)
 
-    const user = userData[0];
+    if(!isPasswordCorrect) return res.status(400).json("Wrong username or password!")
 
-    if (password !== user.password) {
-      const customError = new CustomError(400, "Wrong password");
-      return next(customError);
-    }
+    const token = jwt.sign({id: userData[0].id}, process.env.ACCESS_TOKEN_SECRET as Secret);
 
-    if (!process.env.ACCESS_TOKEN_SECRET) {
-      return res.status(500).json("JWT secret key is not provided");
-    }
+    const { password: pass, ...rest } = userData[0];
 
-    const token = jwt.sign(
-      {
-        userId: user.id,
-      },
-      process.env.ACCESS_TOKEN_SECRET,
-    );
-
-    const { password: pass, ...rest } = user;
-
-    // res.cookie("token", token, {
-    //   httpOnly: true,
-    // });
-    res.status(200).json({
+    res.cookie("access_token", token, {
+      httpOnly: true,
+    }).status(200).json({
       message: "Sign in successfully",
       user: rest,
-      token: token,
     });
   } catch (error) {
     return next(error);

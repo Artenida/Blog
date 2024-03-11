@@ -24,8 +24,8 @@ export const getSinglePost = async (
   next: NextFunction
 ) => {
   try {
-    const postId = parseInt(req.params.id); // Assuming the post ID is passed in the URL params
-    const userId = parseInt(req.params.userId); // Assuming the user ID is passed in the URL params
+    const postId = parseInt(req.params.id);
+    const userId = parseInt(req.params.userId);
 
     const post = await Post.getPostById(postId, userId);
 

@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomError } from "../utils/error";
-import createDatabaseConnection from "../config";
 import { User } from "../models/User";
 
 export const getUser = async (
