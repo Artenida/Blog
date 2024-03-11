@@ -3,13 +3,13 @@ import type { RootState } from "../../store/store";
 import { deleteUser, loginUser, updateUser } from "../../api/userThunk";
 import { registerUser } from "../../api/userThunk";
 interface UserState {
-  currentUser: any; // Define the type for currentUser
+  currentUser: any;
   loading: boolean;
   loginError: string | null;
   registerError: string | null;
   deleteError: string | null;
   updateError: string | null;
-  token: any;
+  token: string | null;
   isLoggedIn: boolean;
   isUpdated: boolean;
 }
@@ -35,6 +35,7 @@ const userSlice = createSlice({
       state.currentUser = null;
       state.loginError = null;
       state.loading = false;
+      state.token = null;
     },
   },
 
@@ -56,6 +57,10 @@ const userSlice = createSlice({
         state.loading = false;
         state.loginError = action.payload as string;
         state.isLoggedIn = false;
+        state.token = null;
+      })
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
@@ -66,6 +71,7 @@ const userSlice = createSlice({
         state.loading = true;
       })
       .addCase(deleteUser.fulfilled, (state) => {
+        state.isLoggedIn = false;
         state.currentUser = null;
         state.deleteError = null;
         state.loading = false;

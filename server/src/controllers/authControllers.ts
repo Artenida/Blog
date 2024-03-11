@@ -54,17 +54,18 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       {
         userId: user.id,
       },
-      process.env.ACCESS_TOKEN_SECRET
+      process.env.ACCESS_TOKEN_SECRET,
     );
 
     const { password: pass, ...rest } = user;
 
-    res.cookie("access_token", token, {
-      httpOnly: true,
-    });
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    // });
     res.status(200).json({
       message: "Sign in successfully",
       user: rest,
+      token: token,
     });
   } catch (error) {
     return next(error);
