@@ -4,6 +4,7 @@ import userRoutes from "./routes/userRoutes";
 import authRoutes from "./routes/authRoutes";
 import { Request, Response, NextFunction } from "express";
 import { getUser } from "./controllers/userControllers";
+import postRoutes from "./routes/postRoutes"
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -15,6 +16,7 @@ app.use(cors());
 app.use(express.json());
 app.use(`${base_url}auth`, authRoutes);
 app.use(`${base_url}users`, userRoutes);
+app.use(`${base_url}posts`, postRoutes)
 app.get(`${base_url}data`, getUser);
 
 app.listen(process.env.DEV_PORT, () => {
