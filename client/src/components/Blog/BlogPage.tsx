@@ -1,14 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import BlogCard from "./BlogCard";
 import { new_blogs } from "../../constants/data";
-import Sidebar from "../Sidebar";
 import Pagination from "../../components/pagination/PaginationButtons";
 
 const BlogPage = () => {
   const [currentPage, setCurrentPage] = useState(0); // State to manage current page
   const itemsPerPage = 9; // Maximum number of cards per page
 
-  // Function to handle page change
   const handlePageChange = (selectedPage: number) => {
     setCurrentPage(selectedPage);
   };
@@ -22,10 +20,6 @@ const BlogPage = () => {
 
   return (
     <div className="flex flex-col">
-      {/* <div className="mr-4"> 
-      <Sidebar />
-    </div> */}
-
       <div className="relative max-w-7xl mx-auto flex-1">
         <BlogCard blogs={currentBlogs} />
         <Pagination
