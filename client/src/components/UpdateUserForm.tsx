@@ -8,7 +8,6 @@ import { updateUser } from "../api/userThunk";
 import FormInputs from "../components/FormInputs"
 import { MediumButton } from "./ButtonComponent";
 import { validateUpdateForm } from "../utils/validations";
-import { emplace } from "@reduxjs/toolkit/dist/utils";
 
 interface FormData {
   username: string;
@@ -18,12 +17,9 @@ interface FormData {
 }
 
 export const UpdateUserForm = () => {
-  const dispatch = useAppDispatch(); // Dispatch function to dispatch actions
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch(); 
   const { currentUser, updateError } = useAppSelector(selectUser);
 
-  const currentId = currentUser?.user?.id;
-  const [valid, setValid] = useState(false);
   const [formDataErrors, setFormDataErrors] = useState<FormData>({
     username: "",
     email: "",
@@ -95,6 +91,7 @@ export const UpdateUserForm = () => {
         <FormInputs
           id="email"
           label="Email"
+          type="email"
           placeholder="Email"
           value={data.email}
           onChange={handleInputChange}
@@ -117,6 +114,7 @@ export const UpdateUserForm = () => {
         <FormInputs
           id="password"
           label="Password"
+          type="password"
           placeholder="Password"
           value={data.password}
           onChange={handleInputChange}
