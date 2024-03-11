@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { BsArrowLeftShort } from "react-icons/bs";
 import { FaRegUserCircle } from "react-icons/fa";
 import { useAppSelector } from "../store/hooks";
 import { selectUser } from "../store/user/userSlice";
@@ -17,14 +16,6 @@ const Sidebar = () => {
           open ? "md:w-72" : "w-20"
         } duration-300 relative`}
       >
-        <BsArrowLeftShort
-          className={`bg-white text-custom-color3 text-3xl rounded-full
-                absolute -right-3 top-9 border border-custom-color3 cursor-pointer mr-3 ${
-                  !open && "rotate-180"
-                }`}
-          onClick={() => setOpen(!open)}
-        />
-
         <div className="inline-flex justify-center items-center gap-2">
           {currentUser?.user?.profile_picture !== null ? (
             <FaRegUserCircle
@@ -50,9 +41,9 @@ const Sidebar = () => {
           </h1>
         </div>
 
-        <ul className="pt-2">
-          <SideLinks />
-        </ul>
+          <ul className="pt-2">
+            <SideLinks/>
+          </ul>
       </div>
     </div>
   );

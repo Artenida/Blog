@@ -9,7 +9,7 @@ import { useState } from "react";
 import { Dialog } from "../components/Dialog";
 
 export const SideLinks = () => {
-  const dispatch = useAppDispatch(); // Dispatch function to dispatch actions
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { currentUser } = useAppSelector(selectUser);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
