@@ -49,6 +49,24 @@ class Post {
       throw new Error(`Error in getPostById: ${error.message}`);
     }
   }
+
+  static deletePostById(postId: number, userId: number): Promise<any> {
+    const connection = createDatabaseConnection();
+    const db = connection.getConnection();
+
+    return new Promise((resolve, reject) => {
+      const q = "DELETE FROM posts WHERE `id` = ? AND `user_id` = ?";
+      db.query(q, [postId, userId], (error, data) => {
+        if (error) {
+          connection.closeConnection();
+          reject(error);
+        } else {
+          connection.closeConnection();
+          resolve(data);
+        }
+      });
+    });
+  }
 }
 
 export default Post;

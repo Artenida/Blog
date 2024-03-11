@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/allPosts",getPosts)
 router.get("/post/:id",getSinglePost)
 router.post("/addPost", addPost)
-router.delete("/deletePost/:id", deletePost)
-router.put("/updatePost/:id", updatePost);
+router.delete("/delete/:id", deletePost)
+router.put("/update/:id", updatePost);
 
 export default router;
