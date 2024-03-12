@@ -1,8 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { CustomError } from "../utils/error";
 import Post from "../models/Post";
-import createDatabaseConnection from "../config";
-import jwt, { VerifyErrors } from "jsonwebtoken";
 
 export const getPosts = async (
   req: Request,

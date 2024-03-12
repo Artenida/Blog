@@ -17,6 +17,8 @@ export const getUser = async (
   }
 };
 
+import bcrypt from 'bcrypt';
+
 export const updateUser = async (
   req: Request,
   res: Response,
@@ -26,11 +28,14 @@ export const updateUser = async (
     const { username, email, password, bio } = req.body;
     const { id } = req.params;
 
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const { success, message } = await User.updateUser(
       id,
       username,
       email,
-      password,
+      hashedPassword, // Use the hashed password
       bio
     );
 

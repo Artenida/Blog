@@ -94,28 +94,6 @@ export class User {
     const db = connection.getConnection();
 
     try {
-      const checkQuery =
-        "SELECT id FROM users WHERE (username = ? OR email = ?) AND id != ?";
-      const checkResult: any[] = await new Promise((resolve, reject) => {
-        db.query(
-          checkQuery,
-          [username, email, id],
-          (checkError, checkResult) => {
-            if (checkError) {
-              console.error("Error checking username/email:", checkError);
-              reject("Error checking username/email");
-            } else {
-              resolve(checkResult);
-            }
-          }
-        );
-      });
-
-      if (checkResult && checkResult.length > 0) {
-        connection.closeConnection();
-        throw new Error("Username or email already exists");
-      }
-
       let query: string;
       let queryParams: (string | number)[];
 

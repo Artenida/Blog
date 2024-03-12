@@ -46,6 +46,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     }).status(200).json({
       message: "Sign in successfully",
       user: rest,
+      token: token
     });
   } catch (error) {
     return next(error);

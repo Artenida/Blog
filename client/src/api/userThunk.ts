@@ -21,6 +21,11 @@ type UserBodyTypeUpdate = {
   userId: number;
 };
 
+type UserEndpointType = {
+  token?: string;
+  body: UserBodyTypeUpdate
+}
+
 export const loginUser = createAsyncThunk(
   "api/auth/login",
   async (body: UserBodyType, { rejectWithValue }) => {
@@ -87,10 +92,12 @@ export const deleteUser = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
   "api/users/update",
-  async (body: UserBodyTypeUpdate, { rejectWithValue, getState }) => {
+  async ({body}: UserEndpointType, { rejectWithValue, getState }) => {
     try {
+
       const state: RootState = getState() as RootState;
       const token: string = state.user.token ?? '';
+  
       const response = await createAPI(`api/users/update/${body.userId}`, {
         method: "PUT",
         token: token,

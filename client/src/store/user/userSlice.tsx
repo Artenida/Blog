@@ -9,7 +9,7 @@ interface UserState {
   registerError: string | null;
   deleteError: string | null;
   updateError: string | null;
-  token: string | null;
+  token?: string;
   isLoggedIn: boolean;
   isUpdated: boolean;
 }
@@ -21,7 +21,7 @@ const initialState: UserState = {
   deleteError: null,
   updateError: null,
   loading: false,
-  token: null,
+  token: undefined,
   isLoggedIn: false,
   isUpdated: false,
 };
@@ -35,7 +35,7 @@ const userSlice = createSlice({
       state.currentUser = null;
       state.loginError = null;
       state.loading = false;
-      state.token = null;
+      state.token = undefined;
     },
   },
 
@@ -57,7 +57,7 @@ const userSlice = createSlice({
         state.loading = false;
         state.loginError = action.payload as string;
         state.isLoggedIn = false;
-        state.token = null;
+        state.token = undefined;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
