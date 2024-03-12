@@ -9,15 +9,15 @@ class Post {
       const query = "SELECT * FROM posts";
       const data = await new Promise((resolve, reject) => {
         db.query(query, (error, result) => {
+          connection.closeConnection();
           if (error) {
-            connection.closeConnection();
             reject(error);
           } else {
-            connection.closeConnection();
             resolve(result);
           }
         });
       });
+
       return data;
     } catch (error) {
       console.error("Error in getPosts", error);
@@ -33,22 +33,47 @@ class Post {
       "SELECT p.id, u.username, p.title, p.description, p.createdAt FROM users u JOIN posts p ON u.id = p.user_id WHERE p.id = ?";
 
     try {
-      const post = await new Promise((resolve, reject) => {
+      const data = await new Promise((resolve, reject) => {
         db.query(query, [postId, userId], (error, result) => {
+          connection.closeConnection();
           if (error) {
-            connection.closeConnection();
             reject(error);
           } else {
-            connection.closeConnection();
             resolve(result[0]);
           }
         });
       });
 
-      return post;
+      return data;
     } catch (error: any) {
       throw new Error(`Error in getPostById: ${error.message}`);
     }
+  }
+
+  static createPost(
+    image: string,
+    title: string,
+    description: string,
+    createdAt: string,
+    userId: number
+  ): Promise<any> {
+    const connection = createDatabaseConnection();
+    const db = connection.getConnection();
+
+    return new Promise((resolve, reject) => {
+      const query =
+        "INSERT INTO posts (`image`, `title`, `description`, `createdAt`, `user_id`) VALUES (?, ?, ?, ?, ?)";
+      const values = [image, title, description, createdAt, userId];
+
+      db.query(query, values, (error, result) => {
+        connection.closeConnection();
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      });
+    });
   }
 
   static deletePostById(postId: number, userId: number): Promise<any> {
@@ -56,54 +81,62 @@ class Post {
     const db = connection.getConnection();
 
     return new Promise((resolve, reject) => {
-      const q = "DELETE FROM posts WHERE `id` = ? AND `user_id` = ?";
-      db.query(q, [postId, userId], (error, data) => {
+      const query = "DELETE FROM posts WHERE `id` = ? AND `user_id` = ?";
+      db.query(query, [postId, userId], (error, result) => {
+        connection.closeConnection();
         if (error) {
-          connection.closeConnection();
+          reject(error);
+        } else if (result.affectedRows === 0) {
           reject(error);
         } else {
-          connection.closeConnection();
-          resolve(data);
+          resolve(result);
         }
       });
     });
   }
 
- static createPost(image: string, title: string, description: string, createdAt: string, userId: number): Promise<any> {
+  static updatePost(
+    image: string,
+    title: string,
+    description: string,
+    postId: number,
+    userId: number
+  ): Promise<any> {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
 
     return new Promise((resolve, reject) => {
-      const q = "INSERT INTO posts (`image`, `title`, `description`, `createdAt`, `user_id`) VALUES (?, ?, ?, ?, ?)";
-      const values = [image, title, description, createdAt, userId];
-      
-      db.query(q, values, (error, data) => {
-        if (error) {
-          connection.closeConnection();
-          reject(error);
-        } else {
-          connection.closeConnection();
-          resolve(data);
-        }
-      });
-    });
-  }
-
-  static updatePost(image: string, title: string, description: string, postId: number, userId: number): Promise<any> {
-    const connection = createDatabaseConnection();
-    const db = connection.getConnection();
-
-    return new Promise((resolve, reject) => {
-      const q = "UPDATE posts SET `image` = ?, `title` = ?, `description` = ? WHERE `id` = ? AND `user_id` = ?";
+      const q =
+        "UPDATE posts SET `image` = ?, `title` = ?, `description` = ? WHERE `id` = ? AND `user_id` = ?";
       const values = [image, title, description, postId, userId];
-      
-      db.query(q, values, (error, data) => {
+
+      db.query(q, values, (error, result) => {
+        connection.closeConnection();
         if (error) {
-          connection.closeConnection();
+          reject(error);
+        } else if (result.affectedRows === 0) {
           reject(error);
         } else {
-          connection.closeConnection();
-          resolve(data);
+          resolve(result);
+        }
+      });
+    });
+  }
+
+  static checkPostExists(postId: number): Promise<boolean> {
+    const connection = createDatabaseConnection();
+    const db = connection.getConnection();
+
+    return new Promise((resolve, reject) => {
+      const query = "SELECT COUNT(*) AS count FROM posts WHERE 'id' = ?";
+      const values = [postId];
+
+      db.query(query, values, (error, result) => {
+        connection.closeConnection();
+        if(error) {
+          reject(error)
+        } else {
+          resolve(result[0].count > 0);
         }
       });
     });

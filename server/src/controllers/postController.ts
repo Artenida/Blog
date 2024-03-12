@@ -69,6 +69,10 @@ export const deletePost = async (
   try {
     const postId = parseInt(req.params.id);
     try {
+      const checkPostExists = await Post.checkPostExists(postId);
+      if(!checkPostExists) {
+        return res.status(404).json("Post not found");
+      }
       await Post.deletePostById(postId, req.body.user.id);
       res.status(200).json("Post has been deleted!");
     } catch (error) {
@@ -87,9 +91,12 @@ export const updatePost = async (
   try {
     const { image, title, description } = req.body;
     const postId = parseInt(req.params.id);
-    const token = req.cookies.access_token;
 
     try {
+      const checkPostExists = await Post.checkPostExists(postId) 
+      if(!checkPostExists) {
+        return res.status(404).json("Post not found!");
+      }
       await Post.updatePost(
         image,
         title,
@@ -99,7 +106,7 @@ export const updatePost = async (
       );
       res.status(200).json("Post updated successfully!");
     } catch (error) {
-      res.status(500).json("Internal server error");
+      res.status(500).json("You can update only your posts");
     }
   } catch (error) {
     next(error);
