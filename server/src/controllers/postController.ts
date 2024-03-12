@@ -40,85 +40,70 @@ export const getSinglePost = async (
   }
 };
 
-
-export const createPost = async (req: Request, res: Response, next: NextFunction) => {
+export const createPost = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { image, title, description, createdAt } = req.body;
-    const token = req.cookies.access_token;
-
-    if (!token) return res.status(401).json("Not authenticated");
-
-    jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN_SECRET || "",
-      async (error: jwt.VerifyErrors | null, userInfo: any) => {
-        if (error || !userInfo)
-          return res.status(403).json("Token is not valid");
-
-        try {
-          await Post.createPost(image, title, description, createdAt, userInfo.id);
-          res.status(200).json("Post created successfully!");
-        } catch (error) {
-          res.status(500).json("Internal server error");
-        }
-      }
-    );
+    try {
+      await Post.createPost(
+        image,
+        title,
+        description,
+        createdAt,
+        req.body.user.id
+      );
+      res.status(200).json("Post created successfully!");
+    } catch (error) {
+      res.status(500).json("Internal server error");
+    }
   } catch (error) {
     next(error);
   }
 };
 
-
-export const deletePost = (req: Request, res: Response, next: NextFunction) => {
+export const deletePost = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const postId = parseInt(req.params.id);
-    const token = req.cookies.access_token;
-
-    if (!token) return res.status(401).json("Not authenticated");
-
-    jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN_SECRET || "",
-      async (error: VerifyErrors | null, userInfo: any) => {
-        if (error || !userInfo)
-          return res.status(403).json("Token is not valid");
-
-        try {
-          await Post.deletePostById(postId, userInfo.id);
-          res.status(200).json("Post has been deleted!");
-        } catch (error) {
-          res.status(403).json("You can delete only your posts");
-        }
-      }
-    );
+    try {
+      await Post.deletePostById(postId, req.body.user.id);
+      res.status(200).json("Post has been deleted!");
+    } catch (error) {
+      res.status(403).json("You can delete only your posts");
+    }
   } catch (error) {
     next(error);
   }
 };
 
-export const updatePost = async (req: Request, res: Response, next: NextFunction) => {
+export const updatePost = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { image, title, description } = req.body;
     const postId = parseInt(req.params.id);
     const token = req.cookies.access_token;
 
-    if (!token) return res.status(401).json("Not authenticated");
-
-    jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN_SECRET || "",
-      async (error: jwt.VerifyErrors | null, userInfo: any) => {
-        if (error || !userInfo)
-          return res.status(403).json("Token is not valid");
-
-        try {
-          await Post.updatePost(image, title, description, postId, userInfo.id);
-          res.status(200).json("Post updated successfully!");
-        } catch (error) {
-          res.status(500).json("Internal server error");
-        }
-      }
-    );
+    try {
+      await Post.updatePost(
+        image,
+        title,
+        description,
+        postId,
+        req.body.user.id
+      );
+      res.status(200).json("Post updated successfully!");
+    } catch (error) {
+      res.status(500).json("Internal server error");
+    }
   } catch (error) {
     next(error);
   }
