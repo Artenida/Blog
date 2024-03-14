@@ -12,7 +12,7 @@ const headers = {
 };
 
 export const createAPI = <FormBody>(endpoint: string, options: APIOptions) => {
-  return async (body: FormBody) => {
+  return async (body?: FormBody) => {
     const headers = {
       "Content-Type": "application/json",
       Accept: "application/json",

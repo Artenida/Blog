@@ -1,34 +1,71 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BlogCard from "./BlogCard";
-import { new_blogs } from "../../constants/data";
 import Pagination from "../../components/pagination/PaginationButtons";
+import { useAppDispatch } from "../../store/hooks";
+import { retrieveAllPosts } from "../../api/postThunk";
+import { useSelector } from "react-redux";
+import { selectPost } from "../../store/posts/postSlice";
+
+interface BlogPost {
+  id: number;
+  image: string | undefined;
+  title: string;
+  description: string;
+  createdAt: string;
+}
+
+interface PostState {
+  currentPost: [];
+  loading: boolean;
+  retrieveError: string | null;
+}
 
 const BlogPage = () => {
-  const [currentPage, setCurrentPage] = useState(0); // State to manage current page
-  const itemsPerPage = 9; // Maximum number of cards per page
+  const dispatch = useAppDispatch();
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 9;
+  const [currentBlogs, setCurrentBlogs] = useState<BlogPost[]>([]);
+  const { currentPost, loading, retrieveError } = useSelector(
+    (state: { post: PostState }) => state.post
+  );
+
+  useEffect(() => {
+    dispatch(retrieveAllPosts());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (currentPost) {
+      setCurrentBlogs(currentPost);
+    }
+  }, [currentPost]);
 
   const handlePageChange = (selectedPage: number) => {
     setCurrentPage(selectedPage);
   };
 
-  // Calculate the start and end index of the blogs array based on the current page
   const startIndex = currentPage * itemsPerPage;
   const endIndex = (currentPage + 1) * itemsPerPage;
 
-  // Slice the blogs array to display only the cards for the current page
-  const currentBlogs = new_blogs.slice(startIndex, endIndex);
+  const slicedBlogs = currentBlogs.slice(startIndex, endIndex);
 
   return (
     <div className="flex flex-col">
       <div className="relative max-w-7xl mx-auto flex-1">
-        <BlogCard blogs={currentBlogs} />
-        <Pagination
-          // totalItems={40}
-          totalItems={new_blogs.length}
-          itemsPerPage={itemsPerPage}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
+        {loading ? (
+          <div>Loading...</div>
+        ) : retrieveError ? (
+          <div>Error: {retrieveError}</div>
+        ) : (
+          <>
+            <BlogCard posts={slicedBlogs} />
+            <Pagination
+              totalItems={currentBlogs.length}
+              itemsPerPage={itemsPerPage}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
+          </>
+        )}
       </div>
     </div>
   );
