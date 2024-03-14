@@ -12,7 +12,7 @@ interface BlogPost {
   cover: string | undefined;
   title: string;
   tags: Tag[];
-  authorName: string;
+  username: string;
   profilePicture: string | undefined;
   description: string;
   createdAt: Date;
@@ -57,7 +57,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ posts }) => {
                   : post.description}
               </p>
 
-              <Author blog={post} />
+              <Author authorName={post.username} profilePicture={post.profilePicture} createdAt={post.createdAt} />
 
               <div className="flex justify-end mx-2 mt-1">
                 <div className="flex justify-center gap-1 items-center">

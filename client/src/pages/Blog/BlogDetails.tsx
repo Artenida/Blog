@@ -45,7 +45,7 @@ const BlogDetails = ({ blogs }: { blogs: BlogPost[] }) => {
               src={blog.cover}
               alt={blog.title}
             />
-            <Author blog={blog} />
+              <Author authorName={blog.authorName} profilePicture={blog.profilePicture} createdAt={blog.createdAt} />
 
             <h1 className="text-xl font-medium font-roboto mt-4 text-custom-color3">
               {blog.title}

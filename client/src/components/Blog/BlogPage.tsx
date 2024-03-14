@@ -15,7 +15,7 @@ interface BlogPost {
   cover: string | undefined;
   title: string;
   tags: Tag[];
-  authorName: string;
+  username: string;
   profilePicture: string | undefined;
   description: string;
   createdAt: Date;
@@ -45,6 +45,7 @@ const BlogPage = () => {
       setCurrentBlogs(currentPost);
     }
   }, [currentPost]);
+  console.log(currentPost)
 
   const handlePageChange = (selectedPage: number) => {
     setCurrentPage(selectedPage);

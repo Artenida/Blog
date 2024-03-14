@@ -13,7 +13,18 @@ class Post {
     const db = connection.getConnection();
 
     try {
-      const query = "SELECT * FROM posts";
+      const query = `
+        SELECT 
+          p.*, 
+          u.username, 
+          u.profile_picture 
+        FROM 
+          posts p
+        LEFT JOIN 
+          users u 
+        ON 
+          p.user_id = u.id`;
+
       const data = await new Promise((resolve, reject) => {
         db.query(query, (error, result) => {
           connection.closeConnection();
