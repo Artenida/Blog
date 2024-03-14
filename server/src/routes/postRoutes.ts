@@ -6,7 +6,7 @@ import { validateCreatePost, validateUpdatePost } from "../middleware/validation
 const router = express.Router();
 
 router.get("/allPosts",getPosts)
-router.get("/post/:id",getSinglePost)
+router.get("/getSinglePost/:id",getSinglePost)
 router.post("/createPost", authenticateToken, validateCreatePost, createPost)
 router.delete("/delete/:id", authenticateToken, deletePost)
 router.put("/update/:id", authenticateToken, validateUpdatePost, updatePost);

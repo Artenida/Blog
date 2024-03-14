@@ -14,6 +14,7 @@ import Blog from "../pages/Blog/Blog";
 import AuthorsPage from "../pages/Blog/AuthorsPage";
 import CreatePost from "../pages/Blog/CreatePost";
 import {new_blogs} from "../constants/data"
+import UpdatePost from "../pages/Blog/UpdatePost";
 
 const routes = [
   { path: "/", element: <Home /> },
@@ -23,8 +24,7 @@ const routes = [
   { path: "/signUp", element: <SignUp /> },
   { path: "/blog", element: <Blog /> },
   { path: "/authors", element: <AuthorsPage/> },
-  { path: "/blog/:id", element: <BlogDetails blogs={new_blogs}/> },
-  { path: "/createPost/:id", element: <CreatePost/> },
+  { path: "/blog/:postId", element: <BlogDetails/> },
   { path: "*", element: <Home /> },
 ];
 
@@ -40,6 +40,8 @@ const AppRoutes = () => {
           <Route element={<PrivateRoutes />}>
             <Route element={<Home />} path="/" />
             <Route element={<MyAccount />} path="/dashboard" />
+            <Route element={<CreatePost />} path="/createPost/:id" />
+            <Route element={<UpdatePost />} path="/updatePost/:id" />
           </Route>
         </Routes>
         <Footer />
