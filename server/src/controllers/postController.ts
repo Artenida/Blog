@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Post from "../models/Post";
+import { Tags } from "../models/Tags";
 
 export const getPosts = async (
   req: Request,
@@ -42,23 +43,22 @@ export const createPost = async (
   next: NextFunction
 ) => {
   try {
-    const { image, title, description, createdAt } = req.body;
-    try {
-      await Post.createPost(
-        image,
-        title,
-        description,
-        createdAt,
-        req.body.user.id
-      );
-      res.status(200).json("Post created successfully!");
-    } catch (error) {
-      res.status(500).json("Internal server error");
-    }
+    const { image, title, description, createdAt, tags } = req.body;
+    const userId = req.body.user.id; 
+    await Post.createPost(image, title, description, createdAt, userId, tags);
+
+    res.status(200).json({ success: true, message: "Post created successfully" });
   } catch (error) {
-    next(error);
+    console.error("Error in createPost", error);
+    if (error === "Post not found") {
+      res.status(404).json({ error: "Post not found" });
+    } else {
+      res.status(500).json({ error: "Internal server error" });
+    }
   }
 };
+
+
 
 export const deletePost = async (
   req: Request,

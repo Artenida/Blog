@@ -108,30 +108,94 @@ class Post {
     return structuredData;
   }
 
-  static createPost(
+  static async createPost(
     image: string,
     title: string,
     description: string,
     createdAt: string,
-    userId: number
+    userId: number,
+    tags: string[]
   ): Promise<any> {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
-
-    return new Promise((resolve, reject) => {
-      const query =
+  
+    try {
+      const postQuery =
         "INSERT INTO posts (`image`, `title`, `description`, `createdAt`, `user_id`) VALUES (?, ?, ?, ?, ?)";
-      const values = [image, title, description, createdAt, userId];
-
-      db.query(query, values, (error, result) => {
-        connection.closeConnection();
-        if (error) {
-          reject(error);
-        } else {
-          resolve(result);
-        }
+      const postValues = [image, title, description, createdAt, userId];
+      const postResult: { insertId: number } = await new Promise((resolve, reject) => {
+        db.query(postQuery, postValues, (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        });
       });
-    });
+  
+      const postId = postResult.insertId;
+  
+      await this.addTags(postId, tags);
+  
+      connection.closeConnection();
+  
+      return postResult;
+    } catch (error) {
+      console.error("Error in createPost", error);
+      connection.closeConnection();
+      throw error;
+    }
+  }
+  
+  
+  // static async getPostByTitle(title: string, user_id: number): Promise<number | null> {
+  //   const connection = createDatabaseConnection();
+  //   const db = connection.getConnection();
+
+  //   const query = 'SELECT id FROM posts WHERE title = ? AND user_id = ?';
+  //   const values = [title, user_id];
+  //   return new Promise((resolve, reject) => {
+  //     db.query(query, values, (error, result) => {
+  //       connection.closeConnection(); 
+
+  //       if (error) {
+  //         reject(error);
+  //       } else {
+  //         if (result.length > 0) {
+  //           resolve(result[0].id); 
+  //         } else {
+  //           resolve(null)
+  //         }
+  //       }
+  //     });
+  //   });
+  // }
+ 
+  static async addTags(postId: number, tags: string[]) {
+    const connection = createDatabaseConnection();
+    const db = connection.getConnection();
+
+    try {
+      for (const tag of tags) {
+        const query = "INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)";
+        await new Promise((resolve, reject) => {
+          db.query(query, [postId, tag], (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          });
+        });
+      }
+
+      connection.closeConnection();
+
+      return { success: true };
+    } catch (error) {
+      console.error("Error in addTags", error);
+      throw error;
+    }
   }
 
   static deletePostById(postId: number, userId: number): Promise<any> {
