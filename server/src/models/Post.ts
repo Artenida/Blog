@@ -1,4 +1,11 @@
 import createDatabaseConnection from "../config";
+interface Post {
+  post_id: number;
+  title: string;
+  description: string;
+  post_createdAt: Date;
+  tags: string[];
+}
 
 class Post {
   static async getPosts() {
@@ -25,29 +32,80 @@ class Post {
     }
   }
 
-  static async getPostById(postId: number, userId: number) {
+  static async getPostById(postId: number) {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
 
-    const query =
-      "SELECT p.id, u.username, p.title, p.description, p.createdAt FROM users u JOIN posts p ON u.id = p.user_id WHERE p.id = ?";
+    const query = `
+        SELECT 
+            u.id AS user_id,
+            u.username,
+            u.profile_picture,
+            p.id AS post_id,
+            p.title,
+            p.description,
+            p.createdAt AS post_createdAt,
+            GROUP_CONCAT(t.name) AS tags
+        FROM posts p 
+        LEFT JOIN users u ON p.user_id = u.id 
+        LEFT JOIN post_tags pt ON p.id = pt.post_id 
+        LEFT JOIN tags t ON pt.tag_id = t.id
+        WHERE p.id = ?
+        GROUP BY p.id`;
 
-    try {
-      const data = await new Promise((resolve, reject) => {
-        db.query(query, [postId, userId], (error, result) => {
+    return new Promise((resolve, reject) => {
+      db.query(query, [postId], (err, result) => {
+        if (err) {
+          reject(err);
           connection.closeConnection();
-          if (error) {
-            reject(error);
+        } else {
+          if (result.length === 0) {
+            reject(new Error("Post does not exist")); // Throw an error explicitly when the post is not found
+            connection.closeConnection();
           } else {
-            resolve(result[0]);
+            const structuredResult = Post.structurePostResult(result);
+            resolve(structuredResult);
+            connection.closeConnection();
           }
-        });
+        }
       });
+    });
+  }
 
-      return data;
-    } catch (error: any) {
-      throw new Error(`Error in getPostById: ${error.message}`);
-    }
+  static structurePostResult(result: any[]) {
+    const structuredData: any = {
+      user: {},
+      posts: [],
+    };
+
+    result.forEach((row, index) => {
+      if (index === 0) {
+        structuredData.user = {
+          user_id: row.user_id,
+          username: row.username,
+          profile_picture: row.profile_picture,
+        };
+      }
+      const existingPostIndex = structuredData.posts.findIndex(
+        (post: Post) => post.post_id === row.post_id
+      );
+
+      if (existingPostIndex === -1) {
+        structuredData.posts.push({
+          post_id: row.post_id,
+          title: row.title,
+          description: row.description,
+          post_createdAt: row.post_createdAt,
+          tags: row.tags ? [row.tags] : [],
+        });
+      } else {
+        if (row.tags) {
+          structuredData.posts[existingPostIndex].tags.push(row.tags);
+        }
+      }
+    });
+
+    return structuredData;
   }
 
   static createPost(
@@ -133,8 +191,8 @@ class Post {
 
       db.query(query, values, (error, result) => {
         connection.closeConnection();
-        if(error) {
-          reject(error)
+        if (error) {
+          reject(error);
         } else {
           resolve(result[0].count > 0);
         }

@@ -22,18 +22,17 @@ export const getSinglePost = async (
 ) => {
   try {
     const postId = parseInt(req.params.id);
-    const userId = parseInt(req.params.userId);
-
-    const post = await Post.getPostById(postId, userId);
-
-    if (!post) {
-      return res.status(404).json({ success: false, error: "Post not found" });
-    }
+    
+    const post = await Post.getPostById(postId);
 
     return res.status(200).json({ success: true, data: post });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error in getPost", error);
-    res.status(500).json({ success: false, error: "Internal server error" });
+    if (error.message === "Post does not exist") {
+      return res.status(404).json({ success: false, error: "Post not found" });
+    } else {
+      return res.status(500).json({ success: false, error: "Internal server error" });
+    }
   }
 };
 
