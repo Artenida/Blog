@@ -23,7 +23,7 @@ export const getSinglePost = async (
 ) => {
   try {
     const postId = parseInt(req.params.id);
-    
+
     const post = await Post.getPostById(postId);
 
     return res.status(200).json({ success: true, data: post });
@@ -32,7 +32,9 @@ export const getSinglePost = async (
     if (error.message === "Post does not exist") {
       return res.status(404).json({ success: false, error: "Post not found" });
     } else {
-      return res.status(500).json({ success: false, error: "Internal server error" });
+      return res
+        .status(500)
+        .json({ success: false, error: "Internal server error" });
     }
   }
 };
@@ -44,10 +46,12 @@ export const createPost = async (
 ) => {
   try {
     const { image, title, description, createdAt, tags } = req.body;
-    const userId = req.body.user.id; 
+    const userId = req.body.user.id;
     await Post.createPost(image, title, description, createdAt, userId, tags);
 
-    res.status(200).json({ success: true, message: "Post created successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Post created successfully" });
   } catch (error) {
     console.error("Error in createPost", error);
     if (error === "Post not found") {
@@ -58,8 +62,6 @@ export const createPost = async (
   }
 };
 
-
-
 export const deletePost = async (
   req: Request,
   res: Response,
@@ -69,7 +71,7 @@ export const deletePost = async (
     const postId = parseInt(req.params.id);
     try {
       const checkPostExists = await Post.checkPostExists(postId);
-      if(!checkPostExists) {
+      if (!checkPostExists) {
         return res.status(404).json("Post not found");
       }
       await Post.deletePostById(postId, req.body.user.id);
@@ -92,8 +94,8 @@ export const updatePost = async (
     const postId = parseInt(req.params.id);
 
     try {
-      const checkPostExists = await Post.checkPostExists(postId) 
-      if(!checkPostExists) {
+      const checkPostExists = await Post.checkPostExists(postId);
+      if (!checkPostExists) {
         return res.status(404).json("Post not found!");
       }
       await Post.updatePost(
@@ -109,5 +111,20 @@ export const updatePost = async (
     }
   } catch (error) {
     next(error);
+  }
+};
+
+export const getUsersPost = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.body.user.id;
+    const userPosts = await Post.getUsersPost(userId);
+    res.status(200).json(userPosts);   
+  }  catch (error) {
+    console.error("Error in getUsersPost", error);
+    next(error)
   }
 };
