@@ -1,26 +1,29 @@
 import React from "react";
 
-interface BlogType {
-  id: number;
-  cover: string;
-  title: string;
-  tags: Tag[];
-  authorName: string;
-  profilePicture: string;
-  description: string;
-  createdAt: Date;
-}
-
 interface Tag {
   id: number;
   name: string;
 }
+interface BlogPost {
+  id: number;
+  cover: string | undefined;
+  title: string;
+  tags: Tag[];
+  authorName: string;
+  profilePicture: string | undefined;
+  description: string;
+  createdAt: Date;
+}
 
 interface AuthorProps {
-  blog: BlogType;
+  blog: BlogPost;
 }
 
 const Author: React.FC<AuthorProps> = ({ blog }) => {
+   const createdAtDate = blog.createdAt instanceof Date ? blog.createdAt : new Date(blog.createdAt);
+   const year = createdAtDate.getFullYear();
+   const month = createdAtDate.getMonth() + 1; 
+   const date = createdAtDate.getDate();
   return (
     <div className="flex justify-between flex-nowrap items-center mt-6">
       <div className="flex items-center gap-x-2">
@@ -34,11 +37,7 @@ const Author: React.FC<AuthorProps> = ({ blog }) => {
             {blog.authorName}
           </h4>
           <h3 className="text-gray-500 text-sm">
-            {blog.createdAt.getFullYear() +
-              "/" +
-              blog.createdAt.getMonth() +
-              "/" +
-              blog.createdAt.getDate()}
+          {year + "/" + month + "/" + date}
           </h3>
         </div>
       </div>

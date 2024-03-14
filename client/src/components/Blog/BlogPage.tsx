@@ -6,12 +6,19 @@ import { retrieveAllPosts } from "../../api/postThunk";
 import { useSelector } from "react-redux";
 import { selectPost } from "../../store/posts/postSlice";
 
+interface Tag {
+  id: number;
+  name: string;
+}
 interface BlogPost {
   id: number;
-  image: string | undefined;
+  cover: string | undefined;
   title: string;
+  tags: Tag[];
+  authorName: string;
+  profilePicture: string | undefined;
   description: string;
-  createdAt: string;
+  createdAt: Date;
 }
 
 interface PostState {
