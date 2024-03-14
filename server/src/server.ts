@@ -5,6 +5,7 @@ import authRoutes from "./routes/authRoutes";
 import { Request, Response, NextFunction } from "express";
 import { getUser } from "./controllers/userControllers";
 import postRoutes from "./routes/postRoutes"
+import tagRoutes from "./routes/tagRoutes"
 import dotenv from 'dotenv';
 import cookieParser from "cookie-parser";
 
@@ -18,7 +19,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(`${base_url}auth`, authRoutes);
 app.use(`${base_url}users`, userRoutes);
-app.use(`${base_url}posts`, postRoutes)
+app.use(`${base_url}posts`, postRoutes);
+app.use(`${base_url}tags`, tagRoutes);
 app.get(`${base_url}data`, getUser);
 
 app.listen(process.env.DEV_PORT, () => {
