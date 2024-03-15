@@ -210,20 +210,19 @@ class Post {
     }
   }
 
-  static deletePostById(postId: number, userId: number): Promise<any> {
+  static deletePostById(postId: number): Promise<any> {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
 
     return new Promise((resolve, reject) => {
-      const query = "DELETE FROM posts WHERE `id` = ? AND `user_id` = ?";
-      db.query(query, [postId, userId], (error, result) => {
-        connection.closeConnection();
+      const q = "DELETE FROM posts WHERE `id` = ?";
+      db.query(q, [postId], (error, data) => {
         if (error) {
-          reject(error);
-        } else if (result.affectedRows === 0) {
+          connection.closeConnection();
           reject(error);
         } else {
-          resolve(result);
+          connection.closeConnection();
+          resolve(data);
         }
       });
     });
@@ -257,24 +256,24 @@ class Post {
     });
   }
 
-  static checkPostExists(postId: number): Promise<boolean> {
-    const connection = createDatabaseConnection();
-    const db = connection.getConnection();
+  // static checkPostExists(postId: number): Promise<boolean> {
+  //   const connection = createDatabaseConnection();
+  //   const db = connection.getConnection();
 
-    return new Promise((resolve, reject) => {
-      const query = "SELECT COUNT(*) AS count FROM posts WHERE 'id' = ?";
-      const values = [postId];
+  //   return new Promise((resolve, reject) => {
+  //     const query = "SELECT COUNT(*) AS count FROM posts WHERE 'id' = ?";
+  //     const values = [postId];
 
-      db.query(query, values, (error, result) => {
-        connection.closeConnection();
-        if (error) {
-          reject(error);
-        } else {
-          resolve(result[0].count > 0);
-        }
-      });
-    });
-  }
+  //     db.query(query, values, (error, result) => {
+  //       connection.closeConnection();
+  //       if (error) {
+  //         reject(error);
+  //       } else {
+  //         resolve(result[0].count > 0);
+  //       }
+  //     });
+  //   });
+  // }
 
   static async getUsersPost(userId: number) {
     const connection = createDatabaseConnection();

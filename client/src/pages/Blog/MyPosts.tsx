@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { selectPost } from "../../store/posts/postSlice";
-import {  deletePost, getMyPosts } from "../../api/postThunk";
+import { deletePost, getMyPosts } from "../../api/postThunk";
 import { selectUser } from "../../store/user/userSlice";
 import { useAppDispatch } from "../../store/hooks";
 import { Dialog } from "../../components/Dialog";
+import { useNavigate } from "react-router-dom";
 
 interface BlogPost {
   id: string;
@@ -15,16 +16,42 @@ interface BlogPost {
 
 const MyPosts = () => {
   const dispatch = useAppDispatch();
-  const { myPost, loading, retrieveError } = useSelector(selectPost);
+  const navigate = useNavigate();
+  const { myPost, loading, retrieveError, deleteSuccessful } = useSelector(selectPost);
   const { currentUser, token } = useSelector(selectUser);
   const userId = currentUser?.user?.id;
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
   useEffect(() => {
     dispatch(getMyPosts({ userId: userId, token: token }));
-  }, [dispatch, userId, token]);
+  }, [dispatch, userId, token, deleteSuccessful]); 
+
+  useEffect(() => {
+    if(deleteSuccessful){
+      navigate('/')
+    }
+  })
 
   const postsArray: BlogPost[] = Object.values(myPost);
+
+  const handleDeleteAccount = (postId: string) => {
+    setSelectedPostId(postId);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleCancelDelete = () => {
+    setSelectedPostId(null);
+    setIsDeleteDialogOpen(false);
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedPostId) {
+      dispatch(deletePost(selectedPostId)).then(() => {
+        setIsDeleteDialogOpen(false);
+      });
+    }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -33,17 +60,6 @@ const MyPosts = () => {
   if (retrieveError) {
     return <div>Error: {retrieveError}</div>;
   }
-
-  const handleDeleteAccount = () => {
-    setIsDeleteDialogOpen(true);
-  };
-  const handleCancelDelete = () => {
-    setIsDeleteDialogOpen(false);
-  };
-  const handleConfirmDelete = () => {
-    dispatch(deletePost({ userId: userId, token: token }));
-    setIsDeleteDialogOpen(false);
-  };
 
   return (
     <div className="h-screen flex flex-col gap-4 p-8 px-[10%]">
@@ -64,7 +80,7 @@ const MyPosts = () => {
               Edit
             </button>
             <button
-              onClick={handleDeleteAccount}
+              onClick={() => handleDeleteAccount(post.id)}
               className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
             >
               Delete

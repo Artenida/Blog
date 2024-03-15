@@ -64,29 +64,19 @@ export const createPost = async (
   }
 };
 
-export const deletePost = (req: Request, res: Response, next: NextFunction) => {
-  res.json("from controller");
+export const deletePost = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const postId = parseInt(req.params.id);
-    const token = req.cookies.access_token;
-
-    if (!token) return res.status(401).json("Not authenticated");
-
-    jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN_SECRET || "",
-      async (error: VerifyErrors | null, userInfo: any) => {
-        if (error || !userInfo)
-          return res.status(403).json("Token is not valid");
-
-        try {
-          await Post.deletePostById(postId, req.body.user.id);
-          res.status(200).json("Post has been deleted!");
-        } catch (error) {
-          res.status(403).json("You can delete only your posts");
-        }
-      }
-    );
+    try {
+      await Post.deletePostById(postId);
+      res.status(200).json("Post has been deleted!");
+    } catch (error) {
+      res.status(403).json("You can delete only your posts");
+    }
   } catch (error) {
     next(error);
   }

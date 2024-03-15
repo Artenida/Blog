@@ -70,26 +70,25 @@ export const getMyPosts = createAsyncThunk(
 
 export const deletePost = createAsyncThunk(
   "api/posts/delete",
-  async ({ userId }: UserEndpointType, { rejectWithValue, getState }) => {
+  async (postId: string, { rejectWithValue, getState }) => {
     try {
       const state: RootState = getState() as RootState;
       const token: string = state.user.token ?? '';
 
-      const response = await createAPI(`api/posts/delete/${userId}`, {
+      const response = await createAPI(`api/posts/delete/${postId}`, {
         method: "DELETE",
         token: token,
       })();
 
-      // console.log(response);
       if (!response.ok) {
         const errorData = await response.json();
         console.error('Error fetching data:', errorData.message);
         return rejectWithValue(errorData.message);
       }
 
-      // const data = await response.json();
+      const data = await response.json();
 
-      // return data;
+      return data;
     } catch (error: any) {
       console.error('Error:', error.message);
       return rejectWithValue(error.message);

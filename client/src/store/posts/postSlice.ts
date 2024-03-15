@@ -38,6 +38,7 @@ interface PostState {
   successful: boolean;
   retrieveError: string | null;
   deleteError: string | null;
+  deleteSuccessful: string | null,
   isUpdated: boolean;
   post: BlogType;
   myPost: BlogPost;
@@ -47,6 +48,7 @@ const initialState: PostState = {
   currentPost: [],
   retrieveError: null,
   deleteError: null,
+  deleteSuccessful: null,
   loading: false,
   successful: false,
   isUpdated: false,
