@@ -8,9 +8,9 @@ const router = express.Router();
 
 router.get("/allPosts",getPosts)
 router.get("/getSinglePost/:id",getSinglePost)
-router.post("/createPost", authenticateToken, validateCreatePost, createPost)
-router.delete("/delete/:id", authenticateToken, deletePost)
-router.put("/update/:id", authenticateToken, validateUpdatePost, updatePost);
-router.get("/user/:userId", authenticateToken, getUsersPost);
+router.post("/createPost", verifyToken, validateCreatePost, createPost)
+router.delete("/delete/:id", verifyToken, deletePost)
+router.put("/update/:id", verifyToken, validateUpdatePost, updatePost);
+router.get("/user/:userId", verifyToken, getUsersPost);
 
 export default router;

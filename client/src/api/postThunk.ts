@@ -48,22 +48,32 @@ export const getSinglePost = createAsyncThunk(
 
 export const getMyPosts = createAsyncThunk(
   "api/posts/user",
-  async ({userId}: UserEndpointType, { rejectWithValue, getState }) => {
+  async ({ userId }: UserEndpointType, { rejectWithValue, getState }) => {
     try {
-
       const state: RootState = getState() as RootState;
       const token: string = state.user.token ?? '';
-  
+
+      console.log('Fetching data for user:', userId);
+
       const response = await createAPI(`api/posts/user/${userId}`, {
         method: "GET",
         token: token,
-        // body: JSON.stringify(body),
       })();
+
+      // Check if the response status is okay
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error fetching data:', errorData.message);
+        return rejectWithValue(errorData.message);
+      }
+
       const data = await response.json();
-      console.log(data);
-      return !response.ok ? rejectWithValue(data.message) : data;
+      console.log('Data received:', data);
+
+      return data;
     } catch (error: any) {
+      console.error('Error:', error.message);
       return rejectWithValue(error.message);
     }
   }
-); 
+);

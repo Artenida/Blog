@@ -24,7 +24,7 @@ interface User {
 
 interface BlogType {
   user: User;
-  post: Post[];
+  posts: Post[];
 }
 interface BlogPost {
   id: string ;
@@ -62,7 +62,7 @@ const initialState: PostState = {
         username: "",
         profile_picture: "",
       },
-    post: [
+    posts: [
       {
         postId: "",
         title: "",

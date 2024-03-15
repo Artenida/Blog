@@ -14,36 +14,37 @@ const BlogPathComponents = [
 
 const BlogDetails = () => {
   const dispatch = useAppDispatch();
-  const blog = useSelector(selectPost).post;
+  const { post } = useSelector(selectPost);
   const { postId } = useParams();
-
+  const currentPost = post && post?.posts[0]? post?.posts[0] : null
+ 
   useEffect(() => {
     dispatch(getSinglePost(postId ?? ""));
   }, [dispatch, postId]);
-
+  
   return (
     <div>
-      {blog && blog.post && blog.post[0] && (
+      {currentPost && (
         <div className="container mx-auto max-w-5xl flex flex-col px-5 py-5">
           <article className="flex-1">
             <BlogPathComponent data={BlogPathComponents} />
             <div>
               <img
                 className="rounded-xl w-full"
-                src={blog.post[0].image}
-                alt={blog.post[0].title}
+                src={currentPost.image}
+                alt={currentPost.title}
               />
               <Author
-                authorName={blog.user.username}
-                profilePicture={blog.user.profile_picture}
-                createdAt={blog.post[0].createdAt}
+                authorName={post.user.username}
+                profilePicture={post.user.profile_picture}
+                createdAt={currentPost.createdAt}
               />
 
               <h1 className="text-xl font-medium font-roboto mt-4 text-custom-color3">
-                {blog.post[0].title}
+                {currentPost.title}
               </h1>
               <div className="mt-4 text-custom-color3">
-                <p>{blog.post[0].description}</p>
+                <p>{currentPost.description}</p>
               </div>
             </div>
           </article>
@@ -52,6 +53,5 @@ const BlogDetails = () => {
     </div>
   );
 };
-
 
 export default BlogDetails;

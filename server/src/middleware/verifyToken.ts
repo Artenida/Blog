@@ -23,6 +23,7 @@ export const verifyToken = (
       return res.status(403).json({ tokenError: 'Invalid token' });
     } else {
       console.log('Decoded token', decoded);
+      req.body.user = decoded;
       next();
     }
   });

@@ -7,7 +7,7 @@ import { selectUser } from "../../store/user/userSlice";
 import { useAppDispatch } from "../../store/hooks";
 
 interface BlogPost {
-  id: number;
+  id: string; // Change type to string since BlogPost id is string in the new state structure
   title: string;
   description: string;
   createdAt: string;
@@ -19,12 +19,14 @@ const MyPosts = () => {
   const { currentUser, token } = useSelector(selectUser);
   const userId = currentUser?.user?.id;
   console.log(userId)
-  // console.log(token)
   console.log(myPost, 'myPost')
 
   useEffect(() => {
     dispatch(getMyPosts({userId: userId,token: token}));
-  }, [dispatch, userId]);
+  }, [dispatch, userId, token]); // Add token to dependencies array
+
+  // Convert myPost object into an array of posts
+  const postsArray: BlogPost[] = Object.values(myPost);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -36,7 +38,7 @@ const MyPosts = () => {
 
   return (
     <div>
-      {myPost?.map((post: BlogPost) => (
+      {postsArray.map((post: BlogPost) => (
         <div key={post.id}>
           <h3>{post.title}</h3>
           <p>{post.description}</p>
