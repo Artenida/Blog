@@ -10,21 +10,25 @@ export const verifyToken = (
   res: Response,
   next: NextFunction
 ) => {
-  const headers = req.headers['authorization'];
-  const token = headers && headers.split(' ')[1];
+  try {
+    const headers = req.headers['authorization'];
+    const token = headers && headers.split(' ')[1];
 
-  if (!token) {
-    return next(errorHandler(401, "Unauthorized"));
-  }
-
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as Secret, (error, decoded) => {
-    if (error) {
-      console.error('Invalid token', error);
-      return res.status(403).json({ tokenError: 'Invalid token' });
-    } else {
-      console.log('Decoded token', decoded);
-      req.body.user = decoded;
-      next();
+    if (!token) {
+      throw errorHandler(401, "Unauthorized");
     }
-  });
+
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as Secret, (error, decoded) => {
+      if (error) {
+        console.error('Invalid token', error);
+        throw errorHandler(403, "Invalid token");
+      } else {
+        console.log('Decoded token', decoded);
+        req.body.user = decoded;
+        next();
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
 };
