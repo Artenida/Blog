@@ -11,6 +11,6 @@ router.get("/getSinglePost/:id",getSinglePost)
 router.post("/createPost", authenticateToken, validateCreatePost, createPost)
 router.delete("/delete/:id", authenticateToken, deletePost)
 router.put("/update/:id", authenticateToken, validateUpdatePost, updatePost);
-router.get("/user/:id", verifyToken, getUsersPost);
+router.get("/user/:userId", authenticateToken, getUsersPost);
 
 export default router;

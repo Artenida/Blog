@@ -27,7 +27,7 @@ interface BlogType {
   post: Post[];
 }
 interface BlogPost {
-  id: number;
+  id: string ;
   title: string;
   description: string;
   createdAt: string;
@@ -40,7 +40,7 @@ interface PostState {
   retrieveError: string | null;
   isUpdated: boolean;
   post: BlogType;
-  myPost: BlogPost[];
+  myPost: BlogPost;
 }
 
 const initialState: PostState = {
@@ -49,7 +49,12 @@ const initialState: PostState = {
   loading: false,
   successful: false,
   isUpdated: false,
-  myPost: [],
+  myPost: {
+    id: "",
+    title: '',
+    description: '',
+    createdAt: ''
+  },
   post: {
     user: 
       {
@@ -106,7 +111,7 @@ const postSlice = createSlice({
       })
       .addCase(getMyPosts.fulfilled, (state, action) => {
         state.loading = false;
-        state.myPost = action.payload.data;
+        state.myPost = action.payload;
       })
       .addCase(getMyPosts.rejected, (state, action) => {
         state.loading = false;

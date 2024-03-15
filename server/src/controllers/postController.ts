@@ -120,7 +120,7 @@ export const getUsersPost = async (
   next: NextFunction
 ) => {
   try {
-    const userId = req.body.userId;
+    const userId = req.body.user.id;
     const userPosts = await Post.getUsersPost(userId);
     res.status(200).json(userPosts);   
   }  catch (error) {
