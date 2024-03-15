@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectPost } from "../../store/posts/postSlice";
-import { deletePost, getMyPosts } from "../../api/postThunk";
+import { deletePost, getMyPosts, getSinglePost } from "../../api/postThunk";
 import { selectUser } from "../../store/user/userSlice";
 import { useAppDispatch } from "../../store/hooks";
 import { Dialog } from "../../components/Dialog";
@@ -17,7 +17,8 @@ interface BlogPost {
 const MyPosts = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { myPost, loading, retrieveError, deleteSuccessful } = useSelector(selectPost);
+  const { myPost, loading, retrieveError, deleteSuccessful } =
+    useSelector(selectPost);
   const { currentUser, token } = useSelector(selectUser);
   const userId = currentUser?.user?.id;
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -25,13 +26,13 @@ const MyPosts = () => {
 
   useEffect(() => {
     dispatch(getMyPosts({ userId: userId, token: token }));
-  }, [dispatch, userId, token, deleteSuccessful]); 
+  }, [dispatch, userId, token, deleteSuccessful]);
 
   useEffect(() => {
-    if(deleteSuccessful){
-      navigate('/')
+    if (deleteSuccessful) {
+      navigate("/");
     }
-  })
+  });
 
   const postsArray: BlogPost[] = Object.values(myPost);
 
@@ -53,6 +54,11 @@ const MyPosts = () => {
     }
   };
 
+  const handlePostClick = (postId: string) => {
+    dispatch(getSinglePost(postId));
+    navigate(`/blog/${postId}`);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -66,7 +72,8 @@ const MyPosts = () => {
       {postsArray.map((post: BlogPost) => (
         <div
           key={post.id}
-          className="bg-gray-100 p-4 rounded shadow-md flex justify-between items-start"
+          onClick={() => handlePostClick(post.id)} // Attach onClick handler to each post
+          className="bg-gray-100 p-4 rounded shadow-md flex justify-between items-start cursor-pointer"
         >
           <div>
             <h3 className="text-lg font-bold">{post.title}</h3>
