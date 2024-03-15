@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { selectPost } from "../../store/posts/postSlice";
-import { getMyPosts } from "../../api/postThunk";
-import { useParams } from "react-router-dom";
+import {  deletePost, getMyPosts } from "../../api/postThunk";
 import { selectUser } from "../../store/user/userSlice";
 import { useAppDispatch } from "../../store/hooks";
+import { Dialog } from "../../components/Dialog";
 
 interface BlogPost {
-  id: string; // Change type to string since BlogPost id is string in the new state structure
+  id: string;
   title: string;
   description: string;
   createdAt: string;
@@ -18,14 +18,12 @@ const MyPosts = () => {
   const { myPost, loading, retrieveError } = useSelector(selectPost);
   const { currentUser, token } = useSelector(selectUser);
   const userId = currentUser?.user?.id;
-  console.log(userId)
-  console.log(myPost, 'myPost')
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   useEffect(() => {
-    dispatch(getMyPosts({userId: userId,token: token}));
-  }, [dispatch, userId, token]); // Add token to dependencies array
+    dispatch(getMyPosts({ userId: userId, token: token }));
+  }, [dispatch, userId, token]);
 
-  // Convert myPost object into an array of posts
   const postsArray: BlogPost[] = Object.values(myPost);
 
   if (loading) {
@@ -36,15 +34,50 @@ const MyPosts = () => {
     return <div>Error: {retrieveError}</div>;
   }
 
+  const handleDeleteAccount = () => {
+    setIsDeleteDialogOpen(true);
+  };
+  const handleCancelDelete = () => {
+    setIsDeleteDialogOpen(false);
+  };
+  const handleConfirmDelete = () => {
+    dispatch(deletePost(userId));
+    setIsDeleteDialogOpen(false);
+  };
+
   return (
-    <div>
+    <div className="h-screen flex flex-col gap-4 p-8 px-[10%]">
       {postsArray.map((post: BlogPost) => (
-        <div key={post.id}>
-          <h3>{post.title}</h3>
-          <p>{post.description}</p>
-          <p>Created at: {new Date(post.createdAt).toLocaleDateString()}</p>
+        <div
+          key={post.id}
+          className="bg-gray-100 p-4 rounded shadow-md flex justify-between items-start"
+        >
+          <div>
+            <h3 className="text-lg font-bold">{post.title}</h3>
+            <p className="text-gray-600 mt-1">{post.description}</p>
+            <p className="text-sm text-gray-500">
+              Created at: {new Date(post.createdAt).toLocaleDateString()}
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+              Edit
+            </button>
+            <button
+              onClick={handleDeleteAccount}
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+            >
+              Delete
+            </button>
+          </div>
         </div>
       ))}
+      <Dialog
+        isOpen={isDeleteDialogOpen}
+        message="Are you sure you want to delete this post?"
+        onCancel={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 };

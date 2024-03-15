@@ -6,12 +6,6 @@ type UserEndpointType = {
   token?: string;
   userId: string
 }
-type Post = {
-  title: string;
-  createdAt: string;
-  images: string;
-  userId: string;
-};
 
 export const retrieveAllPosts = createAsyncThunk(
   "posts/posts/allPosts",
@@ -53,14 +47,11 @@ export const getMyPosts = createAsyncThunk(
       const state: RootState = getState() as RootState;
       const token: string = state.user.token ?? '';
 
-      console.log('Fetching data for user:', userId);
-
       const response = await createAPI(`api/posts/user/${userId}`, {
         method: "GET",
         token: token,
       })();
 
-      // Check if the response status is okay
       if (!response.ok) {
         const errorData = await response.json();
         console.error('Error fetching data:', errorData.message);
@@ -68,11 +59,31 @@ export const getMyPosts = createAsyncThunk(
       }
 
       const data = await response.json();
-      console.log('Data received:', data);
 
       return data;
     } catch (error: any) {
       console.error('Error:', error.message);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deletePost = createAsyncThunk(
+  "api/posts/delete",
+  async (userId: number, { rejectWithValue, getState }) => {
+    try {
+      const state: RootState = getState() as RootState;
+      const token = state.user.token ?? '';
+      const response = await createAPI(`api/posts/delete/${userId}`, {
+        method: "DELETE",
+        token: token,
+      })(null);
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        return rejectWithValue(errorMessage);
+      }
+      return { success: true };
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }

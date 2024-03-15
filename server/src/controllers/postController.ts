@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import Post from "../models/Post";
 import { Tags } from "../models/Tags";
+import { VerifyErrors } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 export const getPosts = async (
   req: Request,
@@ -62,23 +64,29 @@ export const createPost = async (
   }
 };
 
-export const deletePost = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const deletePost = (req: Request, res: Response, next: NextFunction) => {
+  res.json("from controller");
   try {
     const postId = parseInt(req.params.id);
-    try {
-      const checkPostExists = await Post.checkPostExists(postId);
-      if (!checkPostExists) {
-        return res.status(404).json("Post not found");
+    const token = req.cookies.access_token;
+
+    if (!token) return res.status(401).json("Not authenticated");
+
+    jwt.verify(
+      token,
+      process.env.ACCESS_TOKEN_SECRET || "",
+      async (error: VerifyErrors | null, userInfo: any) => {
+        if (error || !userInfo)
+          return res.status(403).json("Token is not valid");
+
+        try {
+          await Post.deletePostById(postId, req.body.user.id);
+          res.status(200).json("Post has been deleted!");
+        } catch (error) {
+          res.status(403).json("You can delete only your posts");
+        }
       }
-      await Post.deletePostById(postId, req.body.user.id);
-      res.status(200).json("Post has been deleted!");
-    } catch (error) {
-      res.status(403).json("You can delete only your posts");
-    }
+    );
   } catch (error) {
     next(error);
   }
@@ -94,10 +102,6 @@ export const updatePost = async (
     const postId = parseInt(req.params.id);
 
     try {
-      const checkPostExists = await Post.checkPostExists(postId);
-      if (!checkPostExists) {
-        return res.status(404).json("Post not found!");
-      }
       await Post.updatePost(
         image,
         title,
@@ -122,9 +126,9 @@ export const getUsersPost = async (
   try {
     const userId = req.body.user.id;
     const userPosts = await Post.getUsersPost(userId);
-    res.status(200).json(userPosts);   
-  }  catch (error) {
+    res.status(200).json(userPosts);
+  } catch (error) {
     console.error("Error in getUsersPost", error);
-    next(error)
+    next(error);
   }
 };
