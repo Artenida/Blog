@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "../../store/store";
-import { getSinglePost, retrieveAllPosts } from "../../api/postThunk";
+import { getMyPosts, getSinglePost, retrieveAllPosts } from "../../api/postThunk";
 
 interface Post {
   postId: string;
@@ -26,6 +26,12 @@ interface BlogType {
   user: User;
   post: Post[];
 }
+interface BlogPost {
+  id: number;
+  title: string;
+  description: string;
+  createdAt: string;
+}
 
 interface PostState {
   currentPost: [];
@@ -34,6 +40,7 @@ interface PostState {
   retrieveError: string | null;
   isUpdated: boolean;
   post: BlogType;
+  myPost: BlogPost[];
 }
 
 const initialState: PostState = {
@@ -42,6 +49,7 @@ const initialState: PostState = {
   loading: false,
   successful: false,
   isUpdated: false,
+  myPost: [],
   post: {
     user: 
       {
@@ -90,7 +98,19 @@ const postSlice = createSlice({
       .addCase(getSinglePost.rejected, (state: PostState, action: any) => {
         state.retrieveError = action.payload as string;
         state.loading = false;
-        state.post = initialState.post;
+        // state.post = initialState.post;
+      })
+      .addCase(getMyPosts.pending, (state) => {
+        state.loading = true;
+        state.retrieveError = null;
+      })
+      .addCase(getMyPosts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.myPost = action.payload.data;
+      })
+      .addCase(getMyPosts.rejected, (state, action) => {
+        state.loading = false;
+        state.retrieveError = action.payload as string;
       });
   },
 });

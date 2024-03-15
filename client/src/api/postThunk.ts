@@ -1,5 +1,17 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createAPI } from "../utils/api/createApi";
+import { RootState } from "../store/store";
+
+type UserEndpointType = {
+  token?: string;
+  userId: string
+}
+type Post = {
+  title: string;
+  createdAt: string;
+  images: string;
+  userId: string;
+};
 
 export const retrieveAllPosts = createAsyncThunk(
   "posts/posts/allPosts",
@@ -33,3 +45,25 @@ export const getSinglePost = createAsyncThunk(
     }
   }
 );
+
+export const getMyPosts = createAsyncThunk(
+  "api/posts/user",
+  async ({userId}: UserEndpointType, { rejectWithValue, getState }) => {
+    try {
+
+      const state: RootState = getState() as RootState;
+      const token: string = state.user.token ?? '';
+  
+      const response = await createAPI(`api/posts/user/${userId}`, {
+        method: "GET",
+        token: token,
+        // body: JSON.stringify(body),
+      })();
+      const data = await response.json();
+      console.log(data);
+      return !response.ok ? rejectWithValue(data.message) : data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+); 
