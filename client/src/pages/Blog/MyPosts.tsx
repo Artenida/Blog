@@ -72,11 +72,15 @@ const MyPosts = () => {
       {postsArray.map((post: BlogPost) => (
         <div
           key={post.id}
-          onClick={() => handlePostClick(post.id)} // Attach onClick handler to each post
-          className="bg-gray-100 p-4 rounded shadow-md flex justify-between items-start cursor-pointer"
+          className="bg-gray-100 p-4 rounded shadow-md flex justify-between items-start"
         >
           <div>
-            <h3 className="text-lg font-bold">{post.title}</h3>
+            <h3
+              onClick={() => handlePostClick(post.id)}
+              className="text-lg font-bold cursor-pointer"
+            >
+              {post.title}
+            </h3>
             <p className="text-gray-600 mt-1">{post.description}</p>
             <p className="text-sm text-gray-500">
               Created at: {new Date(post.createdAt).toLocaleDateString()}
