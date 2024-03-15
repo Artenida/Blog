@@ -41,7 +41,7 @@ const MyPosts = () => {
     setIsDeleteDialogOpen(false);
   };
   const handleConfirmDelete = () => {
-    dispatch(deletePost(userId));
+    dispatch(deletePost({ userId: userId, token: token }));
     setIsDeleteDialogOpen(false);
   };
 
