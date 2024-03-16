@@ -47,11 +47,9 @@ export const createPost = async (
   next: NextFunction
 ) => {
   try {
-    const postId = parseInt(req.params.id);
     const { image, title, description, createdAt, tags } = req.body;
     const userId = req.body.user.id;
     await Post.createPost(image, title, description, createdAt, userId, tags);
-    await Post.addTags(postId, tags);
     res
       .status(200)
       .json({ success: true, message: "Post created successfully" });

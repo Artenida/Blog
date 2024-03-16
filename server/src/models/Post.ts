@@ -147,14 +147,41 @@ class Post {
       );
 
       const postId = postResult.insertId;
+
+      await this.addTags(postId, tags);
+
       connection.closeConnection();
-      return postId;
+
+      return postResult;
     } catch (error) {
       console.error("Error in createPost", error);
       connection.closeConnection();
       throw error;
     }
   }
+
+  // static async getPostByTitle(title: string, user_id: number): Promise<number | null> {
+  //   const connection = createDatabaseConnection();
+  //   const db = connection.getConnection();
+
+  //   const query = 'SELECT id FROM posts WHERE title = ? AND user_id = ?';
+  //   const values = [title, user_id];
+  //   return new Promise((resolve, reject) => {
+  //     db.query(query, values, (error, result) => {
+  //       connection.closeConnection();
+
+  //       if (error) {
+  //         reject(error);
+  //       } else {
+  //         if (result.length > 0) {
+  //           resolve(result[0].id);
+  //         } else {
+  //           resolve(null)
+  //         }
+  //       }
+  //     });
+  //   });
+  // }
 
   static async addTags(postId: number, tags: string[]) {
     const connection = createDatabaseConnection();
@@ -229,6 +256,31 @@ class Post {
     });
   }
 
+  static async getUsersPost(userId: number) {
+    const connection = createDatabaseConnection();
+    const db = connection.getConnection();
+    const query = "SELECT * FROM posts WHERE user_id = ?";
+    const values = [userId];
+
+    try {
+      return new Promise((resolve, reject) => {
+        db.query(query, values, (error, result) => {
+          connection.closeConnection();
+
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+    } catch (error) {
+      console.error("Error in getUsersPost", error);
+      connection.closeConnection();
+      throw error;
+    }
+  }
+
   static async getAuthors() {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
@@ -253,32 +305,6 @@ class Post {
       return data;
     } catch (error) {
       console.error("Error in getAuthors", error);
-      throw error;
-    }
-  }
-  
-
-  static async getUsersPost(userId: number) {
-    const connection = createDatabaseConnection();
-    const db = connection.getConnection();
-    const query = "SELECT * FROM posts WHERE user_id = ?";
-    const values = [userId];
-
-    try {
-      return new Promise((resolve, reject) => {
-        db.query(query, values, (error, result) => {
-          connection.closeConnection();
-
-          if (error) {
-            reject(error);
-          } else {
-            resolve(result);
-          }
-        });
-      });
-    } catch (error) {
-      console.error("Error in getUsersPost", error);
-      connection.closeConnection();
       throw error;
     }
   }
