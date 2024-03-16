@@ -17,7 +17,7 @@ interface BlogPost {
 const MyPosts = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { myPost, loading, retrieveError, deleteSuccessful } =
+  const { myPost, loading, deleteError, deleteSuccessful } =
     useSelector(selectPost);
   const { currentUser, token } = useSelector(selectUser);
   const userId = currentUser?.user?.id;
@@ -26,13 +26,7 @@ const MyPosts = () => {
 
   useEffect(() => {
     dispatch(getMyPosts({ userId: userId, token: token }));
-  }, [dispatch, userId, token, deleteSuccessful]);
-
-  useEffect(() => {
-    if (deleteSuccessful) {
-      navigate("/");
-    }
-  });
+  }, [dispatch, userId, token]);
 
   const postsArray: BlogPost[] = Object.values(myPost);
 
@@ -63,8 +57,8 @@ const MyPosts = () => {
     return <div>Loading...</div>;
   }
 
-  if (retrieveError) {
-    return <div>Error: {retrieveError}</div>;
+  if (deleteError) {
+    return <div>Error: {deleteError}</div>;
   }
 
   return (

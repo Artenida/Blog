@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "../../store/store";
-import {  deletePost, getMyPosts, getSinglePost, retrieveAllPosts } from "../../api/postThunk";
+import {
+  deletePost,
+  getMyPosts,
+  getSinglePost,
+  retrieveAllPosts,
+} from "../../api/postThunk";
 interface Post {
   postId: string;
   title: string;
@@ -26,19 +31,19 @@ interface BlogType {
   posts: Post[];
 }
 interface BlogPost {
-  id: string ;
+  id: string;
   title: string;
   description: string;
   createdAt: string;
 }
 
 interface PostState {
-  currentPost: [] | null
+  currentPost: [] | null;
   loading: boolean;
   successful: boolean;
   retrieveError: string | null;
   deleteError: string | null;
-  deleteSuccessful: string | null,
+  deleteSuccessful: string | null;
   isUpdated: boolean;
   post: BlogType;
   myPost: BlogPost;
@@ -54,17 +59,16 @@ const initialState: PostState = {
   isUpdated: false,
   myPost: {
     id: "",
-    title: '',
-    description: '',
-    createdAt: ''
+    title: "",
+    description: "",
+    createdAt: "",
   },
   post: {
-    user: 
-      {
-        userId: "",
-        username: "",
-        profile_picture: "",
-      },
+    user: {
+      userId: "",
+      username: "",
+      profile_picture: "",
+    },
     posts: [
       {
         postId: "",
@@ -125,14 +129,13 @@ const postSlice = createSlice({
         state.loading = true;
       })
       .addCase(deletePost.fulfilled, (state, action) => {
-        state.currentPost = null;
-        state.deleteError = null;
         state.loading = false;
+        state.deleteError = null;
       })
       .addCase(deletePost.rejected, (state, action) => {
         state.loading = false;
         state.deleteError = action.payload as string;
-      })
+      });
   },
 });
 
