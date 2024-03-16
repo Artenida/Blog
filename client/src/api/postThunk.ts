@@ -95,3 +95,18 @@ export const deletePost = createAsyncThunk(
     }
   }
 );
+
+export const retrieveAllAuthors = createAsyncThunk(
+  "posts/posts/authors",
+  async () => {
+    try {
+      const response = await createAPI("api/posts/authors", {
+        method: "GET",
+      })();
+      const post = await response.json();
+      return post;
+    } catch (error: any) {
+      return error.message;
+    }
+  }
+);

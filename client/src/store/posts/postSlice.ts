@@ -4,6 +4,7 @@ import {
   deletePost,
   getMyPosts,
   getSinglePost,
+  retrieveAllAuthors,
   retrieveAllPosts,
 } from "../../api/postThunk";
 interface Post {
@@ -39,6 +40,7 @@ interface BlogPost {
 
 interface PostState {
   currentPost: [] | null;
+  currentAuthor: [] | null;
   loading: boolean;
   successful: boolean;
   retrieveError: string | null;
@@ -51,6 +53,7 @@ interface PostState {
 
 const initialState: PostState = {
   currentPost: [],
+  currentAuthor: [],
   retrieveError: null,
   deleteError: null,
   deleteSuccessful: null,
@@ -135,7 +138,20 @@ const postSlice = createSlice({
       .addCase(deletePost.rejected, (state, action) => {
         state.loading = false;
         state.deleteError = action.payload as string;
-      });
+      })      
+      .addCase(retrieveAllAuthors.pending, (state) => {
+        state.loading = true;
+        state.retrieveError = null;
+      })
+      .addCase(retrieveAllAuthors.fulfilled, (state, action) => {
+        state.loading = false;
+        state.retrieveError = null;
+        state.currentAuthor = action.payload.data;
+      })
+      .addCase(retrieveAllAuthors.rejected, (state, action) => {
+        state.loading = false;
+        state.retrieveError = action.payload as string;
+      })
   },
 });
 

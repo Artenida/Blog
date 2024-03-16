@@ -287,7 +287,7 @@ class Post {
   
     try {
       const query = `
-        SELECT u.*
+        SELECT DISTINCT u.*
         FROM users u
         JOIN posts p ON u.id = p.user_id`;
   
