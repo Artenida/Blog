@@ -45,7 +45,7 @@ const BlogPage = () => {
       setCurrentBlogs(currentPost);
     }
   }, [currentPost]);
-  console.log(currentPost)
+  // console.log(currentPost)
 
   const handlePageChange = (selectedPage: number) => {
     setCurrentPage(selectedPage);

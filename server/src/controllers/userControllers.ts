@@ -27,15 +27,13 @@ export const updateUser = async (
   try {
     const { username, email, password, bio } = req.body;
     const { id } = req.params;
-
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const { success, message } = await User.updateUser(
       id,
       username,
       email,
-      hashedPassword, // Use the hashed password
+      hashedPassword,
       bio
     );
 
