@@ -1,5 +1,5 @@
 import express from "express";
-import { createPost, deletePost, getSinglePost, getPosts, updatePost, getUsersPost, getAuthors } from "../controllers/postController";
+import { createPost, deletePost, getSinglePost, getPosts, updatePost, getUsersPost, getAuthors, getTagsOfPost } from "../controllers/postController";
 import { authenticateToken } from "../middleware/authenticationToken";
 import { validateCreatePost, validateUpdatePost } from "../middleware/validationMiddleware";
 import { verifyToken } from "../middleware/verifyToken";
@@ -13,5 +13,6 @@ router.delete("/delete/:id", verifyToken, deletePost)
 router.put("/update/:id", verifyToken, validateUpdatePost, updatePost);
 router.get("/user/:userId", verifyToken, getUsersPost);
 router.get("/authors", getAuthors);
+router.get("/tags/:id", getTagsOfPost);
 
 export default router;

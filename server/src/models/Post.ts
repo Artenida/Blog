@@ -6,7 +6,9 @@ interface Post {
   post_createdAt: Date;
   tags: string[];
 }
-
+interface TagRow {
+  name: string;
+}
 class Post {
   static async getPosts() {
     const connection = createDatabaseConnection();
@@ -160,29 +162,6 @@ class Post {
     }
   }
 
-  // static async getPostByTitle(title: string, user_id: number): Promise<number | null> {
-  //   const connection = createDatabaseConnection();
-  //   const db = connection.getConnection();
-
-  //   const query = 'SELECT id FROM posts WHERE title = ? AND user_id = ?';
-  //   const values = [title, user_id];
-  //   return new Promise((resolve, reject) => {
-  //     db.query(query, values, (error, result) => {
-  //       connection.closeConnection();
-
-  //       if (error) {
-  //         reject(error);
-  //       } else {
-  //         if (result.length > 0) {
-  //           resolve(result[0].id);
-  //         } else {
-  //           resolve(null)
-  //         }
-  //       }
-  //     });
-  //   });
-  // }
-
   static async addTags(postId: number, tags: string[]) {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
@@ -280,6 +259,35 @@ class Post {
       throw error;
     }
   }
+
+
+static async getTagsOfPost(postId: string) {
+    const connection = createDatabaseConnection();
+    const db = connection.getConnection();
+
+    const query = `
+      SELECT t.name 
+      FROM tags t
+      JOIN post_tags pt ON t.id = pt.tag_id
+      WHERE pt.post_id = ?;
+    `;
+
+    return new Promise<string[]>((resolve, reject) => {
+      db.query(query, [postId], (err, result: TagRow[]) => {
+        if (err) {
+          reject(err);
+        } else {
+          if (result.length === 0) {
+            reject(new Error("No tags"));
+          } else {
+            const tags = result.map(row => row.name);
+            resolve(tags);
+          }
+        }
+        connection.closeConnection();
+      });
+    });
+}
 
   static async getAuthors() {
     const connection = createDatabaseConnection();
