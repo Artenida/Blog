@@ -13,8 +13,7 @@ import PrivateRoutes from "./PrivateRoute";
 import Blog from "../pages/Blog/Blog";
 import AuthorsPage from "../pages/Blog/AuthorsPage";
 import CreatePost from "../pages/Blog/CreatePost";
-import {new_blogs} from "../constants/data"
-import UpdatePost from "../pages/Blog/UpdatePost";
+import MyPosts from "../pages/Blog/MyPosts";
 
 const routes = [
   { path: "/", element: <Home /> },
@@ -40,8 +39,8 @@ const AppRoutes = () => {
           <Route element={<PrivateRoutes />}>
             <Route element={<Home />} path="/" />
             <Route element={<MyAccount />} path="/dashboard" />
-            <Route element={<CreatePost />} path="/createPost/:id" />
-            <Route element={<UpdatePost />} path="/updatePost/:id" />
+            <Route element={<CreatePost />} path="/createPost" />
+            <Route element={<MyPosts />} path="/viewPosts" />
           </Route>
         </Routes>
         <Footer />
