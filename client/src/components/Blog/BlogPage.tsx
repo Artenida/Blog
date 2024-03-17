@@ -4,14 +4,13 @@ import Pagination from "../../components/pagination/PaginationButtons";
 import { useAppDispatch } from "../../store/hooks";
 import { retrieveAllPosts } from "../../api/postThunk";
 import { useSelector } from "react-redux";
-import { selectPost } from "../../store/posts/postSlice";
 
 interface Tag {
   id: number;
   name: string;
 }
 interface BlogPost {
-  id: number;
+  id: string;
   cover: string | undefined;
   title: string;
   tags: Tag[];
@@ -45,7 +44,7 @@ const BlogPage = () => {
       setCurrentBlogs(currentPost);
     }
   }, [currentPost]);
-  // console.log(currentPost)
+  console.log(currentPost);
 
   const handlePageChange = (selectedPage: number) => {
     setCurrentPage(selectedPage);

@@ -110,3 +110,21 @@ export const retrieveAllAuthors = createAsyncThunk(
     }
   }
 );
+
+export const retrievePostTags = createAsyncThunk(
+  "posts/posts/tags",
+  async (postId: string | undefined, { rejectWithValue }) => {
+    try {
+      const response = await createAPI(`api/posts/tags/${postId}`, {
+        method: "GET",
+      })();
+      if (!response.ok) {
+        throw new Error("Failed to retrieve tags");
+      }
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+)

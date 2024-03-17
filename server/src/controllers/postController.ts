@@ -1,8 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import Post from "../models/Post";
-import { Tags } from "../models/Tags";
-import { VerifyErrors } from "jsonwebtoken";
-import jwt from "jsonwebtoken";
 
 export const getPosts = async (
   req: Request,
@@ -135,25 +132,3 @@ export const getUsersPost = async (
     next(error);
   }
 };
-
-export const getTagsOfPost = async (
-  req: Request,
-  res:Response,
-  next: NextFunction
-) => {
-  try {
-    const postId = req.params.id;
-    const post = await Post.getTagsOfPost(postId);
-
-    return res.status(200).json({ success: true, data: post });
-  } catch (error: any) {
-    console.error("Error in getTags", error);
-    if (error.message === "Tag does not exist") {
-      return res.status(404).json({ success: false, error: "Tags not found" });
-    } else {
-      return res
-        .status(500)
-        .json({ success: false, error: "Internal server error" });
-    }
-  }
-}

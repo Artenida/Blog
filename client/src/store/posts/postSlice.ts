@@ -6,7 +6,9 @@ import {
   getSinglePost,
   retrieveAllAuthors,
   retrieveAllPosts,
+  retrievePostTags,
 } from "../../api/postThunk";
+import { retrieveAllTags } from "../../api/tagsThunk";
 interface Post {
   postId: string;
   title: string;
@@ -41,6 +43,7 @@ interface BlogPost {
 interface PostState {
   currentPost: [] | null;
   currentAuthor: [] | null;
+  postTags: [] | null;
   loading: boolean;
   successful: boolean;
   retrieveError: string | null;
@@ -54,6 +57,7 @@ interface PostState {
 const initialState: PostState = {
   currentPost: [],
   currentAuthor: [],
+  postTags: [],
   retrieveError: null,
   deleteError: null,
   deleteSuccessful: null,
@@ -113,7 +117,7 @@ const postSlice = createSlice({
       .addCase(getSinglePost.rejected, (state: PostState, action: any) => {
         state.retrieveError = action.payload as string;
         state.loading = false;
-        // state.post = initialState.post;
+        state.post = initialState.post;
       })
       .addCase(getMyPosts.pending, (state) => {
         state.loading = true;
@@ -138,7 +142,7 @@ const postSlice = createSlice({
       .addCase(deletePost.rejected, (state, action) => {
         state.loading = false;
         state.deleteError = action.payload as string;
-      })      
+      })
       .addCase(retrieveAllAuthors.pending, (state) => {
         state.loading = true;
         state.retrieveError = null;
@@ -152,6 +156,19 @@ const postSlice = createSlice({
         state.loading = false;
         state.retrieveError = action.payload as string;
       })
+      .addCase(retrievePostTags.pending, (state) => {
+        state.loading = true;
+        state.retrieveError = null;
+      })
+      .addCase(retrievePostTags.fulfilled, (state, action) => {
+        state.loading = false;
+        state.retrieveError = null;
+        state.postTags = action.payload;
+      })
+      .addCase(retrievePostTags.rejected, (state, action) => {
+        state.loading = false;
+        state.retrieveError = action.payload as string;
+      });
   },
 });
 

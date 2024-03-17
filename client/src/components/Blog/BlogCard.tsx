@@ -7,8 +7,9 @@ interface Tag {
   id: number;
   name: string;
 }
+
 interface BlogPost {
-  id: number;
+  id: string;
   cover: string | undefined;
   title: string;
   tags: Tag[];
@@ -41,9 +42,13 @@ const BlogCard: React.FC<BlogCardProps> = ({ posts }) => {
               </Link>
             </div>
             <div className="flex flex-col">
-              <h3 className="mt-4 mb-2 text-custom-color3 text-sm">
-                {post.tags && post.tags.map((tag) => "#" + tag.name + " ")}
-              </h3>
+              <div className="flex">
+                {post.tags.map((tag) => (
+                  <h3 key={tag.id} className="mr-2">
+                    #{tag.name}
+                  </h3>
+                ))}
+              </div>
               <Link to={`/blog/${post.id}`}>
                 <h2 className="mt-4 mb-2 font-bold hover:text-custom-color3 text-lg">
                   {post.title.length > 30
@@ -57,7 +62,11 @@ const BlogCard: React.FC<BlogCardProps> = ({ posts }) => {
                   : post.description}
               </p>
 
-              <Author authorName={post.username} profilePicture={post.profilePicture} createdAt={post.createdAt} />
+              <Author
+                authorName={post.username}
+                profilePicture={post.profilePicture}
+                createdAt={post.createdAt}
+              />
 
               <div className="flex justify-end mx-2 mt-1">
                 <div className="flex justify-center gap-1 items-center">

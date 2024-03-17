@@ -18,7 +18,7 @@ interface FormData {
 
 export const UpdateUserForm = () => {
   const dispatch = useAppDispatch(); 
-  const { currentUser, updateError } = useAppSelector(selectUser);
+  const { currentUser, updateError, token } = useAppSelector(selectUser);
 
   const [formDataErrors, setFormDataErrors] = useState<FormData>({
     username: "",
@@ -58,9 +58,9 @@ export const UpdateUserForm = () => {
         bio: data.bio,
         userId: currentUser?.user?.id,
       };
-      dispatch(updateUser(newUser));
+      dispatch(updateUser({body: newUser, token: token}));
     }
-},[hasErrors, data, currentUser, dispatch]);;
+},[hasErrors, data, currentUser, dispatch]);
 
   return (
     <div className="flex flex-col gap-3 p-4 border-2 rounded-xl border-custom-color2">

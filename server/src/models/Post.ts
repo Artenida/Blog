@@ -1,10 +1,15 @@
 import createDatabaseConnection from "../config";
-interface Post {
-  post_id: number;
+// import { Tags } from "./Tags";
+interface Tag {
+  id: string;
+  name: string;
+}
+interface PostInterface {
+  post_id: string;
   title: string;
   description: string;
   post_createdAt: Date;
-  tags: string[];
+  tags: Tag[];
 }
 interface TagRow {
   name: string;
@@ -19,21 +24,27 @@ class Post {
         SELECT 
           p.*, 
           u.username, 
-          u.profile_picture 
-        FROM 
-          posts p
-        LEFT JOIN 
-          users u 
-        ON 
-          p.user_id = u.id`;
+          u.profile_picture,
+          GROUP_CONCAT(t.name) AS tags
+        FROM posts p LEFT JOIN users u  ON  p.user_id = u.id
+        LEFT JOIN post_tags pt ON p.id = pt.post_id
+        LEFT JOIN tags t ON pt.tag_id = t.id GROUP BY p.id`;
 
-      const data = await new Promise((resolve, reject) => {
+      const data = await new Promise<PostInterface[]>((resolve, reject) => {
         db.query(query, (error, result) => {
           connection.closeConnection();
           if (error) {
             reject(error);
           } else {
-            resolve(result);
+            const postsWithTags = result.map((post: any) => ({
+              ...post,
+              tags: post.tags
+                ? post.tags
+                    .split(",")
+                    .map((tagName: string) => ({ id: "", name: tagName }))
+                : [],
+            }));
+            resolve(postsWithTags);
           }
         });
       });
@@ -100,7 +111,7 @@ class Post {
         };
       }
       const existingPostIndex = structuredData.posts.findIndex(
-        (post: Post) => post.post_id === row.post_id
+        (post: PostInterface) => post.post_id === row.post_id
       );
 
       if (existingPostIndex === -1) {
@@ -260,45 +271,16 @@ class Post {
     }
   }
 
-
-static async getTagsOfPost(postId: string) {
-    const connection = createDatabaseConnection();
-    const db = connection.getConnection();
-
-    const query = `
-      SELECT t.name 
-      FROM tags t
-      JOIN post_tags pt ON t.id = pt.tag_id
-      WHERE pt.post_id = ?;
-    `;
-
-    return new Promise<string[]>((resolve, reject) => {
-      db.query(query, [postId], (err, result: TagRow[]) => {
-        if (err) {
-          reject(err);
-        } else {
-          if (result.length === 0) {
-            reject(new Error("No tags"));
-          } else {
-            const tags = result.map(row => row.name);
-            resolve(tags);
-          }
-        }
-        connection.closeConnection();
-      });
-    });
-}
-
   static async getAuthors() {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
-  
+
     try {
       const query = `
         SELECT DISTINCT u.*
         FROM users u
         JOIN posts p ON u.id = p.user_id`;
-  
+
       const data = await new Promise((resolve, reject) => {
         db.query(query, (error, result) => {
           connection.closeConnection();
@@ -309,7 +291,7 @@ static async getTagsOfPost(postId: string) {
           }
         });
       });
-  
+
       return data;
     } catch (error) {
       console.error("Error in getAuthors", error);
