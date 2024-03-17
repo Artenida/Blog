@@ -101,7 +101,7 @@ class Post {
       user: {},
       posts: [],
     };
-
+  
     result.forEach((row, index) => {
       if (index === 0) {
         structuredData.user = {
@@ -113,24 +113,25 @@ class Post {
       const existingPostIndex = structuredData.posts.findIndex(
         (post: PostInterface) => post.post_id === row.post_id
       );
-
+  
       if (existingPostIndex === -1) {
         structuredData.posts.push({
           post_id: row.post_id,
           title: row.title,
           description: row.description,
           post_createdAt: row.post_createdAt,
-          tags: row.tags ? [row.tags] : [],
+          tags: row.tags ? row.tags.split(',').map((tagName: string) => ({ id: '', name: tagName.trim() })) : [],
         });
       } else {
         if (row.tags) {
-          structuredData.posts[existingPostIndex].tags.push(row.tags);
+          structuredData.posts[existingPostIndex].tags.push(...row.tags.split(',').map((tagName: string) => ({ id: '', name: tagName.trim() })));
         }
       }
     });
-
+  
     return structuredData;
   }
+  
 
   static async createPost(
     image: string,

@@ -34,6 +34,13 @@ const BlogDetails = () => {
                 src={currentPost.image}
                 alt={currentPost.title}
               />
+              <div className="flex mt-4">
+                {currentPost.tags.map((tag) => (
+                  <h3 className="mr-2">
+                    #{tag.name}
+                  </h3>
+                ))}
+              </div>
               <Author
                 authorName={post.user.username}
                 profilePicture={post.user.profile_picture}
