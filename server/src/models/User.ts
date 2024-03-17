@@ -4,6 +4,7 @@ interface UserData {
   username: string;
   email: string;
   password: string;
+  profile_picture: string;
 }
 
 interface DeleteResult {
@@ -88,6 +89,7 @@ export class User {
     username: string,
     email: string,
     password: string,
+    profile_picture: string,
     bio: string
   ): Promise<UpdateResult> {
     const connection = createDatabaseConnection();
@@ -99,12 +101,12 @@ export class User {
 
       if (password.trim() === "") {
         query =
-          "UPDATE users SET username = ?, email = ?, bio = ? WHERE id = ?";
-        queryParams = [username, email, bio, id];
+          "UPDATE users SET username = ?, email = ?, profile_picture = ?, bio = ?, WHERE id = ?";
+        queryParams = [username, email, profile_picture, bio, id];
       } else {
         query =
-          "UPDATE users SET username = ?, email = ?, password = ?, bio = ? WHERE id = ?";
-        queryParams = [username, email, password, bio, id];
+          "UPDATE users SET username = ?, email = ?, password = ?, profile_picture = ?, bio = ? WHERE id = ?";
+        queryParams = [username, email, password, profile_picture, bio, id];
       }
 
       const result: any = await new Promise((resolve, reject) => {
@@ -131,6 +133,37 @@ export class User {
     } catch (error) {
       console.error("Error updating user:", error);
       connection.closeConnection();
+      throw error;
+    }
+  }
+
+
+  static async updateProfilePicture(
+    userId: string,
+    imageUrl: string
+  ): Promise<void> {
+    const connection = createDatabaseConnection();
+    const db = connection.getConnection();
+
+    try {
+      const query = `
+          UPDATE users
+          SET profile_picture = ?
+          WHERE id = ?
+        `;
+
+      await new Promise<void>((resolve, reject) => {
+        db.query(query, [imageUrl, userId], (error, result) => {
+          connection.closeConnection();
+          if (error) {
+            reject(error);
+          } else {
+            resolve();
+          }
+        });
+      });
+    } catch (error) {
+      console.error("Error in updateProfilePicture", error);
       throw error;
     }
   }

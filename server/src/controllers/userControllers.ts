@@ -25,7 +25,7 @@ export const updateUser = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { username, email, password, bio } = req.body;
+    const { username, email, profile_picture, password, bio } = req.body;
     const { id } = req.params;
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -34,7 +34,8 @@ export const updateUser = async (
       username,
       email,
       hashedPassword,
-      bio
+      bio,
+      profile_picture,
     );
 
     if (success) {
@@ -44,6 +45,7 @@ export const updateUser = async (
           id: id,
           username: username,
           email: email,
+          profile_picture: profile_picture,
           bio: bio,
         },
       });
@@ -54,13 +56,29 @@ export const updateUser = async (
     console.error("Error updating user:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
-};
+}
+
+export const updateProfilePicture = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  const userId = req.params.userId;
+  const imageUrl = req.body.imageUrl;
+
+  try {
+    await User.updateProfilePicture(userId, imageUrl);
+    res.status(200).json({ message: 'Profile picture updated successfully' });
+  } catch (error) {
+    console.error('Error updating profile picture:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
 
 export const deleteUser = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   try {
     const { id } = req.params;
     const isDeleted = await User.deleteUser(Number(id));

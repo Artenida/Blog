@@ -14,6 +14,7 @@ interface FormData {
   email: string;
   bio: string;
   password: string;
+  profile_picture: string;
 }
 
 export const UpdateUserForm = () => {
@@ -25,6 +26,7 @@ export const UpdateUserForm = () => {
     email: "",
     bio: "",
     password: "",
+    profile_picture: ""
   });
 
   const [data, setData] = useState({
@@ -32,6 +34,7 @@ export const UpdateUserForm = () => {
     email: currentUser?.user?.email ?? "",
     bio: currentUser?.user?.bio ?? "",
     password: "",
+    profile_picture: "",
   });
 
   const handleInputChange = useCallback( (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,6 +59,7 @@ export const UpdateUserForm = () => {
         email: data.email,
         password: data.password,
         bio: data.bio,
+        profile_picture: data.profile_picture,
         userId: currentUser?.user?.id,
       };
       dispatch(updateUser({body: newUser, token: token}));

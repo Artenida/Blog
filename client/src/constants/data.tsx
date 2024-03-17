@@ -23,12 +23,12 @@ export const new_blogs = [
   {
     id: 1,
     cover: blog1,
-    title: "Title",
+    title: "Unlocking the Power of Camera Lenses: A Comprehensive Guide",
     tags: tags,
-    authorName: "User",
+    authorName: "Author",
     profilePicture: profile,
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dapibus eu lectus id gravida...",
+      "Unlocking the Power of Camera Lenses: A Comprehensive Guide Dive into the world of camera lenses with our latest blog post! From prime to zoom, wide-angle to telephoto, we explore the myriad options available to photographers seeking to enhance their craft. Discover the science behind lens construction, the art of focal lengths, and the impact of aperture on your images. Whether you're a beginner navigating the basics or a seasoned pro looking to expand your repertoire, this guide offers invaluable insights and practical tips to help you choose the perfect lens for every photographic journey. Join us as we unravel the mysteries of glass and bring your vision into crystal-clear focus.",
     createdAt: new Date(),
   },
   {

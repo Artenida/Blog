@@ -18,13 +18,24 @@ type UserBodyTypeUpdate = {
   username: string;
   email: string;
   bio: string;
+  profile_picture: string;
   userId: number;
 };
 
 type UserEndpointType = {
   token?: string;
-  body: UserBodyTypeUpdate
-}
+  body: UserBodyTypeUpdate;
+};
+type UserBodyTypeUpdateProfile = {
+  userId: string;
+  profile_picture: FormData;
+};
+
+type UserEndpoint = {
+  token?: string;
+  userId: string;
+  body: UserBodyTypeUpdateProfile;
+};
 
 export const loginUser = createAsyncThunk(
   "api/auth/login",
@@ -74,7 +85,7 @@ export const deleteUser = createAsyncThunk(
   async (userId: number, { rejectWithValue, getState }) => {
     try {
       const state: RootState = getState() as RootState;
-      const token = state.user.token ?? '';
+      const token = state.user.token ?? "";
       const response = await createAPI(`api/users/delete/${userId}`, {
         method: "DELETE",
         token: token,
@@ -92,22 +103,43 @@ export const deleteUser = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
   "api/users/update",
-  async ({body}: UserEndpointType, { rejectWithValue, getState }) => {
+  async ({ body }: UserEndpointType, { rejectWithValue, getState }) => {
     try {
-
       const state: RootState = getState() as RootState;
-      const token: string = state.user.token ?? '';
-  
+      const token: string = state.user.token ?? "";
+
       const response = await createAPI(`api/users/update/${body.userId}`, {
         method: "PUT",
         token: token,
         body: JSON.stringify(body),
       })(body);
       const data = await response.json();
-      console.log(data);
       return !response.ok ? rejectWithValue(data.message) : data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
-); 
+);
+
+export const updateProfilePicture = createAsyncThunk(
+  "api/users/updatePicture",
+  async ({ body }: UserEndpoint, { rejectWithValue, getState }) => {
+    try {
+      const state: RootState = getState() as RootState;
+      const token: string = state.user.token ?? "";
+
+      const response = await createAPI(
+        `api/users/updatePicture/${body.userId}`,
+        {
+          method: "PUT",
+          token: token,
+          body: JSON.stringify(body),
+        }
+      )(body);
+      const data = await response.json();
+      return !response.ok ? rejectWithValue(data.message) : data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);

@@ -84,7 +84,7 @@ class Post {
           connection.closeConnection();
         } else {
           if (result.length === 0) {
-            reject(new Error("Post does not exist")); // Throw an error explicitly when the post is not found
+            reject(new Error("Post does not exist"));
             connection.closeConnection();
           } else {
             const structuredResult = Post.structurePostResult(result);

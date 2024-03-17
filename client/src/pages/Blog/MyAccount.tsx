@@ -1,11 +1,31 @@
 import Sidebar from "../../components/Sidebar";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/user/userSlice";
-import profile from "../../assets/posts/profile.webp";
 import { UpdateUserForm } from "../../components/UpdateUserForm";
+import { useState } from "react";
+import { MediumButton } from "../../components/ButtonComponent";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { updateProfilePicture } from "../../api/userThunk";
 
 const MyAccount = () => {
-  const { currentUser } = useSelector(selectUser);
+  const [file, setFile] = useState<File | null>(null);
+  const dispatch = useAppDispatch();
+  const { currentUser, token } = useAppSelector(selectUser);
+
+  const update = () => {
+    if (file) {
+      const formData = new FormData();
+      formData.append("profile_picture", file); 
+      formData.append("userId", currentUser?.user?.id); 
+
+      // dispatch(updateProfilePicture({ token: token, body: formData }));
+    }
+  };
+
+  const handleClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    setFile(selectedFile || null);
+  };
 
   return (
     <div className="flex flex-col md:flex-row -z-50">
@@ -17,13 +37,20 @@ const MyAccount = () => {
         </h2>
         <div className="flex flex-col sm:flex-row gap-3 p-4 border-2 rounded-xl border-custom-color2">
           <div className="w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full border-4">
-            <img
-              src={profile}
-              alt="Profile"
-              className="rounded-full w-32 h-32"
+            <label htmlFor="file" className="cursor-pointer">
+              <img
+                src={currentUser?.user?.profile_picture}
+                alt="Profile"
+                className="rounded-full w-32 h-32"
+              />
+            </label>
+            <input
+              type="file"
+              id="file"
+              style={{ display: "none" }}
+              onChange={handleClick}
             />
           </div>
-
           <div className="p-4">
             <h2 className="text-xl text-custom-color3 font-bold ml-2">
               {currentUser?.user?.username}
@@ -40,6 +67,7 @@ const MyAccount = () => {
             </div>
           </div>
         </div>
+        <MediumButton onClick={update}>Update Profile Photo</MediumButton>
 
         <UpdateUserForm />
       </div>
