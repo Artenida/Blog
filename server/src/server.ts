@@ -8,7 +8,8 @@ import postRoutes from "./routes/postRoutes"
 import tagRoutes from "./routes/tagRoutes"
 import dotenv from 'dotenv';
 import cookieParser from "cookie-parser";
-import multer from 'multer';
+// import multer from 'multer';
+import path from "path";
 
 dotenv.config();
 
@@ -19,11 +20,13 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
-const upload = multer({dest: 'uploads/'})
+// const upload = multer({dest: 'uploads/'})
 
-app.post(`${base_url}upload`, upload.single('file'), function(req,res) {
-  res.status(200).json("Image has been uploaded")
-})
+// app.post(`${base_url}upload`, upload.single('file'), function(req,res) {
+//   res.status(200).json("Image has been uploaded")
+// })
+const uploadPath = path.join(__dirname, '../uploads');
+app.use('/uploads', express.static(uploadPath));
 
 app.use(`${base_url}auth`, authRoutes);
 app.use(`${base_url}users`, userRoutes);
