@@ -1,3 +1,4 @@
+import { query } from "express";
 import createDatabaseConnection from "../config";
 // import { Tags } from "./Tags";
 interface Tag {
@@ -14,6 +15,14 @@ interface PostInterface {
 interface TagRow {
   name: string;
 }
+
+type PostInputs = {
+  title: string;
+  description: string;
+  user_id: string;
+  tags: string[];
+  files: Express.Multer.File[];
+};
 class Post {
   static async getPosts() {
     const connection = createDatabaseConnection();
@@ -101,7 +110,7 @@ class Post {
       user: {},
       posts: [],
     };
-  
+
     result.forEach((row, index) => {
       if (index === 0) {
         structuredData.user = {
@@ -113,62 +122,69 @@ class Post {
       const existingPostIndex = structuredData.posts.findIndex(
         (post: PostInterface) => post.post_id === row.post_id
       );
-  
+
       if (existingPostIndex === -1) {
         structuredData.posts.push({
           post_id: row.post_id,
           title: row.title,
           description: row.description,
           post_createdAt: row.post_createdAt,
-          tags: row.tags ? row.tags.split(',').map((tagName: string) => ({ id: '', name: tagName.trim() })) : [],
+          tags: row.tags
+            ? row.tags
+                .split(",")
+                .map((tagName: string) => ({ id: "", name: tagName.trim() }))
+            : [],
         });
       } else {
         if (row.tags) {
-          structuredData.posts[existingPostIndex].tags.push(...row.tags.split(',').map((tagName: string) => ({ id: '', name: tagName.trim() })));
+          structuredData.posts[existingPostIndex].tags.push(
+            ...row.tags
+              .split(",")
+              .map((tagName: string) => ({ id: "", name: tagName.trim() }))
+          );
         }
       }
     });
-  
+
     return structuredData;
   }
-  
 
-  static async createPost(
-    image: string,
-    title: string,
-    description: string,
-    createdAt: string,
-    userId: number,
-    tags: string[]
-  ): Promise<any> {
+  static async createPost(inputs: PostInputs): Promise<any> {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
 
     try {
       const postQuery =
-        "INSERT INTO posts (`image`, `title`, `description`, `createdAt`, `user_id`) VALUES (?, ?, ?, ?, ?)";
-      const postValues = [image, title, description, createdAt, userId];
-      const postResult: { insertId: number } = await new Promise(
-        (resolve, reject) => {
-          db.query(postQuery, postValues, (error, result) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve(result);
-            }
-          });
+        "INSERT INTO posts (`title`, `description`, `createdAt`, `user_id`) VALUES (?, ?, ?, ?)";
+      const postValues = [
+        inputs.title,
+        inputs.description,
+        new Date(),
+        inputs.user_id,
+      ];
+
+      db.query(postQuery, postValues, async (error, result) => {
+        if (error) {
+          console.error("Error inserting post:", error);
+          connection.closeConnection();
+          throw error;
         }
-      );
 
-      const postId = postResult.insertId;
+        const postId = result.insertId;
 
-      await this.addTags(postId, tags);
-
-      connection.closeConnection();
-
-      return postResult;
+        try {
+          await Post.addTags(postId, inputs.tags);
+          await Post.addImages(postId, inputs.files);
+          connection.closeConnection();
+          return { success: true, postId };
+        } catch (error) {
+          console.error("Error adding tags or images:", error);
+          connection.closeConnection();
+          throw error;
+        }
+      });
     } catch (error) {
-      console.error("Error in createPost", error);
+      console.error("Error in createPost:", error);
       connection.closeConnection();
       throw error;
     }
@@ -179,16 +195,18 @@ class Post {
     const db = connection.getConnection();
 
     try {
-      for (const tag of tags) {
+      if (tags) {
         const query = "INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)";
         await new Promise((resolve, reject) => {
-          db.query(query, [postId, tag], (error, result) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve(result);
-            }
-          });
+          for (const tag of tags) {
+            db.query(query, [postId, tag], (error, result) => {
+              if (error) {
+                reject(error);
+              } else {
+                resolve(result);
+              }
+            });
+          }
         });
       }
 
@@ -199,6 +217,24 @@ class Post {
       console.error("Error in addTags", error);
       throw error;
     }
+  }
+
+  static async addImages(postId: any, images: Express.Multer.File[]) {
+    const connection = createDatabaseConnection();
+    const db = connection.getConnection();
+    const query = "INSERT INTO images (post_id, image) VALUES (?, ?)";
+
+    return new Promise((resolve, reject) => {
+      for (const element of images) {
+        db.query(query, [postId, element.path], (err, _) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(true);
+          }
+        });
+      }
+    });
   }
 
   static deletePostById(postId: number): Promise<any> {

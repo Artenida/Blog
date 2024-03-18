@@ -19,7 +19,7 @@ const router = express.Router();
 
 router.get("/allPosts", getPosts);
 router.get("/getSinglePost/:id", getSinglePost);
-router.post("/createPost", verifyToken, validateCreatePost, createPost);
+router.post("/createPost", verifyToken, createPost);
 router.delete("/delete/:id", verifyToken, deletePost);
 router.put("/update/:id", verifyToken, validateUpdatePost, updatePost);
 router.get("/user/:userId", verifyToken, getUsersPost);

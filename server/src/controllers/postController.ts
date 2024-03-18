@@ -1,6 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import Post from "../models/Post";
-
+type PostInputs = {
+  title: string;
+  description: string;
+  user_id: string;
+  tags: string[];
+  files: Express.Multer.File[];
+};
 export const getPosts = async (
   req: Request,
   res: Response,
@@ -44,9 +50,11 @@ export const createPost = async (
   next: NextFunction
 ) => {
   try {
-    const { image, title, description, createdAt, tags } = req.body;
-    const userId = req.body.user.id;
-    await Post.createPost(image, title, description, createdAt, userId, tags);
+    const { title, description, tags } = req.body;
+    const user_id = req.body.user.id;
+    const files: Express.Multer.File[] = req.files as Express.Multer.File[];
+    const inputs: PostInputs = { title, description, user_id, tags, files };
+    const result = await Post.createPost(inputs);
     res
       .status(200)
       .json({ success: true, message: "Post created successfully" });
