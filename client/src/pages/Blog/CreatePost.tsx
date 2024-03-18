@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import FormInputs from "../../components/FormInputs";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -9,29 +9,42 @@ import { selectTags } from "../../store/tags/tagsSlice";
 import { retrieveAllTags } from "../../api/tagsThunk";
 import { createBlog } from "../../api/postThunk";
 import { selectUser } from "../../store/user/userSlice";
-import { Alert } from "@material-tailwind/react";
+import { Alert, input } from "@material-tailwind/react";
+import { validatePost } from "../../utils/validatePost";
 
 interface Tag {
   tagId: number;
   name: string;
 }
 
-interface FormData {
+type CreatePost = {
   title: string;
   description: string;
-  tags: string;
-  file: string;
-}
+  user_id: string;
+  tags: string[];
+  files: FileList | [];
+};
 
 const CreatePost = () => {
   const dispatch = useAppDispatch();
-  const [value, setValue] = useState("");
-  const [title, setTitle] = useState("");
-  const [file, setFile] = useState<File | null>(null);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const { tags, loading, retrieveError } = useSelector(selectTags);
   const { currentUser } = useSelector(selectUser);
   const userId = currentUser?.user?.id;
+
+  const [data, setData] = useState<CreatePost>({
+    title: "",
+    description: "",
+    tags: [] as string[],
+    user_id: userId ?? "",
+    files: [],
+  });
+
+  interface FormData {
+    title: string;
+    description: string;
+    tags: string;
+    file: string;
+  }
 
   const [formDataErrors, setFormDataErrors] = useState<FormData>({
     title: "",
@@ -39,45 +52,35 @@ const CreatePost = () => {
     tags: "",
     file: "",
   });
+  const [postSuccess, setPostSuccess] = useState(false);
+  const hasErrors = Object.values(formDataErrors).some((error) => error !== "");
 
+  useEffect(() => {
+    if (!hasErrors) {
+      const formData = new FormData();
+      formData.append("title", data.title);
+      formData.append("description", data.description);
+      formData.append("user_id", userId);
+      for (let element of data.tags) {
+        formData.append("tags", element);
+      }
+      for (let i = 0; i < data.files.length; i++) {
+        formData.append("files", data.files[i]);
+      }
+      dispatch(createBlog(formData));
+    }
+  }, [hasErrors]);
+
+
+const handleFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
+  setData({ ...data, files: event.target.files ?? [] })
+}
+const handleInputChange = (value: string) => {
+  setData({...data, title: value})
+}
   useEffect(() => {
     dispatch(retrieveAllTags());
   }, [dispatch]);
-
-  const handleSubmit = () => {
-    const errors: FormData = { title: "", description: "", tags: "", file: "" };
-
-    if (!title.trim()) {
-      errors.title = "Title is required";
-    }
-
-    if (!value.trim()) {
-      errors.description = "Description is required";
-    }
-
-    if (selectedTags.length === 0) {
-      errors.tags = "Please select at least one tag";
-    }
-
-    if (Object.values(errors).some((error) => error !== "")) {
-      setFormDataErrors(errors);
-      return;
-    }
-
-    if (!file) {
-      errors.file = "Please upload an image";
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", value);
-    formData.append("tags", JSON.stringify(selectedTags));
-    formData.append("userId", userId);
-    formData.append("images", file);
-
-    dispatch(createBlog({ formData: formData }));
-  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -92,23 +95,24 @@ const CreatePost = () => {
             ) : (
               <ul>
                 {tags?.map((tag: Tag) => (
-                  <li key={tag?.tagId} className="mb-2">
+                  <li key={tag.tagId} className="mb-2">
                     <input
                       type="checkbox"
-                      id={`tag-${tag?.tagId}`}
-                      value={tag?.name}
+                      id={`tag-${tag.tagId}`}
+                      value={tag.name}
                       className="mr-2"
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setSelectedTags([...selectedTags, tag.name]);
-                        } else {
-                          setSelectedTags(
-                            selectedTags.filter((t) => t !== tag.name)
-                          );
-                        }
+                      onChange={(event) => {
+                        const isChecked = event.target.checked;
+                        const tagName = event.target.value;
+
+                        const updatedTags = isChecked
+                          ? [...data.tags, tagName]
+                          : data.tags.filter((tag) => tag !== tagName);
+
+                        setData({ ...data, tags: updatedTags });
                       }}
                     />
-                    <label htmlFor={`tag-${tag?.tagId}`}>{tag?.name}</label>
+                    <label htmlFor={`tag-${tag.tagId}`}>{tag.name}</label>
                   </li>
                 ))}
               </ul>
@@ -120,16 +124,18 @@ const CreatePost = () => {
               label="Upload Image"
               type="file"
               id="file"
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
+              onChange={handleFiles}
             />
+
             <FormInputs
               label="Title"
               id="title"
               type="text"
               placeholder="Title"
-              onChange={(e) => setTitle(e.target.value)}
+              // value={data.title}
               errorMessage={formDataErrors.title}
             />
+
             <label
               htmlFor="description"
               className="block mb-2 mt-8 pl-1 font-semibold"
@@ -138,20 +144,26 @@ const CreatePost = () => {
             </label>
             <ReactQuill
               theme="snow"
-              value={value}
-              onChange={setValue}
               style={{ height: "300px" }}
               className="mb-4"
+              onChange={(value) => setData({ ...data, description: value })}
             />
-            {formDataErrors.description}
+            <h2> {formDataErrors.description}</h2>
 
-            {formDataErrors.tags && (
-              <Alert className="bg-red-200 py-2 px-6 text-red-500">
-                {formDataErrors.tags}
+            {postSuccess && (
+              <Alert className="bg-green-200 py-2 px-6 text-green-500">
+                Post is published
               </Alert>
             )}
+
+            {formDataErrors.tags && (
+              <Alert className="bg-green-200 py-2 px-6 text-red-500">
+                You have to select at least one tag
+              </Alert>
+            )}
+
             <div className="mt-8">
-              <MediumButton onClick={handleSubmit}>Create</MediumButton>
+              <MediumButton>Publish</MediumButton>
             </div>
           </div>
         </div>
