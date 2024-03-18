@@ -9,7 +9,7 @@ import { selectTags } from "../../store/tags/tagsSlice";
 import { retrieveAllTags } from "../../api/tagsThunk";
 import { createBlog } from "../../api/postThunk";
 import { selectUser } from "../../store/user/userSlice";
-import { Alert, input } from "@material-tailwind/react";
+import { Alert } from "@material-tailwind/react";
 import { validatePost } from "../../utils/validatePost";
 
 interface Tag {
@@ -24,6 +24,12 @@ type CreatePost = {
   tags: string[];
   files: FileList | [];
 };
+interface FormData {
+  title: string;
+  description: string;
+  tags: string;
+  file: string;
+}
 
 const CreatePost = () => {
   const dispatch = useAppDispatch();
@@ -39,13 +45,6 @@ const CreatePost = () => {
     files: [],
   });
 
-  interface FormData {
-    title: string;
-    description: string;
-    tags: string;
-    file: string;
-  }
-
   const [formDataErrors, setFormDataErrors] = useState<FormData>({
     title: "",
     description: "",
@@ -53,31 +52,42 @@ const CreatePost = () => {
     file: "",
   });
   const [postSuccess, setPostSuccess] = useState(false);
-  const hasErrors = Object.values(formDataErrors).some((error) => error !== "");
 
-  useEffect(() => {
-    if (!hasErrors) {
-      const formData = new FormData();
-      formData.append("title", data.title);
-      formData.append("description", data.description);
-      formData.append("user_id", userId);
-      for (let element of data.tags) {
-        formData.append("tags", element);
-      }
-      for (let i = 0; i < data.files.length; i++) {
-        formData.append("files", data.files[i]);
-      }
-      dispatch(createBlog(formData));
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = event.target;
+    const updatedErrors = validatePost(id, value, formDataErrors);
+    setData({ ...data, [id]: value.trim() });
+    setFormDataErrors(updatedErrors);
+  };
+
+  const handleTagChange = (tag: string) => {
+    const updatedTags = data.tags.includes(tag)
+      ? data.tags.filter((t) => t !== tag)
+      : [...data.tags, tag];
+    setData({ ...data, tags: updatedTags });
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      setData({ ...data, files: files });
     }
-  }, [hasErrors]);
+  };
+console.log(data);
+  const handleSubmit = () => {
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("description", data.description);
+    formData.append("user_id", userId);
+    for (let tag of data.tags) {
+      formData.append("tags", tag);
+    }
+    for (let i = 0; i < data.files.length; i++) {
+      formData.append("files", data.files[i]);
+    }
+    dispatch(createBlog(formData));
+  };
 
-
-const handleFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setData({ ...data, files: event.target.files ?? [] })
-}
-const handleInputChange = (value: string) => {
-  setData({...data, title: value})
-}
   useEffect(() => {
     dispatch(retrieveAllTags());
   }, [dispatch]);
@@ -99,18 +109,8 @@ const handleInputChange = (value: string) => {
                     <input
                       type="checkbox"
                       id={`tag-${tag.tagId}`}
-                      value={tag.name}
                       className="mr-2"
-                      onChange={(event) => {
-                        const isChecked = event.target.checked;
-                        const tagName = event.target.value;
-
-                        const updatedTags = isChecked
-                          ? [...data.tags, tagName]
-                          : data.tags.filter((tag) => tag !== tagName);
-
-                        setData({ ...data, tags: updatedTags });
-                      }}
+                      onChange={() => handleTagChange(tag.name)}
                     />
                     <label htmlFor={`tag-${tag.tagId}`}>{tag.name}</label>
                   </li>
@@ -124,7 +124,7 @@ const handleInputChange = (value: string) => {
               label="Upload Image"
               type="file"
               id="file"
-              onChange={handleFiles}
+              onChange={handleFileChange}
             />
 
             <FormInputs
@@ -132,8 +132,8 @@ const handleInputChange = (value: string) => {
               id="title"
               type="text"
               placeholder="Title"
-              // value={data.title}
               errorMessage={formDataErrors.title}
+              onChange={handleChange}
             />
 
             <label
@@ -148,7 +148,6 @@ const handleInputChange = (value: string) => {
               className="mb-4"
               onChange={(value) => setData({ ...data, description: value })}
             />
-            <h2> {formDataErrors.description}</h2>
 
             {postSuccess && (
               <Alert className="bg-green-200 py-2 px-6 text-green-500">
@@ -163,7 +162,7 @@ const handleInputChange = (value: string) => {
             )}
 
             <div className="mt-8">
-              <MediumButton>Publish</MediumButton>
+              <MediumButton onClick={handleSubmit}>Publish</MediumButton>
             </div>
           </div>
         </div>
