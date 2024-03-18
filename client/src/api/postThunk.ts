@@ -4,8 +4,8 @@ import { RootState } from "../store/store";
 
 type UserEndpointType = {
   token?: string;
-  userId: string
-}
+  userId: string;
+};
 
 export const retrieveAllPosts = createAsyncThunk(
   "posts/posts/allPosts",
@@ -45,7 +45,7 @@ export const getMyPosts = createAsyncThunk(
   async ({ userId }: UserEndpointType, { rejectWithValue, getState }) => {
     try {
       const state: RootState = getState() as RootState;
-      const token: string = state.user.token ?? '';
+      const token: string = state.user.token ?? "";
 
       const response = await createAPI(`api/posts/user/${userId}`, {
         method: "GET",
@@ -54,7 +54,7 @@ export const getMyPosts = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('Error fetching data:', errorData.message);
+        console.error("Error fetching data:", errorData.message);
         return rejectWithValue(errorData.message);
       }
 
@@ -62,7 +62,7 @@ export const getMyPosts = createAsyncThunk(
 
       return data;
     } catch (error: any) {
-      console.error('Error:', error.message);
+      console.error("Error:", error.message);
       return rejectWithValue(error.message);
     }
   }
@@ -73,7 +73,7 @@ export const deletePost = createAsyncThunk(
   async (postId: string, { rejectWithValue, getState }) => {
     try {
       const state: RootState = getState() as RootState;
-      const token: string = state.user.token ?? '';
+      const token: string = state.user.token ?? "";
 
       const response = await createAPI(`api/posts/delete/${postId}`, {
         method: "DELETE",
@@ -82,7 +82,7 @@ export const deletePost = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('Error fetching data:', errorData.message);
+        console.error("Error fetching data:", errorData.message);
         return rejectWithValue(errorData.message);
       }
 
@@ -90,7 +90,7 @@ export const deletePost = createAsyncThunk(
 
       return data;
     } catch (error: any) {
-      console.error('Error:', error.message);
+      console.error("Error:", error.message);
       return rejectWithValue(error.message);
     }
   }
@@ -127,4 +127,43 @@ export const retrievePostTags = createAsyncThunk(
       return rejectWithValue(error.message);
     }
   }
-)
+);
+
+interface BlogInfo {
+  formData: FormData;
+}
+
+type CreatePost = {
+  title: string;
+  description: string;
+  user_id: string;
+  tags: string[];
+  files: FileList | [];
+};
+
+export const createBlog = createAsyncThunk(
+  "api/posts/createPost",
+  async (formData: FormData, { getState, rejectWithValue }) => {
+    try {
+      const state: RootState = getState() as RootState;
+      const token = state.user.token ?? "";
+      const response = await createAPI(`api/posts/createPost`, {
+        method: "POST",
+        token: token,
+      })(formData);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error creating post:", errorData.message);
+        return rejectWithValue(errorData.message);
+      }
+
+      const data = await response.json();
+
+      return data;
+    } catch (error: any) {
+      console.error("Error:", error.message);
+      return rejectWithValue(error.message);
+    }
+  }
+);

@@ -223,18 +223,25 @@ class Post {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
     const query = "INSERT INTO images (post_id, image) VALUES (?, ?)";
-
-    return new Promise((resolve, reject) => {
+  
+    try {
       for (const element of images) {
-        db.query(query, [postId, element.path], (err, _) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(true);
-          }
+        await new Promise((resolve, reject) => {
+          db.query(query, [postId, element.path], (err, _) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(true);
+            }
+          });
         });
       }
-    });
+      connection.closeConnection();
+      return { success: true };
+    } catch (error) {
+      console.error("Error in addImages", error);
+      throw error;
+    }
   }
 
   static deletePostById(postId: number): Promise<any> {

@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "../../store/store";
 import {
+  createBlog,
   deletePost,
   getMyPosts,
   getSinglePost,
@@ -48,6 +49,7 @@ interface PostState {
   successful: boolean;
   retrieveError: string | null;
   deleteError: string | null;
+  createError: string | null;
   deleteSuccessful: string | null;
   isUpdated: boolean;
   post: BlogType;
@@ -61,6 +63,7 @@ const initialState: PostState = {
   retrieveError: null,
   deleteError: null,
   deleteSuccessful: null,
+  createError: null,
   loading: false,
   successful: false,
   isUpdated: false,
@@ -168,6 +171,21 @@ const postSlice = createSlice({
       .addCase(retrievePostTags.rejected, (state, action) => {
         state.loading = false;
         state.retrieveError = action.payload as string;
+      })
+
+      .addCase(createBlog.pending, (state) => {
+        state.loading = true;
+        state.createError = null;
+      })
+      .addCase(createBlog.fulfilled, (state, action) => {
+        state.loading = false;
+        state.createError = null;
+        state.successful = true;
+      })
+      .addCase(createBlog.rejected, (state, action) => {
+        state.loading = false;
+        state.createError = action.payload as string;
+        state.successful = false;
       });
   },
 });

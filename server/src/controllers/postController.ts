@@ -52,7 +52,7 @@ export const createPost = async (
   try {
     const { title, description, tags } = req.body;
     const user_id = req.body.user.id;
-    const files: Express.Multer.File[] = req.files as Express.Multer.File[];
+    const files: Express.Multer.File[] = Array.isArray(req.files) ? req.files : [];
     const inputs: PostInputs = { title, description, user_id, tags, files };
     const result = await Post.createPost(inputs);
     res
