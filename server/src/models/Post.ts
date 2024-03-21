@@ -12,9 +12,6 @@ interface PostInterface {
   post_createdAt: Date;
   tags: Tag[];
 }
-interface TagRow {
-  name: string;
-}
 
 type PostInputs = {
   title: string;
@@ -152,26 +149,26 @@ class Post {
   static async createPost(inputs: PostInputs): Promise<any> {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
-
+  
     try {
       const postQuery =
-        "INSERT INTO posts (`title`, `description`, `createdAt`, `user_id`) VALUES (?, ?, ?, ?)";
+        "INSERT INTO posts (title, description, createdAt, user_id) VALUES (?, ?, ?, ?)";
       const postValues = [
         inputs.title,
         inputs.description,
         new Date(),
         inputs.user_id,
       ];
-
+  
       db.query(postQuery, postValues, async (error, result) => {
         if (error) {
           console.error("Error inserting post:", error);
           connection.closeConnection();
           throw error;
         }
-
+  
         const postId = result.insertId;
-
+  
         try {
           await Post.addTags(postId, inputs.tags);
           await Post.addImages(postId, inputs.files);
@@ -188,7 +185,7 @@ class Post {
       connection.closeConnection();
       throw error;
     }
-  }
+  }  
 
   static async addTags(postId: number, tags: string[]) {
     const connection = createDatabaseConnection();
@@ -225,7 +222,7 @@ class Post {
     const query = "INSERT INTO images (post_id, image) VALUES (?, ?)";
   
     try {
-      for (const element of images) {
+      await Promise.all(images.map(async (element) => {
         await new Promise((resolve, reject) => {
           db.query(query, [postId, element.path], (err, _) => {
             if (err) {
@@ -235,14 +232,16 @@ class Post {
             }
           });
         });
-      }
+      }));
+
       connection.closeConnection();
       return { success: true };
     } catch (error) {
       console.error("Error in addImages", error);
       throw error;
     }
-  }
+}
+
 
   static deletePostById(postId: number): Promise<any> {
     const connection = createDatabaseConnection();

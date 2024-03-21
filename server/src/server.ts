@@ -10,6 +10,8 @@ import dotenv from 'dotenv';
 import cookieParser from "cookie-parser";
 // import multer from 'multer';
 import path from "path";
+import bodyParser from "body-parser";
+
 
 dotenv.config();
 
@@ -19,14 +21,15 @@ const base_url = process.env.BASE_URL;
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+app.use(bodyParser.json());
 
 // const upload = multer({dest: 'uploads/'})
 
 // app.post(`${base_url}upload`, upload.single('file'), function(req,res) {
 //   res.status(200).json("Image has been uploaded")
 // })
-const uploadPath = path.join(__dirname, '../uploads');
-app.use('/uploads', express.static(uploadPath));
+const Path = path.join(__dirname, '../uploads');
+app.use('/uploads', express.static(Path));
 
 app.use(`${base_url}auth`, authRoutes);
 app.use(`${base_url}users`, userRoutes);

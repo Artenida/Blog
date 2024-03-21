@@ -3,8 +3,8 @@ import Post from "../models/Post";
 type PostInputs = {
   title: string;
   description: string;
-  user_id: string;
   tags: string[];
+  user_id: string;
   files: Express.Multer.File[];
 };
 export const getPosts = async (
