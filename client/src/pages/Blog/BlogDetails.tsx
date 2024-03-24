@@ -4,8 +4,9 @@ import Author from "../../components/Blog/Author";
 import { useAppDispatch } from "../../store/hooks";
 import { useSelector } from "react-redux";
 import { selectPost } from "../../store/posts/postSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getSinglePost } from "../../api/postThunk";
+import picture from "../../assets/about.jpg"
 
 const BlogPathComponents = [
   { id: 1, name: "Home", link: "/" },
@@ -17,10 +18,15 @@ const BlogDetails = () => {
   const { post } = useSelector(selectPost);
   const { postId } = useParams();
   const currentPost = post && post?.posts[0]? post?.posts[0] : null
- 
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
   useEffect(() => {
     dispatch(getSinglePost(postId ?? ""));
   }, [dispatch, postId]);
+
+  const handleImageClick = (index: any) => {
+    setSelectedImageIndex(index);
+  }
   
   return (
     <div>
@@ -29,11 +35,18 @@ const BlogDetails = () => {
           <article className="flex-1">
             <BlogPathComponent data={BlogPathComponents} />
             <div>
-              <img
-                className="rounded-xl w-full"
-                src={currentPost.image}
+              {/* {currentPost.images.map((image, index) => (
+                <img 
+                key={index}
+                className={`rounded-xl cursor-pointer mx-2 ${
+                  index === selectedImageIndex ? "w-full" : "w-1/4"
+                }`}
+                src={image}
                 alt={currentPost.title}
-              />
+                onClick={() => handleImageClick(index)}
+                />
+              ))} */}
+
               <div className="flex mt-4">
                 {currentPost.tags.map((tag) => (
                   <h3 className="mr-2">
