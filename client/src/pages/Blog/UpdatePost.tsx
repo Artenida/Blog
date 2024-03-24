@@ -7,58 +7,68 @@ import { useAppDispatch } from "../../store/hooks";
 import { useSelector } from "react-redux";
 import { selectTags } from "../../store/tags/tagsSlice";
 import { retrieveAllTags } from "../../api/tagsThunk";
-import { updatePost } from "../../api/postThunk";
+import { getSinglePost, updatePost } from "../../api/postThunk";
 import { Alert } from "@material-tailwind/react";
 import { selectPost } from "../../store/posts/postSlice";
 import { useValidateBlogForm } from "../../utils/validatePost";
 import { useNavigate, useParams } from "react-router-dom";
+import { useValidateUpdate } from "../../utils/validateUpdate";
 
 interface Tag {
   id: number;
   name: string;
 }
 
-interface FormData {
-  title: string;
-  description: string;
-  tags: string;
-  file: string;
-}
-
 const UpdatePost = () => {
   const dispatch = useAppDispatch();
   const { tags, loading, retrieveError } = useSelector(selectTags);
-  const { successful, updateError } = useSelector(selectPost);
+  const { successfulUpdate, updateError } = useSelector(selectPost);
   const { postId } = useParams();
-  const { errors, validateForm, displayErrors } = useValidateBlogForm();
+  const { errors, hasError, validateForm, displayErrors } = useValidateUpdate();
   const { post } = useSelector(selectPost);
-  const navigate = useNavigate();
+  const [postSuccess, setPostSuccess] = useState(false);
 
   const [data, setData] = useState({
     postId: postId ?? "",
-    title: post.posts[0].title,
-    description: post.posts[0].description,
+    title: "",
+    description: "",
     tags: [] as string[],
   });
-  const [postSuccess, setPostSuccess] = useState(false);
 
   useEffect(() => {
     tags?.length === 0 && dispatch(retrieveAllTags());
-  }, [dispatch]);
+    dispatch(getSinglePost(postId));
+  }, [dispatch, postId, tags]);
 
   useEffect(() => {
-    if (successful) {
+    if (post && post.posts.length > 0) {
+      const postData = post.posts[0];
+      setData({
+        postId: postId ?? "",
+        title: postData.title,
+        description: postData.description,
+        tags: postData.tags.map((tag: any) => tag?.id.toString()),
+      });
+    }
+  }, [post, postId]);
+
+  useEffect(() => {
+    if (successfulUpdate) {
       setPostSuccess(true);
     }
-  }, [successful]);
+  }, [successfulUpdate]);
 
   const handlePostSuccessClose = () => {
     setPostSuccess(false);
   };
 
   const handleSubmit = () => {
-      dispatch(updatePost(data));
-    //   navigate(`../blog/${postId}`);
+    validateForm(data);
+    displayErrors(data);
+    if (hasError) {
+      return;
+    }
+    dispatch(updatePost(data));
   };
 
   const handleTagChange = (tagId: string) => {
@@ -67,7 +77,7 @@ const UpdatePost = () => {
       : [...data.tags, tagId];
     setData({ ...data, tags: updatedTags });
   };
-console.log(data);
+
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setData({ ...data, title: value });
@@ -76,10 +86,7 @@ console.log(data);
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col gap-8">
-        <div
-          className="flex justify-between items-start gap-8"
-          onSubmit={handleSubmit}
-        >
+        <div className="flex justify-between items-start gap-8">
           <div className="w-1/3">
             <h3 className="mb-4 text-lg font-semibold">Select Tags:</h3>
             {loading ? (
@@ -101,6 +108,13 @@ console.log(data);
                 ))}
               </ul>
             )}
+            <span
+              className={`text-red-600 text-sm ${
+                errors.tags ? "block" : "hidden"
+              }`}
+            >
+              {errors.tags}
+            </span>
           </div>
 
           <div className="w-2/3 flex flex-col">
@@ -140,7 +154,7 @@ console.log(data);
                 onClose={handlePostSuccessClose}
                 className="bg-green-200 py-2 px-6 text-green-500"
               >
-                Post is published
+                Post is updated successfully
               </Alert>
             )}
             {updateError && (

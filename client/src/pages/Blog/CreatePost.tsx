@@ -88,9 +88,6 @@ const CreatePost = () => {
     }
     dispatch(createBlog(formData));
   };
-  console.log(tags)
-
-  console.log(data);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;

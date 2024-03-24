@@ -52,6 +52,10 @@ const MyPosts = () => {
     dispatch(getSinglePost(postId));
     navigate(`/blog/${postId}`);
   };
+  
+  const handleEditClick = (postId: string) => {
+    navigate(`/updatePost/${postId}`)
+  }
 
   if (loading) {
     return <div>Loading...</div>;
@@ -81,7 +85,9 @@ const MyPosts = () => {
             </p>
           </div>
           <div className="flex gap-2">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+            <button 
+            onClick={() => handleEditClick(post.id)}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
               Edit
             </button>
             <button

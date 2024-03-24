@@ -48,6 +48,7 @@ interface PostState {
   postTags: [] | null;
   loading: boolean;
   successful: boolean;
+  successfulUpdate: boolean;
   retrieveError: string | null;
   deleteError: string | null;
   createError: string | null;
@@ -69,6 +70,7 @@ const initialState: PostState = {
   createError: null,
   loading: false,
   successful: false,
+  successfulUpdate: false,
   isUpdated: false,
   myPost: {
     id: "",
@@ -195,12 +197,12 @@ const postSlice = createSlice({
         state.loading = true;
       })
       .addCase(updatePost.fulfilled, (state, action) => {
-        state.successful = true;
+        state.successfulUpdate = true;
         state.updateError = null;
         state.loading = false;
       })
       .addCase(updatePost.rejected, (state, action) => {
-        state.successful = false;
+        state.successfulUpdate = false;
         state.loading = false;
         state.updateError = action.payload as string;
       })
