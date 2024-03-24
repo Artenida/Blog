@@ -8,6 +8,7 @@ import {
   retrieveAllAuthors,
   retrieveAllPosts,
   retrievePostTags,
+  updatePost,
 } from "../../api/postThunk";
 import { retrieveAllTags } from "../../api/tagsThunk";
 interface Post {
@@ -20,7 +21,7 @@ interface Post {
 }
 
 interface Tag {
-  tagId: number;
+  tagId: string;
   name: string;
 }
 
@@ -50,6 +51,7 @@ interface PostState {
   retrieveError: string | null;
   deleteError: string | null;
   createError: string | null;
+  updateError: string | null;
   deleteSuccessful: string | null;
   isUpdated: boolean;
   post: BlogType;
@@ -62,6 +64,7 @@ const initialState: PostState = {
   postTags: [],
   retrieveError: null,
   deleteError: null,
+  updateError: null,
   deleteSuccessful: null,
   createError: null,
   loading: false,
@@ -186,7 +189,21 @@ const postSlice = createSlice({
         state.loading = false;
         state.createError = action.payload as string;
         state.successful = false;
-      });
+      })
+
+      .addCase(updatePost.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updatePost.fulfilled, (state, action) => {
+        state.successful = true;
+        state.updateError = null;
+        state.loading = false;
+      })
+      .addCase(updatePost.rejected, (state, action) => {
+        state.successful = false;
+        state.loading = false;
+        state.updateError = action.payload as string;
+      })
   },
 });
 

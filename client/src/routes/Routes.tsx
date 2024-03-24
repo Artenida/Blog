@@ -14,6 +14,7 @@ import Blog from "../pages/Blog/Blog";
 import AuthorsPage from "../pages/Blog/AuthorsPage";
 import CreatePost from "../pages/Blog/CreatePost";
 import MyPosts from "../pages/Blog/MyPosts";
+import UpdatePost from "../pages/Blog/UpdatePost";
 
 const routes = [
   { path: "/", element: <Home /> },
@@ -40,6 +41,7 @@ const AppRoutes = () => {
             <Route element={<Home />} path="/" />
             <Route element={<MyAccount />} path="/dashboard" />
             <Route element={<CreatePost />} path="/createPost" />
+            <Route element={<UpdatePost />} path="/updatePost/:postId" />
             <Route element={<MyPosts />} path="/viewPosts" />
           </Route>
         </Routes>

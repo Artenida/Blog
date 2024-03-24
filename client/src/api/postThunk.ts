@@ -167,3 +167,39 @@ export const createBlog = createAsyncThunk(
     }
   }
 );
+
+export const updatePost = createAsyncThunk(
+  "api/posts/update",
+  async (
+    input: {
+      postId: string;
+      title: string;
+      description: string;
+      tags: string[];
+    },
+    { rejectWithValue, getState }
+  ) => {
+    try {
+      const state: RootState = getState() as RootState;
+      const token: string = state.user.token ?? "";
+
+      const response = await createAPI(`api/posts/update/${input.postId}`, {
+        method: "PUT",
+        token: token,
+      })(input);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error fetching data:", errorData.message);
+        return rejectWithValue(errorData.message);
+      }
+
+      const data = await response.json();
+
+      return data;
+    } catch (error: any) {
+      console.error("Error:", error.message);
+      return rejectWithValue(error.message);
+    }
+  }
+);

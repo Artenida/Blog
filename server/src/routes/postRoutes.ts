@@ -31,7 +31,7 @@ const router = express.Router();
 
 router.get("/allPosts", getPosts);
 router.get("/getSinglePost/:id", getSinglePost);
-router.post("/createPost", authenticateToken, upload.array("file", 5), validateCreatePost, createPost);
+router.post("/createPost", verifyToken, upload.array("file", 5), validateCreatePost, createPost);
 router.delete("/delete/:id", verifyToken, deletePost);
 router.put("/update/:id", verifyToken, validateUpdatePost, updatePost);
 router.get("/user/:userId", verifyToken, getUsersPost);

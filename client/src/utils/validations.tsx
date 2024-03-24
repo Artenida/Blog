@@ -15,6 +15,7 @@ interface FormUpdateErrors {
   email: string;
   bio: string;
   password: string;
+  profile_picture: string;
 }
 
 const validateUsername = (value: string): string => {
@@ -44,43 +45,21 @@ const validatePassword = (value: string): string => {
   return "";
 };
 
-const validateConfirmPassword = (value: string, password: string): string => {
-  if (!value.trim()) {
-    return "Confirm Password is required";
-  } else if (value !== password) {
-    return "Passwords do not match";
-  }
-  return "";
-};
-
 export const validateRegisterForm = (
   id: string,
   value: string,
-  formData: FormRegisterErrors
+  formData: FormRegisterErrors,
 ): FormRegisterErrors => {
   let errors: FormRegisterErrors = { ...formData };
 
   if (id === "username") {
     errors.username = validateUsername(value);
-  }
-  if (id === "email") {
+  } else if (id === "email") {
     errors.email = validateEmail(value);
-  }
-  if (id === "password") {
-    errors.password = validatePassword(value);
-  }
-  if (id === "confirmPassword") {
-    if (value.trim()) {
-      errors.confirmPassword = validateConfirmPassword(
-        value,
-        formData.password
-      );
-    } else {
-      errors.confirmPassword = "";
-    }
   }
   return errors;
 };
+
 
 export const validateLoginForm = (
   id: string,
