@@ -1,9 +1,18 @@
+import { useState } from "react";
+
 interface CreatePost {
   title: string;
   description: string;
-  tags: string;
-  file: string;
+  tags: string[];
+  file: FileList | [];
 }
+
+type CreatePostError = {
+  title: string;
+  description: string;
+  tags: string;
+  files: string;
+};
 
 const validateTitle = (value: string): string => {
   if (!value.trim()) {
@@ -26,16 +35,43 @@ export const validateTags = (tags: string[]): string => {
   return "";
 };
 
-export const validatePost = (
-  id: string,
-  value: string,
-  formData: CreatePost
-): CreatePost => {
-  let errors: CreatePost = { ...formData };
-  if (id === "title") {
-    errors.title = validateTitle(value);
-  } else if (id === "description") {
-    errors.description = validateDescription(value);
-  } 
-  return errors;
+export const validateFiles = (files: FileList | []) => {
+  if (files) {
+    return files.length === 0 ? "Please upload at least one image" : "";
+  }
+  return "";
+};
+
+export const useValidateBlogForm = () => {
+  const [errors, setErrors] = useState<CreatePostError>({
+    title: '',
+    description: '',
+    tags: '',
+    files: '',
+  });
+
+  const [hasError, setHasError] = useState(true);
+
+  const validateForm = (inputs: CreatePost) => {
+    const titleError = validateTitle(inputs.title);
+    const descriptionError = validateDescription(inputs.description);
+    const tagsError = validateTags(inputs.tags);
+    const filesError = validateFiles(inputs.file);
+    setHasError(!!(titleError || descriptionError || tagsError || filesError));
+  }
+
+  const displayErrors = (inputs: CreatePost) => {
+    const titleError = validateTitle(inputs.title);
+    const descriptionError = validateDescription(inputs.description);
+    const tagsError = validateTags(inputs.tags);
+    const filesError = validateFiles(inputs.file);
+    setErrors({title: titleError, description: descriptionError, tags: tagsError, files: filesError})
+  }
+
+  return {
+    errors,
+    hasError,
+    validateForm,
+    displayErrors,
+  }
 };

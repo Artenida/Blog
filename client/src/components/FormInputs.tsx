@@ -1,3 +1,4 @@
+import { value } from "@material-tailwind/react/types/components/chip";
 import React from "react";
 
 interface FormInputProps {
@@ -7,8 +8,10 @@ interface FormInputProps {
   placeholder?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   icon?: React.ReactNode;
+  name?: string;
   value?: string | number | undefined;
   errorMessage?: string;
+  updateValue?: (value: string) => void;
 }
 
 const FormInputs: React.FC<FormInputProps> = ({
@@ -18,8 +21,10 @@ const FormInputs: React.FC<FormInputProps> = ({
   type,
   value,
   icon,
+  name,
   onChange,
   errorMessage,
+  updateValue
 }) => {
   return (
     <div className="mt-3 h-20">
@@ -38,7 +43,8 @@ const FormInputs: React.FC<FormInputProps> = ({
         className="mt-2 border border-custom-color2 px-3 py-2 rounded-md focus:outline-none focus:border-custom-color3 w-full h-10"
         onChange={onChange}
         value={value}
-      />
+        name={name}
+        />
       </div>
      
       <span
