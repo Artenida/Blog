@@ -60,10 +60,10 @@ const CreatePost = () => {
       setPostSuccess(true);
     }
   }, [successful]);
+
   useEffect(() => {
     if (createError) {
       console.error("Error creating blog post:", createError);
-      // Handle error display or other actions as needed
     }
   }, [createError]);
 
@@ -84,19 +84,17 @@ const CreatePost = () => {
       tags: data.tags,
       file: data.files,
     });
-    if (!hasError) {
-      const formData = new FormData();
-      formData.append("title", data.title);
-      formData.append("description", data.description);
-      formData.append("user_id", userId);
-      for (let tag of data.tags) {
-        formData.append("tags", tag);
-      }
-      for (let i = 0; i < data.files.length; i++) {
-        formData.append("files", data.files[i]);
-      }
-      dispatch(createBlog(formData));
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("description", data.description);
+    formData.append("user_id", userId);
+    for (let tag of data.tags) {
+      formData.append("tags", tag);
     }
+    for (let i = 0; i < data.files.length; i++) {
+      formData.append("files", data.files[i]);
+    }
+    dispatch(createBlog(formData));
   };
 
   const handleTagChange = (tagId: string) => {

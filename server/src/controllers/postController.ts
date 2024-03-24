@@ -1,12 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import Post from "../models/Post";
+
 type PostInputs = {
   title: string;
   description: string;
-  tags: string[];
   user_id: string;
+  tags: string[];
   files: Express.Multer.File[];
 };
+
 export const getPosts = async (
   req: Request,
   res: Response,
@@ -52,7 +54,9 @@ export const createPost = async (
   try {
     const { title, description, tags } = req.body;
     const user_id = req.body.user.id;
-    const files: Express.Multer.File[] = Array.isArray(req.files) ? req.files : [];
+    const files: Express.Multer.File[] = Array.isArray(req.files)
+      ? req.files
+      : [];
     const inputs: PostInputs = { title, description, user_id, tags, files };
     const result = await Post.createPost(inputs);
     res

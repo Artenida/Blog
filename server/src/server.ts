@@ -21,8 +21,6 @@ const base_url = process.env.BASE_URL;
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
-app.use(bodyParser.json());
-
 // const upload = multer({dest: 'uploads/'})
 
 // app.post(`${base_url}upload`, upload.single('file'), function(req,res) {

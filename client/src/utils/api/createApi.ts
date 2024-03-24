@@ -12,22 +12,26 @@ const headers = {
 };
 
 export const createAPI = <FormBody>(endpoint: string, options: APIOptions) => {
-  return async (body?: FormBody) => {
-    const headers = {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    } as Record<string, string>
-    
-    if(options.token) {
+  return async (body?: FormBody | FormData) => {
+    const headers = {} as Record<string, string>;
+
+    if (options.token) {
       headers['Authorization'] = `Bearer ${options.token}`;
     }
 
-    body ? (options.body = JSON.stringify(body)) : undefined;
+    let requestBody: any;
+    if (body instanceof FormData) {
+      requestBody = body;
+    } else {
+      headers['Content-Type'] = 'application/json';
+      headers['Accept'] = 'application/json';
+      requestBody = body ? JSON.stringify(body) : undefined;
+    }
 
     return fetch(`http://localhost:5000/${endpoint}`, {
-      method: options.method ?? "GET",
+      method: options.method ?? 'GET',
       headers,
-      body: options.body,
+      body: requestBody,
     });
   };
 };
