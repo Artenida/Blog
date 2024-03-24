@@ -41,14 +41,11 @@ export const validateCreatePost = (
   res: Response,
   next: NextFunction
 ) => {
-  const { image, title, description, createdAt } = req.body;
-  if (!image || !title || !description || !createdAt) {
+  const { title, description } = req.body;
+  if (!title || !description) {
     return res.status(400).json("Please fill out all fields");
   }
   const createdAtRegex = /^\d{4}\.\d{2}\.\d{2}$/;
-  if (!createdAt.match(createdAtRegex)) {
-    return res.status(400).json("createdAt must have format yyyy.mm.dd");
-  }
   next();
 };
 
@@ -57,9 +54,9 @@ export const validateUpdatePost = (
   res: Response,
   next: NextFunction
 ) => {
-  const { image, title, description } = req.body;
-  const postId = parseInt(req.params.id);
-  if (!image || !title || !description) {
+  const { title, description } = req.body;
+  const postId = req.params.id;
+  if (!title || !description) {
     return res.status(400).json("Cannot send empty values");
   }
   next();

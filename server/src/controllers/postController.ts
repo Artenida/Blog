@@ -29,7 +29,7 @@ export const getSinglePost = async (
   next: NextFunction
 ) => {
   try {
-    const postId = parseInt(req.params.id);
+    const postId = req.params.id;
 
     const post = await Post.getPostById(postId);
 
@@ -78,7 +78,7 @@ export const deletePost = async (
   next: NextFunction
 ) => {
   try {
-    const postId = parseInt(req.params.id);
+    const postId = req.params.id;
     try {
       await Post.deletePostById(postId);
       res.status(200).json("Post has been deleted!");
@@ -96,25 +96,27 @@ export const updatePost = async (
   next: NextFunction
 ) => {
   try {
-    const { image, title, description } = req.body;
-    const postId = parseInt(req.params.id);
+      const { title, description, tags } = req.body;
+      const postId = req.params.id;
 
-    try {
-      await Post.updatePost(
-        image,
-        title,
-        description,
-        postId,
-        req.body.user.id
+      const result = await Post.updatePost(
+          title,
+          description,
+          postId,
+          tags,
       );
-      res.status(200).json("Post updated successfully!");
-    } catch (error) {
-      res.status(500).json("You can update only your posts");
-    }
+
+      if (result.success) {
+          res.status(200).json({ message: "Post updated successfully!" });
+      } else {
+          res.status(400).json({ message: "Failed to update post." });
+      }
   } catch (error) {
-    next(error);
+      console.error("Error in updatePost controller:", error);
+      res.status(500).json({ message: "Internal server error." });
   }
 };
+
 
 export const getAuthors = async (
   req: Request,

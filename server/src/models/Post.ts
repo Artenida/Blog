@@ -1,5 +1,6 @@
 import { query } from "express";
 import createDatabaseConnection from "../config";
+import { connect } from "react-redux";
 // import { Tags } from "./Tags";
 interface Tag {
   id: string;
@@ -62,7 +63,7 @@ class Post {
     }
   }
 
-  static async getPostById(postId: number) {
+  static async getPostById(postId: string) {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
 
@@ -149,7 +150,7 @@ class Post {
   static async createPost(inputs: PostInputs): Promise<any> {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
-  
+
     try {
       const postQuery =
         "INSERT INTO posts (title, description, createdAt, user_id) VALUES (?, ?, ?, ?)";
@@ -159,16 +160,16 @@ class Post {
         new Date(),
         inputs.user_id,
       ];
-  
+
       db.query(postQuery, postValues, async (error, result) => {
         if (error) {
           console.error("Error inserting post:", error);
           connection.closeConnection();
           throw error;
         }
-  
+
         const postId = result.insertId;
-  
+
         try {
           await Post.addTags(postId, inputs.tags);
           await Post.addImages(postId, inputs.files);
@@ -185,9 +186,9 @@ class Post {
       connection.closeConnection();
       throw error;
     }
-  }  
+  }
 
-  static async addTags(postId: number, tags: string[]) {
+  static async addTags(postId: string, tags: string[]) {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
 
@@ -216,23 +217,41 @@ class Post {
     }
   }
 
+  static async deleteTags(postId: string) {
+    const connection = createDatabaseConnection();
+    const db = connection.getConnection();
+
+    const query = "DELETE FROM post_tags WHERE post_id = ?";
+    return new Promise((resolve, reject) => {
+      db.query(query, [postId], (error, _) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        resolve(true);
+      });
+    });
+  }
+
   static async addImages(postId: any, images: Express.Multer.File[]) {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
     const query = "INSERT INTO images (post_id, image) VALUES (?, ?)";
-  
+
     try {
-      await Promise.all(images.map(async (element) => {
-        await new Promise((resolve, reject) => {
-          db.query(query, [postId, element.path], (err, _) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(true);
-            }
+      await Promise.all(
+        images.map(async (element) => {
+          await new Promise((resolve, reject) => {
+            db.query(query, [postId, element.path], (err, _) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(true);
+              }
+            });
           });
-        });
-      }));
+        })
+      );
 
       connection.closeConnection();
       return { success: true };
@@ -240,10 +259,9 @@ class Post {
       console.error("Error in addImages", error);
       throw error;
     }
-}
+  }
 
-
-  static deletePostById(postId: number): Promise<any> {
+  static deletePostById(postId: string): Promise<any> {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
 
@@ -261,32 +279,43 @@ class Post {
     });
   }
 
-  static updatePost(
-    image: string,
+  static async updatePost(
     title: string,
     description: string,
-    postId: number,
-    userId: number
+    postId: string,
+    tags: string[]
   ): Promise<any> {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
 
-    return new Promise((resolve, reject) => {
-      const q =
-        "UPDATE posts SET `image` = ?, `title` = ?, `description` = ? WHERE `id` = ? AND `user_id` = ?";
-      const values = [image, title, description, postId, userId];
+    try {
+      const updateQuery =
+        "UPDATE posts SET title = ?, description = ? WHERE id = ?";
+      const updateValues = [title, description, postId];
 
-      db.query(q, values, (error, result) => {
-        connection.closeConnection();
+      db.query(updateQuery, updateValues, async (error, result) => {
         if (error) {
-          reject(error);
-        } else if (result.affectedRows === 0) {
-          reject(error);
-        } else {
-          resolve(result);
+          console.error("Error updating post:", error);
+          connection.closeConnection();
+          throw error;
         }
       });
-    });
+
+      try {
+        await Post.deleteTags(postId);
+        await Post.addTags(postId, tags);
+        connection.closeConnection();
+        return { success: true, postId };
+      } catch (error) {
+        console.error("Error adding tags or images:", error);
+        connection.closeConnection();
+        throw error;
+      }
+    } catch (error) {
+      console.error("Error in updatePost:", error);
+      connection.closeConnection();
+      throw error;
+    }
   }
 
   static async getUsersPost(userId: number) {
