@@ -12,10 +12,9 @@ import { selectUser } from "../../store/user/userSlice";
 import { Alert } from "@material-tailwind/react";
 import { selectPost } from "../../store/posts/postSlice";
 import { useValidateBlogForm } from "../../utils/validatePost";
-import { error } from "console";
 
 interface Tag {
-  tagId: number;
+  id: number;
   name: string;
 }
 
@@ -25,12 +24,6 @@ type CreatePost = {
   tags: string[];
   files: FileList | [];
 };
-interface FormData {
-  title: string;
-  description: string;
-  tags: string;
-  file: string;
-}
 
 const CreatePost = () => {
   const dispatch = useAppDispatch();
@@ -39,8 +32,7 @@ const CreatePost = () => {
   const { currentUser } = useSelector(selectUser);
   const userId = currentUser?.user?.id;
 
-  const { errors, hasError, validateForm, displayErrors } =
-    useValidateBlogForm();
+  const { errors, validateForm, displayErrors } = useValidateBlogForm();
 
   const [data, setData] = useState<CreatePost>({
     title: "",
@@ -96,19 +88,22 @@ const CreatePost = () => {
     }
     dispatch(createBlog(formData));
   };
+  console.log(tags)
 
-  const handleTagChange = (tagId: string) => {
-    const updatedTags = data.tags.includes(tagId)
-      ? data.tags.filter((id) => id !== tagId)
-      : [...data.tags, tagId];
-    setData({ ...data, tags: updatedTags });
-  };
+  console.log(data);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
       setData({ ...data, files: files });
     }
+  };
+
+  const handleTagChange = (tagId: string) => {
+    const updatedTags = data.tags.includes(tagId)
+      ? data.tags.filter((id) => id !== tagId)
+      : [...data.tags, tagId];
+    setData({ ...data, tags: updatedTags });
   };
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,14 +127,14 @@ const CreatePost = () => {
             ) : (
               <ul>
                 {tags?.map((tag: Tag) => (
-                  <li key={tag.tagId} className="mb-2">
+                  <li key={tag.id} className="mb-2">
                     <input
                       type="checkbox"
-                      id={`tag-${tag.tagId}`}
+                      id={`${tag.id}`}
                       className="mr-2"
-                      onChange={() => handleTagChange(String(tag.tagId))} // Convert tagId to string
+                      onChange={() => handleTagChange(String(tag.id))}
                     />
-                    <label htmlFor={`tag-${tag.tagId}`}>{tag.name}</label>
+                    <label htmlFor={`tag-${tag.id}`}>{tag.name}</label>
                   </li>
                 ))}
               </ul>
@@ -200,9 +195,12 @@ const CreatePost = () => {
               </Alert>
             )}
             {createError && (
-              <div>
-                <span>{createError}</span>
-              </div>
+              <Alert
+                onClose={handlePostSuccessClose}
+                className="bg-red-200 py-2 px-6 text-red-500 mt-12"
+              >
+                {createError}{" "}
+              </Alert>
             )}
             <div className="mt-8">
               <MediumButton onClick={handleSubmit}>Publish</MediumButton>

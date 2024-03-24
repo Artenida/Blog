@@ -3,7 +3,7 @@ import type { RootState } from "../../store/store";
 import { retrieveAllTags } from "../../api/tagsThunk";
 
 interface Tag {
-  tagId: number;
+  id: number;
   name: string;
 }
 
