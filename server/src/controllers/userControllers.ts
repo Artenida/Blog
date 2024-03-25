@@ -17,7 +17,7 @@ export const getUser = async (
   }
 };
 
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 
 export const updateUser = async (
   req: Request,
@@ -35,7 +35,7 @@ export const updateUser = async (
       email,
       hashedPassword,
       bio,
-      profile_picture,
+      profile_picture
     );
 
     if (success) {
@@ -56,23 +56,20 @@ export const updateUser = async (
     console.error("Error updating user:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
-}
+};
 
-export const updateProfilePicture = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
-  const userId = req.params.userId;
-  const imageUrl = req.body.imageUrl;
+export const updateProfilePicture = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const file: Express.Multer.File = req.file as Express.Multer.File;
 
   try {
-    await User.updateProfilePicture(userId, imageUrl);
-    res.status(200).json({ message: 'Profile picture updated successfully' });
+    await User.updateProfilePicture(id, file);
+    res.status(200).json({ message: "Profile picture updated successfully" });
   } catch (error) {
-    console.error('Error updating profile picture:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error updating profile picture:", error);
+    res.status(400).json({ message: "Error updating profile picture" });
   }
-}
+};
 
 export const deleteUser = async (
   req: Request,
