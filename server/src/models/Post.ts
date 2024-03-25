@@ -9,6 +9,7 @@ interface PostInterface {
   description: string;
   post_createdAt: Date;
   tags: Tag[];
+  images: [];
 }
 
 type PostInputs = {
@@ -26,13 +27,17 @@ class Post {
     try {
       const query = `
         SELECT 
-          p.*, 
-          u.username, 
-          u.profile_picture,
-          GROUP_CONCAT(t.name) AS tags
-        FROM posts p LEFT JOIN users u  ON  p.user_id = u.id
-        LEFT JOIN post_tags pt ON p.id = pt.post_id
-        LEFT JOIN tags t ON pt.tag_id = t.id GROUP BY p.id`;
+        p.*, 
+        u.username, 
+        u.profile_picture,
+        MAX(i.image) AS image,
+        GROUP_CONCAT(t.name) AS tags
+    FROM posts p 
+    LEFT JOIN users u ON p.user_id = u.id
+    LEFT JOIN post_tags pt ON p.id = pt.post_id
+    LEFT JOIN tags t ON pt.tag_id = t.id
+    LEFT JOIN images i ON p.id = i.post_id
+    GROUP BY p.id`;
 
       const data = await new Promise<PostInterface[]>((resolve, reject) => {
         db.query(query, (error, result) => {
@@ -40,15 +45,22 @@ class Post {
           if (error) {
             reject(error);
           } else {
-            const postsWithTags = result.map((post: any) => ({
+            const postsWithImagesAndTags = result.map((post: any) => ({
               ...post,
               tags: post.tags
                 ? post.tags
                     .split(",")
                     .map((tagName: string) => ({ id: "", name: tagName }))
                 : [],
+              images: post.images
+                ? post.images.split(",").map((image: string) => ({
+                    url: URL.createObjectURL(
+                      new Blob([image], { type: "image/jpeg" })
+                    ),
+                  }))
+                : [],
             }));
-            resolve(postsWithTags);
+            resolve(postsWithImagesAndTags);
           }
         });
       });
@@ -73,13 +85,15 @@ class Post {
             p.title,
             p.description,
             p.createdAt AS post_createdAt,
+            i.image,
             GROUP_CONCAT(t.name) AS tags
         FROM posts p 
         LEFT JOIN users u ON p.user_id = u.id 
         LEFT JOIN post_tags pt ON p.id = pt.post_id 
         LEFT JOIN tags t ON pt.tag_id = t.id
+        LEFT JOIN images i ON p.id = i.post_id
         WHERE p.id = ?
-        GROUP BY p.id`;
+        GROUP BY p.id, u.id, u.username, u.profile_picture, p.title, p.description, p.createdAt, i.image`;
 
     return new Promise((resolve, reject) => {
       db.query(query, [postId], (err, result) => {
@@ -129,6 +143,7 @@ class Post {
                 .split(",")
                 .map((tagName: string) => ({ id: "", name: tagName.trim() }))
             : [],
+          images: row.image ? { url: row.image } : [],
         });
       } else {
         if (row.tags) {
@@ -137,6 +152,11 @@ class Post {
               .split(",")
               .map((tagName: string) => ({ id: "", name: tagName.trim() }))
           );
+        }
+        if (row.image) {
+          structuredData.posts[existingPostIndex].images.push({
+            url: row.image,
+          });
         }
       }
     });
