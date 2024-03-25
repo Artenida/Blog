@@ -27,10 +27,13 @@ class Post {
     try {
       const query = `
         SELECT 
-        p.*, 
+        p.id,
+        p.title,
+        p.description,
+        p.createdAt,
+        p.user_id,
         u.username, 
         u.profile_picture,
-        MAX(i.image) AS image,
         GROUP_CONCAT(t.name) AS tags
     FROM posts p 
     LEFT JOIN users u ON p.user_id = u.id

@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import { selectPost } from "../../store/posts/postSlice";
 import { useEffect, useState } from "react";
 import { getSinglePost } from "../../api/postThunk";
-import picture from "../../assets/about.jpg"
 
 const BlogPathComponents = [
   { id: 1, name: "Home", link: "/" },
@@ -27,7 +26,7 @@ const BlogDetails = () => {
   const handleImageClick = (index: any) => {
     setSelectedImageIndex(index);
   }
-  
+  console.log(currentPost?.images)
   return (
     <div>
       {currentPost && (
@@ -35,21 +34,17 @@ const BlogDetails = () => {
           <article className="flex-1">
             <BlogPathComponent data={BlogPathComponents} />
             <div>
-              {/* {currentPost.images.map((image, index) => (
-                <img 
-                key={index}
-                className={`rounded-xl cursor-pointer mx-2 ${
-                  index === selectedImageIndex ? "w-full" : "w-1/4"
-                }`}
-                src={image}
-                alt={currentPost.title}
-                onClick={() => handleImageClick(index)}
+              {currentPost.images && (
+                <img
+                  className="rounded-xl cursor-pointer mx-auto"
+                  src={`data:image/jpeg;base64,${currentPost.images}`}
+                  alt={currentPost.title}
+                  onClick={() => handleImageClick(selectedImageIndex)}
                 />
-              ))} */}
-
+              )}
               <div className="flex mt-4">
-                {currentPost.tags.map((tag) => (
-                  <h3 className="mr-2">
+                {currentPost.tags.map((tag, index) => (
+                  <h3 key={index} className="mr-2">
                     #{tag.name}
                   </h3>
                 ))}
@@ -59,7 +54,6 @@ const BlogDetails = () => {
                 profilePicture={post.user.profile_picture}
                 createdAt={currentPost.createdAt}
               />
-
               <h1 className="text-xl font-medium font-roboto mt-4 text-custom-color3">
                 {currentPost.title}
               </h1>

@@ -10,14 +10,14 @@ import {
   retrievePostTags,
   updatePost,
 } from "../../api/postThunk";
-import { retrieveAllTags } from "../../api/tagsThunk";
+
 interface Post {
   postId: string;
   title: string;
   description: string;
   createdAt: Date | undefined;
-  image: string;
   tags: Tag[];
+  images: string[];
 }
 
 interface Tag {
@@ -90,8 +90,8 @@ const initialState: PostState = {
         title: "",
         description: "",
         createdAt: undefined,
-        image: "",
         tags: [],
+        images: [],
       },
     ],
   },
@@ -117,6 +117,7 @@ const postSlice = createSlice({
         state.loading = false;
         state.retrieveError = action.payload as string;
       })
+
       .addCase(getSinglePost.fulfilled, (state: PostState, action: any) => {
         state.retrieveError = null;
         state.loading = false;
@@ -127,6 +128,7 @@ const postSlice = createSlice({
         state.loading = false;
         state.post = initialState.post;
       })
+
       .addCase(getMyPosts.pending, (state) => {
         state.loading = true;
         state.retrieveError = null;
