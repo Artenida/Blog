@@ -129,18 +129,6 @@ export const retrievePostTags = createAsyncThunk(
   }
 );
 
-interface BlogInfo {
-  formData: FormData;
-}
-
-type CreatePost = {
-  title: string;
-  description: string;
-  user_id: string;
-  tags: string[];
-  files: FileList | [];
-};
-
 export const createBlog = createAsyncThunk(
   "api/posts/createPost",
   async (formData: FormData, { getState, rejectWithValue }) => {

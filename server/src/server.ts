@@ -21,11 +21,7 @@ const base_url = process.env.BASE_URL;
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
-// const upload = multer({dest: 'uploads/'})
 
-// app.post(`${base_url}upload`, upload.single('file'), function(req,res) {
-//   res.status(200).json("Image has been uploaded")
-// })
 const Path = path.join(__dirname, '../uploads');
 app.use('/uploads', express.static(Path));
 

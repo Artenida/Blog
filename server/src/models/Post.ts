@@ -1,7 +1,4 @@
-import { query } from "express";
 import createDatabaseConnection from "../config";
-import { connect } from "react-redux";
-// import { Tags } from "./Tags";
 interface Tag {
   id: string;
   name: string;
@@ -17,7 +14,7 @@ interface PostInterface {
 type PostInputs = {
   title: string;
   description: string;
-  user_id: string;
+  userId: string;
   tags: string[];
   files: Express.Multer.File[];
 };
@@ -158,7 +155,7 @@ class Post {
         inputs.title,
         inputs.description,
         new Date(),
-        inputs.user_id,
+        inputs.userId,
       ];
 
       db.query(postQuery, postValues, async (error, result) => {

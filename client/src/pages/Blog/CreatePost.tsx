@@ -31,7 +31,6 @@ const CreatePost = () => {
   const { successful, createError } = useSelector(selectPost);
   const { currentUser } = useSelector(selectUser);
   const userId = currentUser?.user?.id;
-
   const { errors, validateForm, displayErrors } = useValidateBlogForm();
 
   const [data, setData] = useState<CreatePost>({
@@ -84,7 +83,7 @@ const CreatePost = () => {
       formData.append("tags", tag);
     }
     for (let i = 0; i < data.files.length; i++) {
-      formData.append("files", data.files[i]);
+      formData.append("file", data.files[i]);
     }
     dispatch(createBlog(formData));
   };
@@ -183,14 +182,16 @@ const CreatePost = () => {
             >
               {errors.description}
             </span>
+
             {postSuccess && (
               <Alert
                 onClose={handlePostSuccessClose}
-                className="bg-green-200 py-2 px-6 text-green-500"
+                className="bg-green-200 py-2 px-6 text-green-500 mt-12"
               >
                 Post is published
               </Alert>
             )}
+           
             {createError && (
               <Alert
                 onClose={handlePostSuccessClose}
@@ -202,6 +203,7 @@ const CreatePost = () => {
             <div className="mt-8">
               <MediumButton onClick={handleSubmit}>Publish</MediumButton>
             </div>
+           
           </div>
         </div>
       </div>
