@@ -66,7 +66,7 @@ const MyPosts = () => {
   }
 
   return (
-    <div className="h-screen flex flex-col gap-4 p-8 px-[10%]">
+    <div className="flex flex-col gap-4 p-8 px-[10%]">
       {postsArray.map((post: BlogPost) => (
         <div
           key={post.id}
