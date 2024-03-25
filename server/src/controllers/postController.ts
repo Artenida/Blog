@@ -4,7 +4,7 @@ import Post from "../models/Post";
 type PostInputs = {
   title: string;
   description: string;
-  userId: string;
+  user_id: string;
   tags: string[];
   files: Express.Multer.File[];
 };
@@ -52,12 +52,12 @@ export const createPost = async (
   next: NextFunction
 ) => {
   try {
-    const { title, description, userId, tags } = req.body;
+    const { title, description, user_id, tags } = req.body;
     // const userId = req.body.user.id;
     const files: Express.Multer.File[] = Array.isArray(req.files)
       ? req.files
       : [];
-    const inputs: PostInputs = { title, description, userId, tags, files };
+    const inputs: PostInputs = { title, description, user_id, tags, files };
     await Post.createPost(inputs);
     res
       .status(200)

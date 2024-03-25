@@ -14,7 +14,7 @@ interface PostInterface {
 type PostInputs = {
   title: string;
   description: string;
-  userId: string;
+  user_id: string;
   tags: string[];
   files: Express.Multer.File[];
 };
@@ -155,7 +155,7 @@ class Post {
         inputs.title,
         inputs.description,
         new Date(),
-        inputs.userId,
+        inputs.user_id,
       ];
 
       db.query(postQuery, postValues, async (error, result) => {
