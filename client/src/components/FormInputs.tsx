@@ -48,7 +48,7 @@ const FormInputs: React.FC<FormInputProps> = ({
       </div>
      
       <span
-        className={`text-sm text-red-600 pl-1 ${
+        className={`text-sm text-red-600 pl-1 pt-1${
           errorMessage ? "block" : "hidden"
         } h-4`}
       >

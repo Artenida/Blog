@@ -109,9 +109,9 @@ const UpdatePost = () => {
               </ul>
             )}
             <span
-              className={`text-red-600 text-sm ${
+              className={`text-sm text-red-600 pl-1 pt-1${
                 errors.tags ? "block" : "hidden"
-              }`}
+              } mt-1`}
             >
               {errors.tags}
             </span>
@@ -131,7 +131,7 @@ const UpdatePost = () => {
             />
             <label
               htmlFor="description"
-              className="block mb-2 mt-8 pl-1 font-semibold"
+              className="block mb-2 mt-12 pl-1 font-semibold"
             >
               Description
             </label>
@@ -143,9 +143,9 @@ const UpdatePost = () => {
               onChange={(value) => setData({ ...data, description: value })}
             />
             <span
-              className={`text-red-600 text-sm ${
+              className={`text-red-600 text-sm pl-1 pt-1 ${
                 errors.description ? "block" : "hidden"
-              }`}
+              } mt-4`}
             >
               {errors.description}
             </span>

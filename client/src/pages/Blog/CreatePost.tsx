@@ -135,6 +135,13 @@ const CreatePost = () => {
                 ))}
               </ul>
             )}
+              <span
+              className={`text-sm text-red-600 pl-1 pt-1${
+                errors.tags ? "block" : "hidden"
+              } h-4`}
+            >
+              {errors.tags}
+            </span>
           </div>
 
           <div className="w-2/3 flex flex-col">
@@ -147,9 +154,9 @@ const CreatePost = () => {
               onChange={handleFileChange}
             />
             <span
-              className={`text-red-600 text-sm ${
+              className={`text-sm text-red-600 pl-1 pt-1 ${
                 errors.files ? "block" : "hidden"
-              }`}
+              } h-4`}
             >
               {errors.files}
             </span>
@@ -165,7 +172,7 @@ const CreatePost = () => {
             />
             <label
               htmlFor="description"
-              className="block mb-2 mt-8 pl-1 font-semibold"
+              className="block mb-2 mt-12 pl-1 font-semibold"
             >
               Description
             </label>
@@ -176,9 +183,9 @@ const CreatePost = () => {
               onChange={(value) => setData({ ...data, description: value })}
             />
             <span
-              className={`text-red-600 text-sm ${
+              className={`text-sm text-red-600 pl-1 pt-8 ${
                 errors.description ? "block" : "hidden"
-              }`}
+              } h-4`}
             >
               {errors.description}
             </span>
