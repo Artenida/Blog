@@ -137,7 +137,7 @@ export class User {
     }
   }
 
-  static async updateProfilePicture(id: string, file: Express.Multer.File) {
+  static async updateProfilePicture(userId: string, file: Express.Multer.File) {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
 
@@ -148,13 +148,13 @@ export class User {
           WHERE id = ?
         `;
 
-      await new Promise<void>((resolve, reject) => {
-        db.query(query, [file.path, id], (error, result) => {
+      await new Promise((resolve, reject) => {
+        db.query(query, [file.path, userId], (error, result) => {
           connection.closeConnection();
           if (error) {
             reject(error);
           } else {
-            resolve();
+            resolve(file.path);
           }
         });
       });

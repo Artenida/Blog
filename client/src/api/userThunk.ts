@@ -26,16 +26,16 @@ type UserEndpointType = {
   token?: string;
   body: UserBodyTypeUpdate;
 };
-type UserBodyTypeUpdateProfile = {
-  userId: string;
-  profile_picture: FormData;
-};
+// type UserBodyTypeUpdateProfile = {
+//   userId: string;
+//   profile_picture: FormData;
+// };
 
-type UserEndpoint = {
-  token?: string;
-  userId: string;
-  body: UserBodyTypeUpdateProfile;
-};
+// type UserEndpoint = {
+//   token?: string;
+//   userId: string;
+//   body: UserBodyTypeUpdateProfile;
+// };
 
 export const loginUser = createAsyncThunk(
   "api/auth/login",
@@ -123,19 +123,20 @@ export const updateUser = createAsyncThunk(
 
 export const updateProfilePicture = createAsyncThunk(
   "api/users/updatePicture",
-  async ({ body }: UserEndpoint, { rejectWithValue, getState }) => {
+  async (formData: FormData, { rejectWithValue, getState }) => {
     try {
       const state: RootState = getState() as RootState;
       const token: string = state.user.token ?? "";
 
       const response = await createAPI(
-        `api/users/updatePicture/${body.userId}`,
+        `api/users/updatePicture`,
         {
           method: "PUT",
           token: token,
-          body: JSON.stringify(body),
+          body: JSON.stringify(formData),
         }
-      )(body);
+      )(formData);
+      
       const data = await response.json();
       return !response.ok ? rejectWithValue(data.message) : data;
     } catch (error: any) {

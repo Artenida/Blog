@@ -12,6 +12,7 @@ interface UserState {
   token?: string;
   isLoggedIn: boolean;
   isUpdated: boolean;
+  profilePicture: boolean;
 }
 
 const initialState: UserState = {
@@ -24,6 +25,7 @@ const initialState: UserState = {
   token: undefined,
   isLoggedIn: false,
   isUpdated: false,
+  profilePicture: false,
 };
 
 const userSlice = createSlice({
@@ -94,9 +96,10 @@ const userSlice = createSlice({
         state.isUpdated = false;
         state.updateError = action.payload as string | null;
       })
+
       .addCase(updateProfilePicture.fulfilled, (state, action) => {
         state.isUpdated = true;
-        state.currentUser = action.payload;
+        state.profilePicture = action.payload;
       })
   },
 });

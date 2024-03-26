@@ -59,11 +59,11 @@ export const updateUser = async (
 };
 
 export const updateProfilePicture = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const { userId } = req.body;
   const file: Express.Multer.File = req.file as Express.Multer.File;
 
   try {
-    await User.updateProfilePicture(id, file);
+    await User.updateProfilePicture(userId, file);
     res.status(200).json({ message: "Profile picture updated successfully" });
   } catch (error) {
     console.error("Error updating profile picture:", error);
