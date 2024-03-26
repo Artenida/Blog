@@ -1,25 +1,34 @@
 import Sidebar from "../../components/Sidebar";
-import { useSelector } from "react-redux";
 import { selectUser } from "../../store/user/userSlice";
 import { UpdateUserForm } from "../../components/UpdateUserForm";
 import { useEffect, useState } from "react";
 import { MediumButton } from "../../components/ButtonComponent";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { updateProfilePicture } from "../../api/userThunk";
+import { getUser, updateProfilePicture } from "../../api/userThunk";
 import profile from "../../assets/userProfile.jpg";
 
 const MyAccount = () => {
   const [image, setImage] = useState<File>();
   const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector(selectUser);
+  const { user } = useAppSelector(selectUser);
+  const userId = currentUser?.user?.id;
+console.log(user)
 
-  const handleUpload =() => {
+const imagePath = user[0].profile_picture.replace(/\\/g, '/');
+console.log(imagePath)
+
+  useEffect(() => {
+    dispatch(getUser(userId));
+  }, [dispatch, userId])
+
+  const handleUpload = () => {
     const formData = new FormData();
-    formData.append('userId', currentUser?.user?.id ?? '');
-    formData.append('files', image ?? '');
+    formData.append("userId", userId ?? "");
+    formData.append("files", image ?? "");
 
     dispatch(updateProfilePicture(formData));
-}
+  };
 
   return (
     <div className="flex flex-col md:flex-row -z-50">
@@ -33,7 +42,11 @@ const MyAccount = () => {
           <div className="w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full border-4">
             <label htmlFor="file" className="cursor-pointer">
               <img
-                // src={profilePicture ? profilePicture : profile}
+                src={
+                  user[0].profile_picture
+                    ? `http://localhost:5000/${imagePath}`
+                    : profile
+                }
                 alt="Profile"
                 className="rounded-full w-32 h-32"
               />
@@ -42,7 +55,6 @@ const MyAccount = () => {
                 id="file"
                 style={{ display: "none" }}
                 onChange={(event) => setImage(event.target.files?.[0])}
-                onClick={handleUpload}
               />
             </label>
           </div>
@@ -62,7 +74,9 @@ const MyAccount = () => {
             </div>
           </div>
         </div>
-        <MediumButton onClick={handleUpload}>Update Profile Picture</MediumButton>
+        <MediumButton onClick={handleUpload}>
+          Update Profile Picture
+        </MediumButton>
 
         <UpdateUserForm />
       </div>

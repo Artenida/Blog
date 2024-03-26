@@ -61,13 +61,13 @@ export class User {
     }
   }
 
-  static async getAllUserData(): Promise<any[]> {
+  static async getAllUserData(userId: string): Promise<any[]> {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
 
     try {
       const data = await new Promise<any[]>((resolve, reject) => {
-        db.query("SELECT * FROM users", (error, result) => {
+        db.query("SELECT * FROM users WHERE id = ?", [userId], (error, result) => {
           if (error) {
             reject(error);
           } else {
@@ -82,14 +82,13 @@ export class User {
       console.error("Error in getAllUserData:", error);
       throw error;
     }
-  }
+}
 
   static async updateUser(
     id: string,
     username: string,
     email: string,
     password: string,
-    profile_picture: string,
     bio: string
   ): Promise<UpdateResult> {
     const connection = createDatabaseConnection();
@@ -101,12 +100,12 @@ export class User {
 
       if (password.trim() === "") {
         query =
-          "UPDATE users SET username = ?, email = ?, profile_picture = ?, bio = ?, WHERE id = ?";
-        queryParams = [username, email, profile_picture, bio, id];
+          "UPDATE users SET username = ?, email = ?, bio = ?, WHERE id = ?";
+        queryParams = [username, email, bio, id];
       } else {
         query =
-          "UPDATE users SET username = ?, email = ?, password = ?, profile_picture = ?, bio = ? WHERE id = ?";
-        queryParams = [username, email, password, profile_picture, bio, id];
+          "UPDATE users SET username = ?, email = ?, password = ?, bio = ? WHERE id = ?";
+        queryParams = [username, email, password, bio, id];
       }
 
       const result: any = await new Promise((resolve, reject) => {

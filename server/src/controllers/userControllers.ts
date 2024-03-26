@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomError } from "../utils/error";
 import { User } from "../models/User";
+import bcrypt from "bcrypt";
 
 export const getUser = async (
   req: Request,
@@ -8,7 +9,14 @@ export const getUser = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const userData = await User.getAllUserData();
+    const { userId } = req.params;
+
+    if (!userId) {
+      const customError = new CustomError(400, "User ID is required");
+      return next(customError);
+    }
+
+    const userData = await User.getAllUserData(userId);
     res.json(userData);
   } catch (error) {
     console.error("Error retrieving user data", error);
@@ -17,15 +25,13 @@ export const getUser = async (
   }
 };
 
-import bcrypt from "bcrypt";
-
 export const updateUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { username, email, profile_picture, password, bio } = req.body;
+    const { username, email, password, bio } = req.body;
     const { id } = req.params;
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -35,7 +41,6 @@ export const updateUser = async (
       email,
       hashedPassword,
       bio,
-      profile_picture
     );
 
     if (success) {
@@ -45,7 +50,6 @@ export const updateUser = async (
           id: id,
           username: username,
           email: email,
-          profile_picture: profile_picture,
           bio: bio,
         },
       });

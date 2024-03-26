@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "../../store/store";
-import { deleteUser, loginUser, updateProfilePicture, updateUser } from "../../api/userThunk";
+import { deleteUser, getUser, loginUser, updateProfilePicture, updateUser } from "../../api/userThunk";
 import { registerUser } from "../../api/userThunk";
 interface UserState {
   currentUser: any;
@@ -12,7 +12,7 @@ interface UserState {
   token?: string;
   isLoggedIn: boolean;
   isUpdated: boolean;
-  profilePicture: boolean;
+  user: any;
 }
 
 const initialState: UserState = {
@@ -25,7 +25,7 @@ const initialState: UserState = {
   token: undefined,
   isLoggedIn: false,
   isUpdated: false,
-  profilePicture: false,
+  user: null,
 };
 
 const userSlice = createSlice({
@@ -99,7 +99,11 @@ const userSlice = createSlice({
 
       .addCase(updateProfilePicture.fulfilled, (state, action) => {
         state.isUpdated = true;
-        state.profilePicture = action.payload;
+      })
+
+      
+      .addCase(getUser.fulfilled, (state, action) => {
+        state.user = action.payload;
       })
   },
 });

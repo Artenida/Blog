@@ -26,16 +26,6 @@ type UserEndpointType = {
   token?: string;
   body: UserBodyTypeUpdate;
 };
-// type UserBodyTypeUpdateProfile = {
-//   userId: string;
-//   profile_picture: FormData;
-// };
-
-// type UserEndpoint = {
-//   token?: string;
-//   userId: string;
-//   body: UserBodyTypeUpdateProfile;
-// };
 
 export const loginUser = createAsyncThunk(
   "api/auth/login",
@@ -139,6 +129,27 @@ export const updateProfilePicture = createAsyncThunk(
       
       const data = await response.json();
       return !response.ok ? rejectWithValue(data.message) : data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const getUser = createAsyncThunk(
+  "api/users/find",
+  async (userId: string, { rejectWithValue, getState }) => {
+    try {
+      const state: RootState = getState() as RootState;
+      const token = state.user.token ?? "";
+      const response = await createAPI(`api/users/find/${userId}`, {
+        method: "GET",
+        token: token,
+      })();
+      if (!response.ok) {
+        throw new Error("Failed to retrieve single post");
+      }
+      const data = await response.json();
+      return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
