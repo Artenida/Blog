@@ -2,22 +2,20 @@ import { useState } from "react";
 import { FaRegUserCircle } from "react-icons/fa";
 import { useAppSelector } from "../store/hooks";
 import { selectUser } from "../store/user/userSlice";
-import image from "../assets/userProfile.jpg";
 import { SideLinks } from "./SideLinks";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(true);
-  const { currentUser } = useAppSelector(selectUser);
+  const { currentUser, user } = useAppSelector(selectUser);
+  const imagePath = user.length > 0 && user[0]?.profile_picture ? user[0].profile_picture.replace(/\\/g, "/") : '';
 
   return (
-    <div className="sm:max-h-screen md:h-[900px] flex flex-col md:flex-row ">
+    <div className="sm:max-h-screen md:h-[900px] md:w-80 flex flex-col md:flex-row ">
       <div
-        className={`opacity-90 p-5 pt-8 fixed ${
-          open ? "md:w-72" : "w-20"
-        } duration-300 relative`}
+        className={`opacity-90 p-5 pt-8 duration-300 relative`}
       >
         <div className="inline-flex justify-center items-center gap-2">
-          {currentUser?.user?.profile_picture !== null ? (
+          {user[0]?.profile_picture === null ? (
             <FaRegUserCircle
               className={`text-custom-color3 text-4xl rounded cursor-pointer block float-left mr-2 duration-500 ${
                 open && "rotate-[360deg]"
@@ -26,7 +24,7 @@ const Sidebar = () => {
           ) : (
             <img
               className="rounded-full w-14 h-14 cursor-pointer ml-4"
-              src={image}
+              src={`http://localhost:5000/${imagePath}`}
               alt="User"
             />
           )}

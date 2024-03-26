@@ -13,21 +13,23 @@ const MyAccount = () => {
   const { currentUser } = useAppSelector(selectUser);
   const { user } = useAppSelector(selectUser);
   const userId = currentUser?.user?.id;
-console.log(user)
-
-const imagePath = user[0].profile_picture.replace(/\\/g, '/');
-console.log(imagePath)
+  const imagePath = user.length > 0 && user[0]?.profile_picture ? user[0].profile_picture.replace(/\\/g, "/") : '';
 
   useEffect(() => {
     dispatch(getUser(userId));
-  }, [dispatch, userId])
+  }, [dispatch, userId]);
 
   const handleUpload = () => {
     const formData = new FormData();
     formData.append("userId", userId ?? "");
     formData.append("files", image ?? "");
 
-    dispatch(updateProfilePicture(formData));
+    try {
+      dispatch(updateProfilePicture(formData));
+      dispatch(getUser(userId));
+    } catch(error) {
+      console.error("Error updating profile picture:", error);
+    }
   };
 
   return (
@@ -43,7 +45,7 @@ console.log(imagePath)
             <label htmlFor="file" className="cursor-pointer">
               <img
                 src={
-                  user[0].profile_picture
+                  user[0]?.profile_picture
                     ? `http://localhost:5000/${imagePath}`
                     : profile
                 }

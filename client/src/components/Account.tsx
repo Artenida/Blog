@@ -6,13 +6,15 @@ import { SmallButton } from "./ButtonComponent";
 import image from "../assets/userProfile.jpg";
 import { MdDashboard } from "react-icons/md";
 import { FaSignOutAlt } from "react-icons/fa";
+import profile from "../assets/userProfile.jpg";
 
 const Account = () => {
-  const { currentUser } = useAppSelector(selectUser);
+  const { currentUser, user } = useAppSelector(selectUser);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const dispatch = useAppDispatch(); // Dispatch function to dispatch actions
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const imagePath = user.length > 0 && user[0]?.profile_picture ? user[0].profile_picture.replace(/\\/g, "/") : '';
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -51,10 +53,14 @@ const Account = () => {
               ref={dropdownRef}
             >
               <div>
-                {currentUser?.user?.profile_picture !== null ? (
+                {user[0].profile_picture !== null ? (
                   <img
                     className="rounded-full w-14 h-14"
-                    src={currentUser?.user?.profile_picture}
+                    src={
+                      user[0]?.profile_picture
+                        ? `http://localhost:5000/${imagePath}`
+                        : profile
+                    }
                     alt="User"
                   />
                 ) : (
