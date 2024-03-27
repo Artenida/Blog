@@ -7,6 +7,7 @@ import {
   updatePost,
   getUsersPost,
   getAuthors,
+  getNumberOfPosts,
 } from "../controllers/postController";
 import {
   validateCreatePost,
@@ -36,5 +37,6 @@ router.delete("/delete/:id", verifyToken, deletePost);
 router.put("/update/:id", verifyToken, validateUpdatePost, updatePost);
 router.get("/user/:userId", verifyToken, getUsersPost);
 router.get("/authors", getAuthors);
+router.get("/nrOfPosts", getNumberOfPosts);
 
 export default router;

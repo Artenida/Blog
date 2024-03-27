@@ -146,3 +146,17 @@ export const getUsersPost = async (
     next(error);
   }
 };
+
+export const getNumberOfPosts = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const nrOfPosts = await Post.getNumberOfPosts();
+    res.status(200).json(nrOfPosts);
+  } catch (error) {
+    console.error("Error getting number of posts", error);
+    next(error);
+  }
+};

@@ -396,6 +396,30 @@ class Post {
       throw error;
     }
   }
+
+  static async getNumberOfPosts() {
+    const connection = createDatabaseConnection();
+    const db = connection.getConnection();
+
+    try {
+      const query = `SELECT COUNT(*) FROM posts`;
+        const data = await new Promise((resolve, reject) => {
+        db.query(query, (error, result) => {
+          connection.closeConnection();
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result[0]['COUNT(*)']);
+          }
+        });
+      });
+
+      return data;
+    } catch (error) {
+      console.error("Error getting number of posts", error);
+      throw error;
+    }
+  }
 }
 
 export default Post;
