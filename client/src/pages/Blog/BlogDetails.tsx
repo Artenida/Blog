@@ -16,7 +16,7 @@ const BlogDetails = () => {
   const dispatch = useAppDispatch();
   const { post } = useSelector(selectPost);
   const { postId } = useParams();
-  const currentPost = post && post?.posts[0]? post?.posts[0] : null
+  const currentPost = post && post?.posts[0] ? post.posts[0] : null;
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {
@@ -25,8 +25,8 @@ const BlogDetails = () => {
 
   const handleImageClick = (index: any) => {
     setSelectedImageIndex(index);
-  }
-  console.log(currentPost?.images)
+  };
+
   return (
     <div>
       {currentPost && (
@@ -34,16 +34,17 @@ const BlogDetails = () => {
           <article className="flex-1">
             <BlogPathComponent data={BlogPathComponents} />
             <div>
-              {currentPost.images && (
+              {currentPost.images.map((image: any, index: number) => (
                 <img
-                  className="rounded-xl cursor-pointer mx-auto"
-                  src={`data:image/jpeg;base64,${currentPost.images}`}
-                  alt={currentPost.title}
-                  onClick={() => handleImageClick(selectedImageIndex)}
-                />
-              )}
+                key={index}
+                className={`rounded-xl cursor-pointer mx-2 max-h-full`}
+                src={`http://localhost:5000/${image.url}`}
+                alt={`Image ${index + 1}`}
+            />
+              ))}
+
               <div className="flex mt-4">
-                {currentPost.tags.map((tag, index) => (
+                {currentPost.tags.map((tag: any, index: number) => (
                   <h3 key={index} className="mr-2">
                     #{tag.name}
                   </h3>

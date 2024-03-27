@@ -1,15 +1,16 @@
 import React from "react";
+import moment from "moment";
+
 interface AuthorProps {
   authorName: string;
   profilePicture: string | undefined;
-  createdAt: Date | undefined;
+  createdAt: Date;
 }
 
 const Author: React.FC<AuthorProps> = ({ authorName, profilePicture, createdAt }) => {
-  // const createdAtDate = createdAt instanceof Date ? createdAt : new Date(createdAt);
-  //  const year = createdAtDate.getFullYear();
-  //  const month = createdAtDate.getMonth() + 1; 
-  //  const date = createdAtDate.getDate();
+  const formattedRelativeTime = moment(createdAt).fromNow();
+  // const formattedDate = moment(createdAt).format("MMMM Do YYYY");
+
   return (
     <div className="flex justify-between flex-nowrap items-center mt-6">
       <div className="flex items-center gap-x-2">
@@ -22,9 +23,7 @@ const Author: React.FC<AuthorProps> = ({ authorName, profilePicture, createdAt }
           <h4 className="font-bold italic text-custom-color3 text-sm">
             {authorName}
           </h4>
-          {/* <h3 className="text-gray-500 text-sm">
-          {year + "/" + month + "/" + date}
-          </h3> */}
+          <h3 className="text-gray-500 text-sm">{formattedRelativeTime}</h3>
         </div>
       </div>
     </div>

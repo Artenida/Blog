@@ -146,7 +146,9 @@ class Post {
                 .split(",")
                 .map((tagName: string) => ({ id: "", name: tagName.trim() }))
             : [],
-          images: row.image ? { url: row.image } : [],
+          images: row.image
+            ? [{ url: Buffer.from(row.image).toString("base64") }]
+            : [],
         });
       } else {
         if (row.tags) {
@@ -158,7 +160,7 @@ class Post {
         }
         if (row.image) {
           structuredData.posts[existingPostIndex].images.push({
-            url: row.image,
+            url: Buffer.from(row.image).toString("base64"),
           });
         }
       }

@@ -15,7 +15,7 @@ interface Post {
   postId: string;
   title: string;
   description: string;
-  createdAt: Date | undefined;
+  createdAt: Date;
   tags: Tag[];
   images: string[];
 }
@@ -39,7 +39,7 @@ interface BlogPost {
   id: string;
   title: string;
   description: string;
-  createdAt: string;
+  createdAt: Date;
 }
 
 interface PostState {
@@ -76,7 +76,7 @@ const initialState: PostState = {
     id: "",
     title: "",
     description: "",
-    createdAt: "",
+    createdAt: new Date(),
   },
   post: {
     user: {
@@ -89,7 +89,7 @@ const initialState: PostState = {
         postId: "",
         title: "",
         description: "",
-        createdAt: undefined,
+        createdAt: new Date(),
         tags: [],
         images: [],
       },

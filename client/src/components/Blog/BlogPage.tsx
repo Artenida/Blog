@@ -34,6 +34,7 @@ const BlogPage = () => {
   const { currentPost, loading, retrieveError } = useSelector(
     (state: { post: PostState }) => state.post
   );
+  console.log(currentPost)
 
   useEffect(() => {
     dispatch(retrieveAllPosts());
@@ -44,7 +45,6 @@ const BlogPage = () => {
       setCurrentBlogs(currentPost);
     }
   }, [currentPost]);
-  console.log(currentPost);
 
   const handlePageChange = (selectedPage: number) => {
     setCurrentPage(selectedPage);
