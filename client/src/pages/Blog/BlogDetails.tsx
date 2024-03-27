@@ -17,6 +17,7 @@ const BlogDetails = () => {
   const { post } = useSelector(selectPost);
   const { postId } = useParams();
   const currentPost = post && post?.posts[0] ? post.posts[0] : null;
+  console.log(currentPost);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {
@@ -34,14 +35,20 @@ const BlogDetails = () => {
           <article className="flex-1">
             <BlogPathComponent data={BlogPathComponents} />
             <div>
-              {currentPost.images.map((image: any, index: number) => (
-                <img
-                key={index}
-                className={`rounded-xl cursor-pointer mx-2 max-h-full`}
-                src={`http://localhost:5000/${image.url}`}
-                alt={`Image ${index + 1}`}
-            />
-              ))}
+              {currentPost?.images &&
+                Array.isArray(currentPost.images) &&
+                currentPost.images.map((image: any, index: number) => (
+                  <img
+                    key={index}
+                    className={`rounded-xl cursor-pointer mx-2 max-h-full`}
+                    src={`http://localhost:5000/${image.url.replace(
+                      /\\/g,
+                      "/"
+                    )}`}
+                    alt={`Image ${index + 1}`}
+                    onClick={() => handleImageClick(index)}
+                  />
+                ))}
 
               <div className="flex mt-4">
                 {currentPost.tags.map((tag: any, index: number) => (

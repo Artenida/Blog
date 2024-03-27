@@ -34,13 +34,14 @@ class Post {
         p.user_id,
         u.username, 
         u.profile_picture,
-        GROUP_CONCAT(t.name) AS tags
-    FROM posts p 
-    LEFT JOIN users u ON p.user_id = u.id
-    LEFT JOIN post_tags pt ON p.id = pt.post_id
-    LEFT JOIN tags t ON pt.tag_id = t.id
-    LEFT JOIN images i ON p.id = i.post_id
-    GROUP BY p.id`;
+        GROUP_CONCAT(t.name) AS tags,
+        GROUP_CONCAT(i.image) AS images
+      FROM posts p 
+      LEFT JOIN users u ON p.user_id = u.id
+      LEFT JOIN post_tags pt ON p.id = pt.post_id
+      LEFT JOIN tags t ON pt.tag_id = t.id
+      LEFT JOIN images i ON p.id = i.post_id
+      GROUP BY p.id`;
 
       const data = await new Promise<PostInterface[]>((resolve, reject) => {
         db.query(query, (error, result) => {
@@ -56,11 +57,9 @@ class Post {
                     .map((tagName: string) => ({ id: "", name: tagName }))
                 : [],
               images: post.images
-                ? post.images.split(",").map((image: string) => ({
-                    url: URL.createObjectURL(
-                      new Blob([image], { type: "image/jpeg" })
-                    ),
-                  }))
+                ? post.images
+                    .split(",")
+                    .map((image: string) => ({ url: image.trim() }))
                 : [],
             }));
             resolve(postsWithImagesAndTags);
@@ -146,9 +145,7 @@ class Post {
                 .split(",")
                 .map((tagName: string) => ({ id: "", name: tagName.trim() }))
             : [],
-          images: row.image
-            ? [{ url: Buffer.from(row.image).toString("base64") }]
-            : [],
+          images: row.image ? [{ url: row.image }] : [],
         });
       } else {
         if (row.tags) {
@@ -159,9 +156,16 @@ class Post {
           );
         }
         if (row.image) {
-          structuredData.posts[existingPostIndex].images.push({
-            url: Buffer.from(row.image).toString("base64"),
-          });
+          const imageUrl = row.image.trim();
+          if (
+            !structuredData.posts[existingPostIndex].images.some(
+              (img: any) => img.url === imageUrl
+            )
+          ) {
+            structuredData.posts[existingPostIndex].images.push({
+              url: imageUrl,
+            });
+          }
         }
       }
     });

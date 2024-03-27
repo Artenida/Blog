@@ -8,9 +8,13 @@ interface Tag {
   name: string;
 }
 
+interface Image {
+  url: string;
+}
+
 interface BlogPost {
   id: string;
-  cover: string | undefined;
+  images: Image[]; 
   title: string;
   tags: Tag[];
   username: string;
@@ -33,13 +37,15 @@ const BlogCard: React.FC<BlogCardProps> = ({ posts }) => {
             className="shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] p-3 transform transition-transform hover:scale-105 bg-custom-color1 rounded-xl"
           >
             <div className="rounded-xl overflow-hidden">
-              <Link to={`/blog/${post.id}`}>
-                <img
-                  src={post.cover}
-                  alt="blogPicture"
-                  className="w-full object-cover object-center h-64"
-                />
-              </Link>
+              {post.images && post.images.length > 0 && ( 
+                <Link to={`/blog/${post.id}`}>
+                  <img
+                    src={`http://localhost:5000/${post.images[0].url.replace(/\\/g, "/")}`}
+                    alt="blogPicture"
+                    className="w-full object-cover object-center h-64"
+                  />
+                </Link>
+              )}
             </div>
             <div className="flex flex-col">
               <div className="flex">

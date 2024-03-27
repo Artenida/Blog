@@ -9,9 +9,13 @@ interface Tag {
   id: number;
   name: string;
 }
+interface Image {
+  url: string;
+}
+
 interface BlogPost {
   id: string;
-  cover: string | undefined;
+  images: Image[]; 
   title: string;
   tags: Tag[];
   username: string;
