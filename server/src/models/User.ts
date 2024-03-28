@@ -1,4 +1,6 @@
 import createDatabaseConnection from "../config";
+import bcrypt from 'bcrypt';
+
 interface UserData {
   id: number;
   username: string;
@@ -45,15 +47,17 @@ export class User {
   static async createUser(username: string, email: string, password: string) {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
-
+  
     try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
       const insertQuery =
         "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
-      const values = [username, email, password];
-
+      const values = [username, email, hashedPassword];
+  
       await db.query(insertQuery, values);
       connection.closeConnection();
-
+  
       return true;
     } catch (error) {
       connection.closeConnection();
