@@ -44,6 +44,7 @@ const MyPosts = () => {
     if (selectedPostId) {
       dispatch(deletePost(selectedPostId)).then(() => {
         setIsDeleteDialogOpen(false);
+        dispatch(getMyPosts({ userId: userId, token: token }))
       });
     }
   };
