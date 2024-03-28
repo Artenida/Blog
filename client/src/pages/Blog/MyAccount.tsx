@@ -9,6 +9,7 @@ import profile from "../../assets/userProfile.jpg";
 
 const MyAccount = () => {
   const [image, setImage] = useState<File>();
+  const [selectedImage, setSelectedImage] = useState<string | undefined>();
   const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector(selectUser);
   const { user } = useAppSelector(selectUser);
@@ -32,6 +33,14 @@ const MyAccount = () => {
     }
   };
 
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    if (selectedFile) {
+      setImage(selectedFile);
+      setSelectedImage(URL.createObjectURL(selectedFile));
+    }
+  };
+
   return (
     <div className="flex flex-col md:flex-row -z-50">
       <Sidebar />
@@ -45,9 +54,7 @@ const MyAccount = () => {
             <label htmlFor="file" className="cursor-pointer">
               <img
                 src={
-                  user[0]?.profile_picture
-                    ? `http://localhost:5000/${imagePath}`
-                    : profile
+                  selectedImage || (user[0]?.profile_picture && `http://localhost:5000/${imagePath}`) || profile
                 }
                 alt="Profile"
                 className="rounded-full w-32 h-32"
@@ -56,7 +63,7 @@ const MyAccount = () => {
                 type="file"
                 id="file"
                 style={{ display: "none" }}
-                onChange={(event) => setImage(event.target.files?.[0])}
+                onChange={handleImageChange}
               />
             </label>
           </div>
