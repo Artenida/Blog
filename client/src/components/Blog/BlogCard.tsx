@@ -18,7 +18,7 @@ interface BlogPost {
   title: string;
   tags: Tag[];
   username: string;
-  profilePicture: string | undefined;
+  profile_picture: string | undefined;
   description: string;
   createdAt: Date;
 }
@@ -70,7 +70,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ posts }) => {
 
               <Author
                 authorName={post.username}
-                profilePicture={post.profilePicture}
+                profile_picture={post.profile_picture}
                 createdAt={post.createdAt}
               />
 

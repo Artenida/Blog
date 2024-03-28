@@ -19,7 +19,7 @@ interface BlogPost {
   title: string;
   tags: Tag[];
   username: string;
-  profilePicture: string | undefined;
+  profile_picture: string | undefined;
   description: string;
   createdAt: Date;
 }
@@ -32,8 +32,6 @@ interface PostState {
 
 const BlogPage = () => {
   const dispatch = useAppDispatch();
-  const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 9;
   const [currentBlogs, setCurrentBlogs] = useState<BlogPost[]>([]);
   const { currentPost, loading, retrieveError } = useSelector(
     (state: { post: PostState }) => state.post
@@ -50,14 +48,7 @@ const BlogPage = () => {
     }
   }, [currentPost]);
 
-  const handlePageChange = (selectedPage: number) => {
-    setCurrentPage(selectedPage);
-  };
 
-  const startIndex = currentPage * itemsPerPage;
-  const endIndex = (currentPage + 1) * itemsPerPage;
-
-  const slicedBlogs = currentBlogs.slice(startIndex, endIndex);
 
   return (
     <div className="flex flex-col">
@@ -68,13 +59,10 @@ const BlogPage = () => {
           <div>Error: {retrieveError}</div>
         ) : (
           <>
-            <BlogCard posts={slicedBlogs} />
-            <Pagination
-              totalItems={currentBlogs.length}
-              itemsPerPage={itemsPerPage}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-            />
+            <BlogCard posts={currentBlogs} />
+            {/* <Pagination
+              currentPage={currentPage} setCurrentPage={}
+            /> */}
           </>
         )}
       </div>

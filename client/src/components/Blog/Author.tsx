@@ -3,19 +3,24 @@ import moment from "moment";
 
 interface AuthorProps {
   authorName: string;
-  profilePicture: string | undefined;
+  profile_picture: string | undefined;
   createdAt: Date;
 }
 
-const Author: React.FC<AuthorProps> = ({ authorName, profilePicture, createdAt }) => {
+const Author: React.FC<AuthorProps> = ({
+  authorName,
+  profile_picture,
+  createdAt,
+}) => {
   const formattedRelativeTime = moment(createdAt).fromNow();
   // const formattedDate = moment(createdAt).format("MMMM Do YYYY");
+  const imagePath = profile_picture ? profile_picture.replace(/\\/g, "/") : "";
 
   return (
     <div className="flex justify-between flex-nowrap items-center mt-6">
       <div className="flex items-center gap-x-2">
         <img
-          src={profilePicture}
+          src={`http://localhost:5000/${imagePath.replace(/\\/g, "/")}`}
           alt="post profile"
           className="h-[50px] w-[50px] rounded-full"
         />

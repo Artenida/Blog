@@ -17,7 +17,6 @@ const BlogDetails = () => {
   const { post } = useSelector(selectPost);
   const { postId } = useParams();
   const currentPost = post && post?.posts[0] ? post.posts[0] : null;
-  console.log(currentPost);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {
@@ -59,7 +58,7 @@ const BlogDetails = () => {
               </div>
               <Author
                 authorName={post.user.username}
-                profilePicture={post.user.profile_picture}
+                profile_picture={post.user.profile_picture}
                 createdAt={currentPost.createdAt}
               />
               <h1 className="text-xl font-medium font-roboto mt-4 text-custom-color3">
