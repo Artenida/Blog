@@ -10,8 +10,7 @@ import { retrieveAllTags } from "../../api/tagsThunk";
 import { getSinglePost, updatePost } from "../../api/postThunk";
 import { Alert } from "@material-tailwind/react";
 import { selectPost } from "../../store/posts/postSlice";
-import { useValidateBlogForm } from "../../utils/validatePost";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useValidateUpdate } from "../../utils/validateUpdate";
 
 interface Tag {
@@ -22,11 +21,13 @@ interface Tag {
 const UpdatePost = () => {
   const dispatch = useAppDispatch();
   const { tags, loading, retrieveError } = useSelector(selectTags);
-  const { successfulUpdate, updateError } = useSelector(selectPost);
+  const { updateError } = useSelector(selectPost);
   const { postId } = useParams();
   const { errors, hasError, validateForm, displayErrors } = useValidateUpdate();
   const { post } = useSelector(selectPost);
   const [postSuccess, setPostSuccess] = useState(false);
+  const [isFormChanged, setIsFormChanged] = useState(false);
+  const [message, setMessage] = useState(false);
 
   const [data, setData] = useState({
     postId: postId ?? "",
@@ -52,12 +53,6 @@ const UpdatePost = () => {
     }
   }, [post, postId]);
 
-  useEffect(() => {
-    if (successfulUpdate) {
-      setPostSuccess(true);
-    }
-  }, [successfulUpdate]);
-
   const handlePostSuccessClose = () => {
     setPostSuccess(false);
   };
@@ -68,10 +63,16 @@ const UpdatePost = () => {
     if (hasError) {
       return;
     }
-    dispatch(updatePost(data));
+    if(isFormChanged) {
+      setMessage(false);
+      dispatch(updatePost(data)).then(() => setPostSuccess(true));
+    } else {
+      setMessage(true);
+    }
   };
 
   const handleTagChange = (tagId: string) => {
+    setIsFormChanged(true);
     const updatedTags = data.tags.includes(tagId)
       ? data.tags.filter((id) => id !== tagId)
       : [...data.tags, tagId];
@@ -79,8 +80,14 @@ const UpdatePost = () => {
   };
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsFormChanged(true);
     const { value } = event.target;
     setData({ ...data, title: value });
+  };
+
+  const handleDescriptionChange = (value: string) => {
+    setIsFormChanged(true);
+    setData({ ...data, description: value });
   };
 
   return (
@@ -108,13 +115,13 @@ const UpdatePost = () => {
                 ))}
               </ul>
             )}
-            <span
+            {/* <span
               className={`text-sm text-red-600 pl-1 pt-1${
                 errors.tags ? "block" : "hidden"
               } mt-1`}
             >
               {errors.tags}
-            </span>
+            </span> */}
           </div>
 
           <div className="w-2/3 flex flex-col">
@@ -140,7 +147,7 @@ const UpdatePost = () => {
               style={{ height: "300px" }}
               className="mb-4"
               value={data.description}
-              onChange={(value) => setData({ ...data, description: value })}
+              onChange={handleDescriptionChange}
             />
             <span
               className={`text-red-600 text-sm pl-1 pt-1 ${
@@ -149,6 +156,7 @@ const UpdatePost = () => {
             >
               {errors.description}
             </span>
+           
             {postSuccess && (
               <Alert
                 onClose={handlePostSuccessClose}
@@ -157,10 +165,18 @@ const UpdatePost = () => {
                 Post is updated successfully
               </Alert>
             )}
-            {updateError && (
+            {updateError  && (
               <div className="mt-10">
                 <Alert className="bg-red-200 py-2 px-6 text-red-600">
                   {updateError}
+                </Alert>
+              </div>
+            )}
+
+              {message  && (
+              <div className="mt-10">
+                <Alert className="bg-red-200 py-2 px-6 text-red-600">
+                  "You haven't made any changes to the post"
                 </Alert>
               </div>
             )}

@@ -53,7 +53,6 @@ export const createPost = async (
 ) => {
   try {
     const { title, description, user_id, tags } = req.body;
-    // const userId = req.body.user.id;
     const files: Express.Multer.File[] = Array.isArray(req.files)
       ? req.files
       : [];
@@ -63,7 +62,7 @@ export const createPost = async (
       .status(200)
       .json({ success: true, message: "Post created successfully" });
   } catch (error) {
-    console.error("Error in createPost", error);
+    console.error("Error creating post", error);
     if (error === "Post not found") {
       res.status(404).json({ error: "Post not found" });
     } else {
@@ -96,27 +95,19 @@ export const updatePost = async (
   next: NextFunction
 ) => {
   try {
-      const { title, description, tags } = req.body;
-      const postId = req.params.id;
-
-      const result = await Post.updatePost(
-          title,
-          description,
-          postId,
-          tags,
-      );
-
-      if (result.success) {
-          res.status(200).json({ message: "Post updated successfully!" });
-      } else {
-          res.status(400).json({ message: "Failed to update post." });
-      }
+    const { title, description, tags } = req.body;
+    const postId = req.params.id;
+    try {
+      await Post.updatePost(title, description, postId, tags);
+      res.status(200).json("Post has been updated!");
+    } catch(error) {
+      res.status(403).json("Your post wasn't updated");
+    }
   } catch (error) {
-      console.error("Error in updatePost controller:", error);
-      res.status(500).json({ message: "Internal server error." });
+    console.error("Error in updatePost controller:", error);
+    res.status(500).json({ message: "Internal server error." });
   }
 };
-
 
 export const getAuthors = async (
   req: Request,

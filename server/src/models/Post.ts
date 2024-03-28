@@ -189,7 +189,7 @@ class Post {
 
       db.query(postQuery, postValues, async (error, result) => {
         if (error) {
-          console.error("Error inserting post:", error);
+          console.error("Error creating post:", error);
           connection.closeConnection();
           throw error;
         }
@@ -208,7 +208,7 @@ class Post {
         }
       });
     } catch (error) {
-      console.error("Error in createPost:", error);
+      console.error("Error creating post:", error);
       connection.closeConnection();
       throw error;
     }
@@ -238,7 +238,7 @@ class Post {
 
       return { success: true };
     } catch (error) {
-      console.error("Error in addTags", error);
+      console.error("Error adding tags", error);
       throw error;
     }
   }
@@ -282,7 +282,7 @@ class Post {
       connection.closeConnection();
       return { success: true };
     } catch (error) {
-      console.error("Error in addImages", error);
+      console.error("Error adding images", error);
       throw error;
     }
   }
@@ -320,23 +320,35 @@ class Post {
       const updateValues = [title, description, postId];
 
       db.query(updateQuery, updateValues, async (error, result) => {
-        if (error) {
-          console.error("Error updating post:", error);
+        try {
+          if (tags.length > 0) {
+            await Post.deleteTags(postId);
+            await Post.addTags(postId, tags);
+          } else {
+            const existingTagsQuery =
+              "SELECT tag_id FROM post_tags WHERE post_id = ?";
+            db.query(existingTagsQuery, [postId], async (error, result) => {
+              if (error) {
+                console.error("Error fetching existing tags:", error);
+                connection.closeConnection();
+                throw error;
+              }
+              const existingTags: string[] = result.map(
+                (row: any) => row.tag_id
+              );
+              if (existingTags.length > 0) {
+                await Post.addTags(postId, existingTags);
+              }
+            });
+          }
+
           connection.closeConnection();
+          return { success: true, postId };
+        } catch (error) {
+          console.error("Error adding tags:", error);
           throw error;
         }
       });
-
-      try {
-        await Post.deleteTags(postId);
-        await Post.addTags(postId, tags);
-        connection.closeConnection();
-        return { success: true, postId };
-      } catch (error) {
-        console.error("Error adding tags or images:", error);
-        connection.closeConnection();
-        throw error;
-      }
     } catch (error) {
       console.error("Error in updatePost:", error);
       connection.closeConnection();
@@ -403,13 +415,13 @@ class Post {
 
     try {
       const query = `SELECT COUNT(*) FROM posts`;
-        const data = await new Promise((resolve, reject) => {
+      const data = await new Promise((resolve, reject) => {
         db.query(query, (error, result) => {
           connection.closeConnection();
           if (error) {
             reject(error);
           } else {
-            resolve(result[0]['COUNT(*)']);
+            resolve(result[0]["COUNT(*)"]);
           }
         });
       });
