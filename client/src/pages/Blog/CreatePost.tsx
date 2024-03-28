@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import FormInputs from "../../components/FormInputs";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -7,7 +7,7 @@ import { useAppDispatch } from "../../store/hooks";
 import { useSelector } from "react-redux";
 import { selectTags } from "../../store/tags/tagsSlice";
 import { retrieveAllTags } from "../../api/tagsThunk";
-import { createBlog } from "../../api/postThunk";
+import { createPost } from "../../api/postThunk";
 import { selectUser } from "../../store/user/userSlice";
 import { Alert } from "@material-tailwind/react";
 import { selectPost } from "../../store/posts/postSlice";
@@ -28,10 +28,12 @@ type CreatePost = {
 const CreatePost = () => {
   const dispatch = useAppDispatch();
   const { tags, loading, retrieveError } = useSelector(selectTags);
-  const { successful, createError } = useSelector(selectPost);
+  const { createError } = useSelector(selectPost);
   const { currentUser } = useSelector(selectUser);
   const userId = currentUser?.user?.id;
-  const { errors, validateForm, displayErrors } = useValidateBlogForm();
+  const { errors, hasError, validateForm, displayErrors } =
+    useValidateBlogForm();
+  const [success, setSuccess] = useState(false);
 
   const [data, setData] = useState<CreatePost>({
     title: "",
@@ -40,27 +42,9 @@ const CreatePost = () => {
     files: [],
   });
 
-  const [postSuccess, setPostSuccess] = useState(false);
-
   useEffect(() => {
     tags?.length === 0 && dispatch(retrieveAllTags());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (successful) {
-      setPostSuccess(true);
-    }
-  }, [successful]);
-
-  useEffect(() => {
-    if (createError) {
-      console.error("Error creating blog post:", createError);
-    }
-  }, [createError]);
-
-  const handlePostSuccessClose = () => {
-    setPostSuccess(false);
-  };
 
   const handleSubmit = () => {
     validateForm({
@@ -75,18 +59,25 @@ const CreatePost = () => {
       tags: data.tags,
       file: data.files,
     });
-    const formData = new FormData();
-    formData.append("title", data.title);
-    formData.append("description", data.description);
-    formData.append("user_id", userId);
-    for (let tag of data.tags) {
-      formData.append("tags", tag);
-    }
-    for (let i = 0; i < data.files.length; i++) {
-      formData.append("file", data.files[i]);
-    }
-    dispatch(createBlog(formData));
   };
+
+  useEffect(() => {
+    if (!hasError) {
+      const formData = new FormData();
+      formData.append("title", data.title);
+      formData.append("description", data.description);
+      formData.append("user_id", userId || "");
+      for (let tag of data.tags) {
+        formData.append("tags", tag);
+      }
+      for (let i = 0; i < data.files.length; i++) {
+        formData.append("file", data.files[i]);
+      }
+      dispatch(createPost(formData)).then(()=> 
+      setSuccess(true)
+      );
+    }
+  }, [hasError]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -135,7 +126,7 @@ const CreatePost = () => {
                 ))}
               </ul>
             )}
-              <span
+            <span
               className={`text-sm text-red-600 pl-1 pt-1${
                 errors.tags ? "block" : "hidden"
               } h-4`}
@@ -190,27 +181,20 @@ const CreatePost = () => {
               {errors.description}
             </span>
 
-            {postSuccess && (
-              <Alert
-                onClose={handlePostSuccessClose}
-                className="bg-green-200 py-2 px-6 text-green-500 mt-12"
-              >
+            {success && (
+              <Alert className="bg-green-200 py-2 px-6 text-green-500 mt-12">
                 Post is published
               </Alert>
             )}
-           
+
             {createError && (
-              <Alert
-                onClose={handlePostSuccessClose}
-                className="bg-red-200 py-2 px-6 text-red-500 mt-12"
-              >
-                {createError}{" "}
+              <Alert className="bg-red-200 py-2 px-6 text-red-500 mt-12">
+                {createError}
               </Alert>
             )}
             <div className="mt-8">
               <MediumButton onClick={handleSubmit}>Publish</MediumButton>
             </div>
-           
           </div>
         </div>
       </div>

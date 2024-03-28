@@ -129,7 +129,7 @@ export const retrievePostTags = createAsyncThunk(
   }
 );
 
-export const createBlog = createAsyncThunk(
+export const createPost = createAsyncThunk(
   "api/posts/createPost",
   async (formData: FormData, { getState, rejectWithValue }) => {
     try {
@@ -191,3 +191,18 @@ export const updatePost = createAsyncThunk(
     }
   }
 );
+
+export const getNrOfPosts = createAsyncThunk(
+  "api/posts/nrOfPosts",
+  async () => {
+    try {
+      const response = await createAPI("api/posts/nrOfPosts", {
+        method: "GET",
+      })();
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      return error.message;
+    }
+  }
+)

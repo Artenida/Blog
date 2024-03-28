@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "../../store/store";
 import {
-  createBlog,
+  createPost,
   deletePost,
   getMyPosts,
+  getNrOfPosts,
   getSinglePost,
   retrieveAllAuthors,
   retrieveAllPosts,
@@ -57,6 +58,7 @@ interface PostState {
   isUpdated: boolean;
   post: BlogType;
   myPost: BlogPost;
+  postNr: number | null;
 }
 
 const initialState: PostState = {
@@ -72,6 +74,7 @@ const initialState: PostState = {
   successful: false,
   successfulUpdate: false,
   isUpdated: false,
+  postNr: null,
   myPost: {
     id: "",
     title: "",
@@ -180,16 +183,16 @@ const postSlice = createSlice({
         state.retrieveError = action.payload as string;
       })
 
-      .addCase(createBlog.pending, (state) => {
+      .addCase(createPost.pending, (state) => {
         state.loading = true;
         state.createError = null;
       })
-      .addCase(createBlog.fulfilled, (state, action) => {
+      .addCase(createPost.fulfilled, (state, action) => {
         state.loading = false;
         state.createError = null;
         state.successful = true;
       })
-      .addCase(createBlog.rejected, (state, action) => {
+      .addCase(createPost.rejected, (state, action) => {
         state.loading = false;
         state.createError = action.payload as string;
         state.successful = false;
@@ -207,6 +210,13 @@ const postSlice = createSlice({
         state.successfulUpdate = false;
         state.loading = false;
         state.updateError = action.payload as string;
+      })
+
+      .addCase(getNrOfPosts.fulfilled, (state, action) => {
+        state.postNr = action.payload;
+      })
+      .addCase(getNrOfPosts.rejected, (state, action) => {
+        state.postNr = null;
       })
   },
 });
