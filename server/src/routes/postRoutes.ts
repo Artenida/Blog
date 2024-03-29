@@ -38,6 +38,6 @@ router.put("/update/:id", verifyToken, validateUpdatePost, updatePost);
 router.get("/user/:userId", verifyToken, getUsersPost);
 router.get("/authors", getAuthors);
 // router.get("/nrOfPosts", getNumberOfPosts);
-router.get("/paginatedPosts", getPaginatedPosts)
+router.get("/paginatedPosts", getPaginatedPosts);
 
 export default router;

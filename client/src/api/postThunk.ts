@@ -213,7 +213,7 @@ export const retrievePaginatedPosts = createAsyncThunk(
     try {
       const response = await createAPI(`api/posts/paginatedPosts?page=${page}&limit=${limit}`, {
         method: "GET",
-      })({page, limit});
+      })();
       
       if (!response.ok) {
         const errorData = await response.json();
