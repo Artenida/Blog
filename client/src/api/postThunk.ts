@@ -209,9 +209,9 @@ export const getNrOfPosts = createAsyncThunk(
 
 export const retrievePaginatedPosts = createAsyncThunk(
   "posts/posts/paginatedPosts",
-  async ({ page, limit }: { page: number; limit: number }, { rejectWithValue, getState }) => {
+  async ({ currentPage, limit }: { currentPage: number; limit: number }, { rejectWithValue, getState }) => {
     try {
-      const response = await createAPI(`api/posts/paginatedPosts?page=${page}&limit=${limit}`, {
+      const response = await createAPI(`api/posts/paginatedPosts?page=${currentPage}&limit=${limit}`, {
         method: "GET",
       })();
       
@@ -233,3 +233,23 @@ export const retrievePaginatedPosts = createAsyncThunk(
     }
   }
 );
+
+export const filterPosts = createAsyncThunk (
+  `posts/posts/search`,
+async ({ keyword }: { keyword: string }, { rejectWithValue, getState }) => {
+  try {
+    const response = await createAPI(`api/posts/search?keyword=${keyword}`, {
+      method: "GET",
+    })();
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to fetch data');
+    }
+    
+    const post = await response.json();
+    return post;
+  } catch (error: any) {
+    return error.message;
+  }
+})
