@@ -123,7 +123,7 @@ GROUP BY p.id, u.id, u.username, u.profile_picture, p.title, p.description, p.cr
       user: {},
       posts: [],
     };
-  
+
     result.forEach((row, index) => {
       if (index === 0) {
         structuredData.user = {
@@ -132,11 +132,11 @@ GROUP BY p.id, u.id, u.username, u.profile_picture, p.title, p.description, p.cr
           profile_picture: row.profile_picture,
         };
       }
-  
+
       const existingPostIndex = structuredData.posts.findIndex(
         (post: PostInterface) => post.post_id === row.post_id
       );
-  
+
       if (existingPostIndex === -1) {
         structuredData.posts.push({
           post_id: row.post_id,
@@ -144,28 +144,36 @@ GROUP BY p.id, u.id, u.username, u.profile_picture, p.title, p.description, p.cr
           description: row.description,
           post_createdAt: row.post_createdAt,
           tags: row.tags
-            ? row.tags.split(",").map((tagName: string) => ({ id: "", name: tagName.trim() }))
+            ? row.tags
+                .split(",")
+                .map((tagName: string) => ({ id: "", name: tagName.trim() }))
             : [],
           images: row.images
-            ? row.images.split(",").map((image: string) => ({ url: image.trim() }))
+            ? row.images
+                .split(",")
+                .map((image: string) => ({ url: image.trim() }))
             : [],
         });
       } else {
         if (row.tags) {
           structuredData.posts[existingPostIndex].tags.push(
-            ...row.tags.split(",").map((tagName: string) => ({ id: "", name: tagName.trim() }))
+            ...row.tags
+              .split(",")
+              .map((tagName: string) => ({ id: "", name: tagName.trim() }))
           );
         }
         if (row.images) {
           structuredData.posts[existingPostIndex].images.push(
-            ...row.images.split(",").map((image: string) => ({ url: image.trim() }))
+            ...row.images
+              .split(",")
+              .map((image: string) => ({ url: image.trim() }))
           );
         }
       }
     });
-  
+
     return structuredData;
-  }  
+  }
 
   static async createPost(inputs: PostInputs): Promise<any> {
     const connection = createDatabaseConnection();
@@ -427,8 +435,191 @@ GROUP BY p.id, u.id, u.username, u.profile_picture, p.title, p.description, p.cr
   //   }
   // }
 
-  static async getPaginatedPosts() {
-    
+  static async searchPost(word: string) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const getPostByTitle = await Post.filterByTitle(word);
+        const getPostByDescription = await Post.filterByDescription(word);
+        const getPostByAuthor = await Post.filterByAuthor(word);
+        const getPostByTag = await Post.filterByTag(word);
+        resolve({
+          getPostByTitle,
+          getPostByDescription,
+          getPostByAuthor,
+          getPostByTag,
+        });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  static async filterByTitle(word: string) {
+    const connection = createDatabaseConnection();
+    const db = connection.getConnection();
+
+    try {
+      const query = `
+            SELECT 
+                u.id,
+                u.username,
+                u.profile_picture,
+                p.id,
+                p.title,
+                p.description,
+                p.createdAt,
+                t.name
+            FROM 
+                posts p
+                LEFT JOIN users u ON p.user_id = u.id
+                LEFT JOIN post_tags pt ON pt.post_id = p.id
+                LEFT JOIN tags t ON pt.tag_id = t.id
+            WHERE 
+                p.title LIKE ?;
+        `;
+
+      const data = await new Promise((resolve, reject) => {
+        db.query(query, [`%${word}%`], (error, result) => {
+          connection.closeConnection();
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+
+      return data;
+    } catch (error) {
+      console.error("Error in filterByTitle", error);
+      throw error;
+    }
+  }
+
+  static async filterByDescription(word: string) {
+    const connection = createDatabaseConnection();
+    const db = connection.getConnection();
+
+    try {
+      const query = `
+            SELECT 
+                u.id,
+                u.username,
+                u.profile_picture,
+                p.id,
+                p.title,
+                p.description,
+                p.createdAt,
+                t.name
+            FROM 
+                posts p
+                LEFT JOIN users u ON p.user_id = u.id
+                LEFT JOIN post_tags pt ON pt.post_id = p.id
+                LEFT JOIN tags t ON pt.tag_id = t.id
+            WHERE 
+                p.description LIKE ?;
+        `;
+
+      const data = await new Promise((resolve, reject) => {
+        db.query(query, [`%${word}%`], (error, result) => {
+          connection.closeConnection();
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+
+      return data;
+    } catch (error) {
+      console.error("Error in filterByDescription", error);
+      throw error;
+    }
+  }
+
+  static async filterByTag(word: string) {
+    const connection = createDatabaseConnection();
+    const db = connection.getConnection();
+
+    try {
+      const query = `
+            SELECT 
+                u.id,
+                u.username,
+                u.profile_picture,
+                p.id,
+                p.title,
+                p.description,
+                p.createdAt,
+                t.name
+            FROM 
+                posts p
+                LEFT JOIN users u ON p.user_id = u.id
+                LEFT JOIN post_tags pt ON pt.post_id = p.id
+                LEFT JOIN tags t ON pt.tag_id = t.id
+            WHERE 
+                t.name LIKE ?;
+        `;
+
+      const data = await new Promise((resolve, reject) => {
+        db.query(query, [`%${word}%`], (error, result) => {
+          connection.closeConnection();
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+
+      return data;
+    } catch (error) {
+      console.error("Error in filterByTag", error);
+      throw error;
+    }
+  }
+
+  static async filterByAuthor(word: string) {
+    const connection = createDatabaseConnection();
+    const db = connection.getConnection();
+
+    try {
+      const query = `
+            SELECT 
+                u.id,
+                u.username,
+                u.profile_picture,
+                p.id,
+                p.title,
+                p.description,
+                p.createdAt,
+                t.name
+            FROM 
+                posts p
+                LEFT JOIN users u ON p.user_id = u.id
+                LEFT JOIN post_tags pt ON pt.post_id = p.id
+                LEFT JOIN tags t ON pt.tag_id = t.id
+            WHERE 
+                u.username LIKE ?;
+        `;
+
+      const data = await new Promise((resolve, reject) => {
+        db.query(query, [`%${word}%`], (error, result) => {
+          connection.closeConnection();
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+
+      return data;
+    } catch (error) {
+      console.error("Error in filterByAuthor", error);
+      throw error;
+    }
   }
 }
 

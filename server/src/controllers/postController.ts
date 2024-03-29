@@ -207,3 +207,17 @@ export const getPaginatedPosts = async (
     res.status(500).json({ error: "Error in getPaginatedPosts" });
   }
 };
+
+export const searchPosts = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const keyword = req.query.keyword as string;
+    const data = await Post.searchPost(keyword);
+    res.status(200).json(data);
+  } catch(error) {
+    res.status(500).json("Error getting posts");
+  }
+};

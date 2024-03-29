@@ -8,6 +8,7 @@ import {
   getUsersPost,
   getAuthors,
   getPaginatedPosts,
+  searchPosts,
 } from "../controllers/postController";
 import {
   validateCreatePost,
@@ -39,5 +40,6 @@ router.get("/user/:userId", verifyToken, getUsersPost);
 router.get("/authors", getAuthors);
 // router.get("/nrOfPosts", getNumberOfPosts);
 router.get("/paginatedPosts", getPaginatedPosts);
+router.get("/search", searchPosts);
 
 export default router;
