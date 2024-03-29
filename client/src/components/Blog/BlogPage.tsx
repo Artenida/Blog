@@ -37,19 +37,13 @@ interface PaginatedPosts {
 const BlogPage = () => {
   const dispatch = useAppDispatch();
   const [currentBlogs, setCurrentBlogs] = useState<Paginated[]>([]);
-  const {currentPost} = useSelector(selectPost);
   const { paginatedPost, loading, retrieveError } = useSelector(selectPost);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(2);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(9);
   const [pageCount, setPageCount] = useState(1);
-  // const [keyword, setKeyword] = useState("New");
 
   useEffect(() => {
-    dispatch(retrieveAllPosts());
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(retrievePaginatedPosts({page, limit}));
+    getPaginatedPosts();
   }, [dispatch]);
 
   useEffect(() => {
@@ -58,23 +52,15 @@ const BlogPage = () => {
     }
   }, [paginatedPost]);  
 
-  console.log(paginatedPost)
-  console.log(paginatedPost?.pageCount)
-
   const handlePageClick = (selectedItem: { selected: number }) => {
-    setPage(selectedItem.selected + 1);
+    setCurrentPage(selectedItem.selected + 1);
+    getPaginatedPosts();
+  };
+  
+  const getPaginatedPosts = () => {
+    dispatch(retrievePaginatedPosts({ currentPage, limit }));
+    setPageCount(paginatedPost?.pageCount ?? 1);
   }
-  
-  useEffect(() => {
-    dispatch(retrievePaginatedPosts({ page, limit }));
-  }, [dispatch, page, limit]);
-
-  // const {searchedPost, filterSearch} = useSelector(selectPost);
-  // console.log(searchedPost);
-  
-  // useEffect(()=>{
-  //   dispatch(filterPosts({keyword}));
-  // },[dispatch, keyword])
 
   return (
     <div className="flex flex-col">
@@ -95,7 +81,7 @@ const BlogPage = () => {
         nextLabel="next >"
         onPageChange={handlePageClick}
         pageRangeDisplayed={5}
-        pageCount={8}
+        pageCount={pageCount}
         previousLabel="< previous"
         renderOnZeroPageCount={null}
         />
