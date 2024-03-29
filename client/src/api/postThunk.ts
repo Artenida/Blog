@@ -206,3 +206,30 @@ export const getNrOfPosts = createAsyncThunk(
     }
   }
 )
+
+export const retrievePaginatedPosts = createAsyncThunk(
+  "posts/posts/paginatedPosts",
+  async ({ page, limit }: { page: number; limit: number }, { rejectWithValue, getState }) => {
+    try {
+      const response = await createAPI(`api/posts/paginatedPosts?page=${page}&limit=${limit}`, {
+        method: "GET",
+      })({page, limit});
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch data');
+      }
+      
+      const data = await response.json();
+      
+      if (!data || typeof data !== 'object' || !('result' in data)) {
+        throw new Error('Invalid response data');
+      }
+      
+      return data;
+      
+    } catch (error: any) {
+      return error.message;
+    }
+  }
+);

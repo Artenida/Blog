@@ -12,6 +12,21 @@ interface Image {
   url: string;
 }
 
+interface BlogCardProps {
+  posts: Paginated[] | null;
+}
+
+interface Paginated {
+  id: string;
+  images: Image[]; 
+  title: string;
+  tags: Tag[];
+  username: string;
+  profile_picture: string | undefined;
+  description: string;
+  createdAt: Date;
+}
+
 interface BlogPost {
   id: string;
   images: Image[]; 
@@ -23,15 +38,11 @@ interface BlogPost {
   createdAt: Date;
 }
 
-interface BlogCardProps {
-  posts: BlogPost[];
-}
-
 const BlogCard: React.FC<BlogCardProps> = ({ posts }) => {
   return (
     <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 w-full mt-12 gap-12">
       {posts &&
-        posts.map((post) => (
+         posts.map((post) => (
           <div
             key={post.id}
             className="shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] p-3 transform transition-transform hover:scale-105 bg-custom-color1 rounded-xl"

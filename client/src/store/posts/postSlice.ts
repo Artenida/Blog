@@ -8,6 +8,7 @@ import {
   getSinglePost,
   retrieveAllAuthors,
   retrieveAllPosts,
+  retrievePaginatedPosts,
   retrievePostTags,
   updatePost,
 } from "../../api/postThunk";
@@ -42,9 +43,36 @@ interface BlogPost {
   description: string;
   createdAt: Date;
 }
+interface Image {
+url: string;
+}
+interface Tag {
+  id: number;
+  name: string;
+}
+interface Paginated {
+  id: string;
+  images: Image[]; 
+  title: string;
+  tags: Tag[];
+  username: string;
+  profile_picture: string | undefined;
+  description: string;
+  createdAt: Date;
+}
+interface PaginatedPosts {
+  data: {
+    next?: { pageAsNumber: number };
+    prev?: { pageAsNumber: number };
+    result: Paginated[];
+    totalUser?: number;
+    pageCount?: number;
+  };
+}
 
 interface PostState {
   currentPost: [] | null;
+  paginatedPost: PaginatedPosts | null;
   currentAuthor: [] | null;
   postTags: [] | null;
   loading: boolean;
@@ -63,6 +91,7 @@ interface PostState {
 
 const initialState: PostState = {
   currentPost: [],
+  paginatedPost: null,
   currentAuthor: [],
   postTags: [],
   retrieveError: null,
@@ -217,6 +246,20 @@ const postSlice = createSlice({
       })
       .addCase(getNrOfPosts.rejected, (state, action) => {
         state.postNr = null;
+      })
+
+      .addCase(retrievePaginatedPosts.pending, (state) => {
+        state.loading = true;
+        state.retrieveError = null;
+      })
+      .addCase(retrievePaginatedPosts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.retrieveError = null;
+        state.paginatedPost = action.payload.data;
+      })           
+      .addCase(retrievePaginatedPosts.rejected, (state, action) => {
+        state.loading = false;
+        state.retrieveError = action.payload as string;
       })
   },
 });

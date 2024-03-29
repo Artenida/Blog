@@ -281,7 +281,7 @@ GROUP BY p.id, u.id, u.username, u.profile_picture, p.title, p.description, p.cr
     }
   }
 
-  static deletePostById(postId: string): Promise<any> {
+  static async deletePostById(postId: string): Promise<any> {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
 
@@ -403,28 +403,32 @@ GROUP BY p.id, u.id, u.username, u.profile_picture, p.title, p.description, p.cr
     }
   }
 
-  static async getNumberOfPosts() {
-    const connection = createDatabaseConnection();
-    const db = connection.getConnection();
+  // static async getNumberOfPosts() {
+  //   const connection = createDatabaseConnection();
+  //   const db = connection.getConnection();
 
-    try {
-      const query = `SELECT COUNT(*) FROM posts`;
-      const data = await new Promise((resolve, reject) => {
-        db.query(query, (error, result) => {
-          connection.closeConnection();
-          if (error) {
-            reject(error);
-          } else {
-            resolve(result[0]["COUNT(*)"]);
-          }
-        });
-      });
+  //   try {
+  //     const query = `SELECT COUNT(*) FROM posts`;
+  //     const data = await new Promise((resolve, reject) => {
+  //       db.query(query, (error, result) => {
+  //         connection.closeConnection();
+  //         if (error) {
+  //           reject(error);
+  //         } else {
+  //           resolve(result[0]["COUNT(*)"]);
+  //         }
+  //       });
+  //     });
 
-      return data;
-    } catch (error) {
-      console.error("Error getting number of posts", error);
-      throw error;
-    }
+  //     return data;
+  //   } catch (error) {
+  //     console.error("Error getting number of posts", error);
+  //     throw error;
+  //   }
+  // }
+
+  static async getPaginatedPosts() {
+    
   }
 }
 

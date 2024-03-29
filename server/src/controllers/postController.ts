@@ -100,7 +100,7 @@ export const updatePost = async (
     try {
       await Post.updatePost(title, description, postId, tags);
       res.status(200).json("Post has been updated!");
-    } catch(error) {
+    } catch (error) {
       res.status(403).json("Your post wasn't updated");
     }
   } catch (error) {
@@ -138,16 +138,72 @@ export const getUsersPost = async (
   }
 };
 
-export const getNumberOfPosts = async (
+// export const getNumberOfPosts = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const nrOfPosts = await Post.getNumberOfPosts();
+//     res.status(200).json(nrOfPosts);
+//   } catch (error) {
+//     console.error("Error getting number of posts", error);
+//     next(error);
+//   }
+// };
+
+export const getPaginatedPosts = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const nrOfPosts = await Post.getNumberOfPosts();
-    res.status(200).json(nrOfPosts);
+    const allPosts = await Post.getPosts();
+    let { page, limit } = req.query;
+
+    if (page && limit) {
+      const pageAsNumber = parseInt(page as string);
+      const limitAsNumber = parseInt(limit as string);
+
+      if (
+        !isNaN(pageAsNumber) &&
+        !isNaN(limitAsNumber) &&
+        pageAsNumber > 0 &&
+        limitAsNumber > 0
+      ) {
+        const startIndex = (pageAsNumber - 1) * limitAsNumber;
+        const endIndex = pageAsNumber * limitAsNumber;
+
+        const results: {
+          next?: { pageAsNumber: number };
+          prev?: { pageAsNumber: number };
+          result: any[];
+          totalPosts?: number;
+          pageCount?: number;
+        } = { result: [] };
+        results.totalPosts = allPosts.length;
+        results.pageCount = Math.ceil(allPosts.length / limitAsNumber);
+
+        if (endIndex < allPosts.length) {
+          results.next = {
+            pageAsNumber: pageAsNumber + 1,
+          };
+        }
+        if (startIndex > 0) {
+          results.prev = {
+            pageAsNumber: pageAsNumber - 1,
+          };
+        }
+
+        results.result = allPosts.slice(startIndex, endIndex);
+
+        return res.json({ data: results });
+      }
+    }
+
+    throw new Error("Invalid page or limit parameter");
   } catch (error) {
-    console.error("Error getting number of posts", error);
-    next(error);
+    console.error("Error in getPaginatedPosts:", error);
+    res.status(500).json({ error: "Error in getPaginatedPosts" });
   }
 };
