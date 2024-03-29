@@ -3,6 +3,7 @@ import type { RootState } from "../../store/store";
 import {
   createPost,
   deletePost,
+  filterPosts,
   getMyPosts,
   getNrOfPosts,
   getSinglePost,
@@ -44,7 +45,7 @@ interface BlogPost {
   createdAt: Date;
 }
 interface Image {
-url: string;
+  url: string;
 }
 interface Tag {
   id: number;
@@ -52,7 +53,7 @@ interface Tag {
 }
 interface Paginated {
   id: string;
-  images: Image[]; 
+  images: Image[];
   title: string;
   tags: Tag[];
   username: string;
@@ -61,17 +62,17 @@ interface Paginated {
   createdAt: Date;
 }
 interface PaginatedPosts {
-  data: {
-    next?: { pageAsNumber: number };
-    prev?: { pageAsNumber: number };
-    result: Paginated[];
-    totalUser?: number;
-    pageCount?: number;
-  };
+  result: Paginated[];
+  totalPosts?: number;
+  pageCount?: number;
+  next: { pageAsNumber: number };
+  prev: { pageAsNumber: number };
 }
 
 interface PostState {
   currentPost: [] | null;
+  searchedPost: [] | null;
+  filterSearch: string | null;
   paginatedPost: PaginatedPosts | null;
   currentAuthor: [] | null;
   postTags: [] | null;
@@ -91,6 +92,8 @@ interface PostState {
 
 const initialState: PostState = {
   currentPost: [],
+  searchedPost: [],
+  filterSearch: null,
   paginatedPost: null,
   currentAuthor: [],
   postTags: [],
@@ -255,12 +258,24 @@ const postSlice = createSlice({
       .addCase(retrievePaginatedPosts.fulfilled, (state, action) => {
         state.loading = false;
         state.retrieveError = null;
-        state.paginatedPost = action.payload.data;
-      })           
+        state.paginatedPost = action.payload;
+      })
       .addCase(retrievePaginatedPosts.rejected, (state, action) => {
         state.loading = false;
         state.retrieveError = action.payload as string;
       })
+
+      .addCase(filterPosts.pending, (state) => {
+        state.filterSearch = null;
+      })
+      .addCase(filterPosts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.filterSearch = null;
+        state.searchedPost = action.payload;
+      })
+      .addCase(filterPosts.rejected, (state, action) => {
+        state.filterSearch = action.payload as string;
+      });
   },
 });
 

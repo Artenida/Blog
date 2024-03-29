@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import BlogCard from "./BlogCard";
 // import Pagination from "../../components/pagination/PaginationButtons";
 import { useAppDispatch } from "../../store/hooks";
-import { retrieveAllPosts, retrievePaginatedPosts } from "../../api/postThunk";
+import { filterPosts, retrieveAllPosts, retrievePaginatedPosts } from "../../api/postThunk";
 import { useSelector } from "react-redux";
 import ReactPaginate from "react-paginate";
 import { selectPost } from "../../store/posts/postSlice";
+import Searchbar from "../Searchbar";
 
 interface Tag {
   id: number;
@@ -26,53 +27,60 @@ interface Paginated {
   createdAt: Date;
 }
 interface PaginatedPosts {
-  data: {
     next?: { pageAsNumber: number };
     prev?: { pageAsNumber: number };
     result: Paginated[];
     totalUser?: number;
     pageCount?: number;
-  };
 }
-
 
 const BlogPage = () => {
   const dispatch = useAppDispatch();
   const [currentBlogs, setCurrentBlogs] = useState<Paginated[]>([]);
-  // const {currentPost} = useSelector(selectPost);
+  const {currentPost} = useSelector(selectPost);
   const { paginatedPost, loading, retrieveError } = useSelector(selectPost);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(2);
   const [pageCount, setPageCount] = useState(1);
+  // const [keyword, setKeyword] = useState("New");
+
+  useEffect(() => {
+    dispatch(retrieveAllPosts());
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(retrievePaginatedPosts({page, limit}));
   }, [dispatch]);
 
-  // useEffect(()=> {
-  //   dispatch(retrieveAllPosts())
-  // },[dispatch])
-
   useEffect(() => {
-    if (paginatedPost?.data?.result) {
-      setCurrentBlogs(paginatedPost?.data?.result);
+    if (paginatedPost?.result) {
+      setCurrentBlogs(paginatedPost.result);
     }
   }, [paginatedPost]);  
-  
-  console.log(paginatedPost?.data.result)
 
-  const handlePageClick = () => {
-    // console.log("e")
+  console.log(paginatedPost)
+  console.log(paginatedPost?.pageCount)
+
+  const handlePageClick = (selectedItem: { selected: number }) => {
+    setPage(selectedItem.selected + 1);
   }
-
+  
   useEffect(() => {
     dispatch(retrievePaginatedPosts({ page, limit }));
   }, [dispatch, page, limit]);
+
+  // const {searchedPost, filterSearch} = useSelector(selectPost);
+  // console.log(searchedPost);
   
+  // useEffect(()=>{
+  //   dispatch(filterPosts({keyword}));
+  // },[dispatch, keyword])
 
   return (
     <div className="flex flex-col">
+      <Searchbar />
       <div className="relative max-w-7xl mx-auto flex-1">
+        
         {loading ? (
           <div>Loading...</div>
         ) : retrieveError ? (

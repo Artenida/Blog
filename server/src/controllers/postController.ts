@@ -197,7 +197,7 @@ export const getPaginatedPosts = async (
 
         results.result = allPosts.slice(startIndex, endIndex);
 
-        return res.json({ data: results });
+        return res.json(results);
       }
     }
 
