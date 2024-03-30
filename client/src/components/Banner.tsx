@@ -12,7 +12,7 @@ const Banner = () => {
                     who are passionate about sharing their stories and ideas.
                 </p>
             </div>
-            <Searchbar />
+            {/* <Searchbar /> */}
         </div>
     )
 }

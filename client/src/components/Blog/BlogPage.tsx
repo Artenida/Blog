@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import BlogCard from "./BlogCard";
 import { useAppDispatch } from "../../store/hooks";
-import { retrievePaginatedPosts } from "../../api/postThunk";
+import { filterPosts, retrievePaginatedPosts } from "../../api/postThunk";
 import { useSelector } from "react-redux";
 import { selectPost } from "../../store/posts/postSlice";
 import Searchbar from "../Searchbar";
@@ -35,11 +35,18 @@ interface PaginatedPosts {
 
 const BlogPage = () => {
   const dispatch = useAppDispatch();
-  const [currentBlogs, setCurrentBlogs] = useState<Paginated[]>([]);
   const { paginatedPost, loading, retrieveError } = useSelector(selectPost);
+  const [currentBlogs, setCurrentBlogs] = useState<Paginated[]>([]);
   const currentPageRef = useRef<number>(1);
   const [limit, setLimit] = useState<number>(9);
   const [pageCount, setPageCount] = useState(1);
+  const [keyword, setKeyword] = useState("New");
+  const { searchedPost, filterSearch } = useSelector(selectPost);
+  const [records, setRecords] = useState<Paginated[]>([]);
+
+  useEffect(() => {
+    dispatch(filterPosts({ keyword: keyword }));
+  }, [dispatch, keyword]);
 
   useEffect(() => {
     getPaginatedPosts();
@@ -48,6 +55,7 @@ const BlogPage = () => {
   useEffect(() => {
     if (paginatedPost?.result) {
       setCurrentBlogs(paginatedPost.result);
+      setRecords(paginatedPost.result);
     }
   }, [paginatedPost]);
 
@@ -63,9 +71,20 @@ const BlogPage = () => {
     setPageCount(paginatedPost?.pageCount ?? 1);
   };
 
+  const filter = (searchValue: string) => {
+    setKeyword(searchValue);
+    if (!paginatedPost?.result) return;
+  
+    const filteredPosts = currentBlogs.filter(post =>
+      post.title.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setRecords(filteredPosts);
+  };
+
   return (
     <div className="flex flex-col">
-      <Searchbar />
+      <Searchbar onChange={filter} />
+
       <div className="relative max-w-7xl mx-auto flex-1">
         {loading ? (
           <div>Loading...</div>
@@ -73,7 +92,7 @@ const BlogPage = () => {
           <div>Error: {retrieveError}</div>
         ) : (
           <>
-            <BlogCard posts={currentBlogs} />
+            <BlogCard posts={records} />
           </>
         )}
 
