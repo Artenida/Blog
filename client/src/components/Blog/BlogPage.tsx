@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BlogCard from "./BlogCard";
 // import Pagination from "../../components/pagination/PaginationButtons";
 import { useAppDispatch } from "../../store/hooks";
@@ -38,9 +38,13 @@ const BlogPage = () => {
   const dispatch = useAppDispatch();
   const [currentBlogs, setCurrentBlogs] = useState<Paginated[]>([]);
   const { paginatedPost, loading, retrieveError } = useSelector(selectPost);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const currentPageRef = useRef<number>(1); 
   const [limit, setLimit] = useState<number>(9);
   const [pageCount, setPageCount] = useState(1);
+
+  useEffect(() => {
+    getPaginatedPosts();
+  }, [dispatch]);
 
   useEffect(() => {
     if (paginatedPost?.result) {
@@ -49,17 +53,12 @@ const BlogPage = () => {
   }, [paginatedPost]);  
 
   const handlePageClick = (selectedItem: { selected: number }) => {
-    setCurrentPage(selectedItem.selected + 1);
+    currentPageRef.current = selectedItem.selected + 1;
+    getPaginatedPosts();
   };
-
-  useEffect(() => {
-    if (currentPage !== 0) {
-      getPaginatedPosts();
-    }
-  }, [currentPage, dispatch]);
-    
+  
   const getPaginatedPosts = () => {
-    dispatch(retrievePaginatedPosts({ currentPage, limit }));
+    dispatch(retrievePaginatedPosts({ currentPage: currentPageRef.current, limit })); 
     setPageCount(paginatedPost?.pageCount ?? 1);
   }
 
