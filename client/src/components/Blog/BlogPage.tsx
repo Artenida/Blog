@@ -73,10 +73,13 @@ const BlogPage = () => {
 
   const filter = (searchValue: string) => {
     setKeyword(searchValue);
-    if (!paginatedPost?.result) return;
+    if (!currentBlogs) return;
   
     const filteredPosts = currentBlogs.filter(post =>
-      post.title.toLowerCase().includes(searchValue.toLowerCase())
+      post.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+      post.description.toLowerCase().includes(searchValue.toLowerCase()) ||
+      post.username.toLowerCase().includes(searchValue.toLowerCase()) ||
+      post.tags[0]?.name.toLowerCase().includes(searchValue.toLowerCase())
     );
     setRecords(filteredPosts);
   };
