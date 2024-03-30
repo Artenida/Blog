@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import BlogCard from "./BlogCard";
 // import Pagination from "../../components/pagination/PaginationButtons";
 import { useAppDispatch } from "../../store/hooks";
-import { filterPosts, retrieveAllPosts, retrievePaginatedPosts } from "../../api/postThunk";
+import { retrievePaginatedPosts } from "../../api/postThunk";
 import { useSelector } from "react-redux";
 import ReactPaginate from "react-paginate";
 import { selectPost } from "../../store/posts/postSlice";
@@ -43,10 +43,6 @@ const BlogPage = () => {
   const [pageCount, setPageCount] = useState(1);
 
   useEffect(() => {
-    getPaginatedPosts();
-  }, [dispatch]);
-
-  useEffect(() => {
     if (paginatedPost?.result) {
       setCurrentBlogs(paginatedPost.result);
     }
@@ -54,9 +50,14 @@ const BlogPage = () => {
 
   const handlePageClick = (selectedItem: { selected: number }) => {
     setCurrentPage(selectedItem.selected + 1);
-    getPaginatedPosts();
   };
-  
+
+  useEffect(() => {
+    if (currentPage !== 0) {
+      getPaginatedPosts();
+    }
+  }, [currentPage, dispatch]);
+    
   const getPaginatedPosts = () => {
     dispatch(retrievePaginatedPosts({ currentPage, limit }));
     setPageCount(paginatedPost?.pageCount ?? 1);
@@ -84,6 +85,7 @@ const BlogPage = () => {
         pageCount={pageCount}
         previousLabel="< previous"
         renderOnZeroPageCount={null}
+        marginPagesDisplayed={2}
         />
       </div>
     </div>
