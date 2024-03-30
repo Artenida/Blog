@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import BlogCard from "./BlogCard";
 import { useAppDispatch } from "../../store/hooks";
-import { filterPosts, retrievePaginatedPosts } from "../../api/postThunk";
+import {
+  filterPosts,
+  retrieveAllPosts,
+  retrievePaginatedPosts,
+} from "../../api/postThunk";
 import { useSelector } from "react-redux";
 import { selectPost } from "../../store/posts/postSlice";
 import Searchbar from "../Searchbar";
@@ -36,11 +40,12 @@ const BlogPage = () => {
   const [limit, setLimit] = useState<number>(9);
   const [pageCount, setPageCount] = useState(1);
   const [keyword, setKeyword] = useState("New");
+  const [searching, setSearching] = useState(false);
 
   useEffect(() => {
     dispatch(filterPosts({ keyword: keyword }));
   }, [dispatch, keyword]);
-  
+
   useEffect(() => {
     getPaginatedPosts();
   }, [dispatch]);
@@ -50,6 +55,10 @@ const BlogPage = () => {
       setCurrentBlogs(paginatedPost.result);
     }
   }, [paginatedPost]);
+
+  useEffect(() => {
+    dispatch(retrieveAllPosts());
+  }, [dispatch]);
 
   useEffect(() => {
     if (currentPost) {
@@ -71,18 +80,22 @@ const BlogPage = () => {
 
   const filter = (searchValue: string) => {
     setKeyword(searchValue);
-  
+    setSearching(searchValue.trim().length > 0);
+
     if (!allPosts) return;
 
-    const filteredPosts = allPosts.filter(post =>
-      post.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-      post.description.toLowerCase().includes(searchValue.toLowerCase()) ||
-      post.username.toLowerCase().includes(searchValue.toLowerCase()) ||
-      post.tags.some(tag => tag.name.toLowerCase().includes(searchValue.toLowerCase()))
+    const filteredPosts = allPosts.filter(
+      (post) =>
+        post.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+        post.description.toLowerCase().includes(searchValue.toLowerCase()) ||
+        post.username.toLowerCase().includes(searchValue.toLowerCase()) ||
+        post.tags.some((tag) =>
+          tag.name.toLowerCase().includes(searchValue.toLowerCase())
+        )
     );
     setCurrentBlogs(filteredPosts);
   };
-  
+
   return (
     <div className="flex flex-col">
       <Searchbar onChange={filter} />
@@ -98,10 +111,12 @@ const BlogPage = () => {
           </>
         )}
 
-        <PaginationButtons
-          pageCount={pageCount}
-          onPageChange={handlePageClick}
-        />
+        {!searching && (
+          <PaginationButtons
+            pageCount={pageCount}
+            onPageChange={handlePageClick}
+          />
+        )}
       </div>
     </div>
   );
