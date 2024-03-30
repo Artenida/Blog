@@ -25,29 +25,22 @@ interface Paginated {
   description: string;
   createdAt: Date;
 }
-interface PaginatedPosts {
-  next?: { pageAsNumber: number };
-  prev?: { pageAsNumber: number };
-  result: Paginated[];
-  totalUser?: number;
-  pageCount?: number;
-}
 
 const BlogPage = () => {
   const dispatch = useAppDispatch();
   const { paginatedPost, loading, retrieveError } = useSelector(selectPost);
+  const { currentPost } = useSelector(selectPost);
   const [currentBlogs, setCurrentBlogs] = useState<Paginated[]>([]);
+  const [allPosts, setAllPosts] = useState<Paginated[]>([]);
   const currentPageRef = useRef<number>(1);
   const [limit, setLimit] = useState<number>(9);
   const [pageCount, setPageCount] = useState(1);
   const [keyword, setKeyword] = useState("New");
-  const { searchedPost, filterSearch } = useSelector(selectPost);
-  const [records, setRecords] = useState<Paginated[]>([]);
 
   useEffect(() => {
     dispatch(filterPosts({ keyword: keyword }));
   }, [dispatch, keyword]);
-
+  
   useEffect(() => {
     getPaginatedPosts();
   }, [dispatch]);
@@ -55,9 +48,14 @@ const BlogPage = () => {
   useEffect(() => {
     if (paginatedPost?.result) {
       setCurrentBlogs(paginatedPost.result);
-      setRecords(paginatedPost.result);
     }
   }, [paginatedPost]);
+
+  useEffect(() => {
+    if (currentPost) {
+      setAllPosts(currentPost);
+    }
+  }, [currentPost]);
 
   const handlePageClick = (selectedItem: { selected: number }) => {
     currentPageRef.current = selectedItem.selected + 1;
@@ -73,17 +71,18 @@ const BlogPage = () => {
 
   const filter = (searchValue: string) => {
     setKeyword(searchValue);
-    if (!currentBlogs) return;
   
-    const filteredPosts = currentBlogs.filter(post =>
+    if (!allPosts) return;
+
+    const filteredPosts = allPosts.filter(post =>
       post.title.toLowerCase().includes(searchValue.toLowerCase()) ||
       post.description.toLowerCase().includes(searchValue.toLowerCase()) ||
       post.username.toLowerCase().includes(searchValue.toLowerCase()) ||
-      post.tags[0]?.name.toLowerCase().includes(searchValue.toLowerCase())
+      post.tags.some(tag => tag.name.toLowerCase().includes(searchValue.toLowerCase()))
     );
-    setRecords(filteredPosts);
+    setCurrentBlogs(filteredPosts);
   };
-
+  
   return (
     <div className="flex flex-col">
       <Searchbar onChange={filter} />
@@ -95,7 +94,7 @@ const BlogPage = () => {
           <div>Error: {retrieveError}</div>
         ) : (
           <>
-            <BlogCard posts={records} />
+            <BlogCard posts={currentBlogs} />
           </>
         )}
 
