@@ -6,6 +6,8 @@ import { selectUser } from "../../store/user/userSlice";
 import { useAppDispatch } from "../../store/hooks";
 import { Dialog } from "../../components/Dialog";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../components/Loading";
+import Error from "../../components/Error";
 
 interface BlogPost {
   id: string;
@@ -59,11 +61,13 @@ const MyPosts = () => {
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
-  if (deleteError) {
-    return <div>Error: {deleteError}</div>;
+  if(deleteError){
+    return (
+      <Error />
+    )
   }
 
   return (

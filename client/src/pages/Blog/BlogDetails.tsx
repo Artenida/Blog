@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import { selectPost } from "../../store/posts/postSlice";
 import { useEffect, useState } from "react";
 import { getSinglePost } from "../../api/postThunk";
+import Error from "../../components/Error";
+import Loading from "../../components/Loading";
 
 const BlogPathComponents = [
   { id: 1, name: "Home", link: "/" },
@@ -14,9 +16,8 @@ const BlogPathComponents = [
 
 const BlogDetails = () => {
   const dispatch = useAppDispatch();
-  const { postDetails } = useSelector(selectPost);
+  const { postDetails, retrieveError, loading } = useSelector(selectPost);
   const { postId } = useParams();
-  console.log(postDetails);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {
@@ -27,6 +28,16 @@ const BlogDetails = () => {
     setSelectedImageIndex(index);
   };
 
+  if(loading) {
+    <Loading/>
+  }
+
+  if(retrieveError){
+    return (
+      <Error />
+    )
+  }
+
   return (
     <div>
       {postDetails && (
@@ -34,9 +45,9 @@ const BlogDetails = () => {
           <article className="flex-1">
             <BlogPathComponent data={BlogPathComponents} />
             <div>
-              {postDetails[0].images &&
+              {postDetails[0]?.images &&
                 Array.isArray(postDetails[0].images) &&
-                postDetails[0].images.map((image: any, index: number) => (
+                postDetails[0]?.images.map((image: any, index: number) => (
                   <img
                     key={index}
                     className={`rounded-xl cursor-pointer mx-2 max-h-full`}
@@ -50,15 +61,15 @@ const BlogDetails = () => {
                 ))}
 
               <div className="flex mt-4">
-                {postDetails[0].tags.map((tag: any) => (
+                {postDetails[0]?.tags.map((tag: any) => (
                   <h3 key={tag.id} className="mr-2">
                     #{tag.name}
                   </h3>
                 ))}
               </div>
               <Author
-                authorName={postDetails[0].username}
-                profile_picture={postDetails[0].profile_picture}
+                authorName={postDetails[0]?.username}
+                profile_picture={postDetails[0]?.profile_picture}
                 createdAt={postDetails[0]?.createdAt}
               />
               <h1 className="text-xl font-medium font-roboto mt-4 text-custom-color3">
