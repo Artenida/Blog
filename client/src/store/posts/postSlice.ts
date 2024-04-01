@@ -14,36 +14,6 @@ import {
   updatePost,
 } from "../../api/postThunk";
 
-interface Post {
-  postId: string;
-  title: string;
-  description: string;
-  createdAt: Date;
-  tags: Tag[];
-  images: string[];
-}
-
-interface Tag {
-  tagId: string;
-  name: string;
-}
-
-interface User {
-  userId: string;
-  username: string;
-  profile_picture: string;
-}
-
-interface BlogType {
-  user: User;
-  posts: Post[];
-}
-interface BlogPost {
-  id: string;
-  title: string;
-  description: string;
-  createdAt: Date;
-}
 interface Image {
   url: string;
 }
@@ -51,6 +21,26 @@ interface Tag {
   id: number;
   name: string;
 }
+interface PostDetails {
+  user_id: string;
+  username: string;
+  profile_picture: string;
+  post_id: string;
+  title: string;
+  description: string;
+  createdAt: Date;
+  images: string[];
+  tags: Tag[];
+  tag_Id: string;
+}
+
+interface BlogPost {
+  id: string;
+  title: string;
+  description: string;
+  createdAt: Date;
+}
+
 interface Paginated {
   id: string;
   images: Image[];
@@ -85,9 +75,9 @@ interface PostState {
   updateError: string | null;
   deleteSuccessful: string | null;
   isUpdated: boolean;
-  post: BlogType;
   myPost: BlogPost;
   postNr: number | null;
+  postDetails: PostDetails[] | null;
 }
 
 const initialState: PostState = {
@@ -113,23 +103,7 @@ const initialState: PostState = {
     description: "",
     createdAt: new Date(),
   },
-  post: {
-    user: {
-      userId: "",
-      username: "",
-      profile_picture: "",
-    },
-    posts: [
-      {
-        postId: "",
-        title: "",
-        description: "",
-        createdAt: new Date(),
-        tags: [],
-        images: [],
-      },
-    ],
-  },
+  postDetails: [],
 };
 
 const postSlice = createSlice({
@@ -153,15 +127,15 @@ const postSlice = createSlice({
         state.retrieveError = action.payload as string;
       })
 
-      .addCase(getSinglePost.fulfilled, (state: PostState, action: any) => {
+      .addCase(getSinglePost.fulfilled, (state, action) => {
         state.retrieveError = null;
         state.loading = false;
-        state.post = action.payload.data;
+        state.postDetails = action.payload.data;
       })
-      .addCase(getSinglePost.rejected, (state: PostState, action: any) => {
+      .addCase(getSinglePost.rejected, (state, action) => {
         state.retrieveError = action.payload as string;
         state.loading = false;
-        state.post = initialState.post;
+        state.postDetails = initialState.postDetails;
       })
 
       .addCase(getMyPosts.pending, (state) => {

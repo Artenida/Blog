@@ -26,23 +26,24 @@ class Post {
 
     try {
       const query = `
-      SELECT 
-      p.id,
-      p.title,
-      p.description,
-      p.createdAt,
-      p.user_id,
-      u.username, 
-      u.profile_picture,
-      GROUP_CONCAT(DISTINCT t.name) AS tags,
-      GROUP_CONCAT(DISTINCT i.image) AS images
-  FROM posts p 
-  LEFT JOIN users u ON p.user_id = u.id
-  LEFT JOIN post_tags pt ON p.id = pt.post_id
-  LEFT JOIN tags t ON pt.tag_id = t.id
-  LEFT JOIN images i ON p.id = i.post_id
-  GROUP BY p.id;
-  `;
+            SELECT 
+                p.id,
+                p.title,
+                p.description,
+                p.createdAt,
+                p.user_id,
+                u.username, 
+                u.profile_picture,
+                GROUP_CONCAT(DISTINCT pt.tag_id) AS tag_Id,
+                GROUP_CONCAT(DISTINCT t.name) AS tags,
+                GROUP_CONCAT(DISTINCT i.image) AS images
+            FROM posts p 
+            LEFT JOIN users u ON p.user_id = u.id
+            LEFT JOIN post_tags pt ON p.id = pt.post_id
+            LEFT JOIN tags t ON pt.tag_id = t.id
+            LEFT JOIN images i ON p.id = i.post_id
+            GROUP BY p.id;
+        `;
 
       const data = await new Promise<PostInterface[]>((resolve, reject) => {
         db.query(query, (error, result) => {
@@ -50,19 +51,25 @@ class Post {
           if (error) {
             reject(error);
           } else {
-            const postsWithImagesAndTags = result.map((post: any) => ({
-              ...post,
-              tags: post.tags
-                ? post.tags
-                    .split(",")
-                    .map((tagName: string) => ({ id: "", name: tagName }))
-                : [],
-              images: post.images
-                ? post.images
-                    .split(",")
-                    .map((image: string) => ({ url: image.trim() }))
-                : [],
-            }));
+            const postsWithImagesAndTags = result.map((post: any) => {
+              const tagIds = post.tag_Id ? post.tag_Id.split(",") : [];
+              const tagNames = post.tags ? post.tags.split(",") : [];
+
+              const tags = tagIds.map((tagId: string, index: number) => ({
+                id: tagId,
+                name: tagNames[index].trim(),
+              }));
+
+              return {
+                ...post,
+                tags: tags,
+                images: post.images
+                  ? post.images
+                      .split(",")
+                      .map((image: string) => ({ url: image.trim() }))
+                  : [],
+              };
+            });
             resolve(postsWithImagesAndTags);
           }
         });
@@ -81,22 +88,23 @@ class Post {
 
     const query = `
     SELECT 
-    u.id AS user_id,
-    u.username,
-    u.profile_picture,
-    p.id AS post_id,
-    p.title,
-    p.description,
-    p.createdAt AS post_createdAt,
-    GROUP_CONCAT(DISTINCT i.image) AS images,
-    GROUP_CONCAT(DISTINCT t.name) AS tags
-FROM posts p 
-LEFT JOIN users u ON p.user_id = u.id 
-LEFT JOIN post_tags pt ON p.id = pt.post_id 
-LEFT JOIN tags t ON pt.tag_id = t.id
-LEFT JOIN images i ON p.id = i.post_id
-WHERE p.id = ?
-GROUP BY p.id, u.id, u.username, u.profile_picture, p.title, p.description, p.createdAt;
+        u.id AS user_id,
+        u.username,
+        u.profile_picture,
+        p.id AS post_id,
+        p.title,
+        p.description,
+        p.createdAt AS post_createdAt,
+        GROUP_CONCAT(DISTINCT i.image) AS images,
+        GROUP_CONCAT(DISTINCT t.name) AS tags,
+        GROUP_CONCAT(DISTINCT pt.tag_id) AS tag_Id
+    FROM posts p 
+    LEFT JOIN users u ON p.user_id = u.id 
+    LEFT JOIN post_tags pt ON p.id = pt.post_id 
+    LEFT JOIN tags t ON pt.tag_id = t.id
+    LEFT JOIN images i ON p.id = i.post_id
+    WHERE p.id = ?
+    GROUP BY p.id, u.id, u.username, u.profile_picture, p.title, p.description, p.createdAt;
 `;
 
     return new Promise((resolve, reject) => {
@@ -109,70 +117,30 @@ GROUP BY p.id, u.id, u.username, u.profile_picture, p.title, p.description, p.cr
             reject(new Error("Post does not exist"));
             connection.closeConnection();
           } else {
-            const structuredResult = Post.structurePostResult(result);
-            resolve(structuredResult);
-            connection.closeConnection();
+            const postsWithImagesAndTags = result.map((post: any) => {
+              const tagIds = post.tag_Id ? post.tag_Id.split(",") : [];
+              const tagNames = post.tags ? post.tags.split(",") : [];
+
+              const tags = tagIds.map((tagId: string, index: number) => ({
+                id: tagId,
+                name: tagNames[index].trim(),
+              }));
+
+              return {
+                ...post,
+                tags: tags,
+                images: post.images
+                  ? post.images
+                      .split(",")
+                      .map((image: string) => ({ url: image.trim() }))
+                  : [],
+              };
+            });
+            resolve(postsWithImagesAndTags);
           }
         }
       });
     });
-  }
-
-  static structurePostResult(result: any[]) {
-    const structuredData: any = {
-      user: {},
-      posts: [],
-    };
-
-    result.forEach((row, index) => {
-      if (index === 0) {
-        structuredData.user = {
-          user_id: row.user_id,
-          username: row.username,
-          profile_picture: row.profile_picture,
-        };
-      }
-
-      const existingPostIndex = structuredData.posts.findIndex(
-        (post: PostInterface) => post.post_id === row.post_id
-      );
-
-      if (existingPostIndex === -1) {
-        structuredData.posts.push({
-          post_id: row.post_id,
-          title: row.title,
-          description: row.description,
-          post_createdAt: row.post_createdAt,
-          tags: row.tags
-            ? row.tags
-                .split(",")
-                .map((tagName: string) => ({ id: "", name: tagName.trim() }))
-            : [],
-          images: row.images
-            ? row.images
-                .split(",")
-                .map((image: string) => ({ url: image.trim() }))
-            : [],
-        });
-      } else {
-        if (row.tags) {
-          structuredData.posts[existingPostIndex].tags.push(
-            ...row.tags
-              .split(",")
-              .map((tagName: string) => ({ id: "", name: tagName.trim() }))
-          );
-        }
-        if (row.images) {
-          structuredData.posts[existingPostIndex].images.push(
-            ...row.images
-              .split(",")
-              .map((image: string) => ({ url: image.trim() }))
-          );
-        }
-      }
-    });
-
-    return structuredData;
   }
 
   static async createPost(inputs: PostInputs): Promise<any> {

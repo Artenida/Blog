@@ -14,9 +14,9 @@ const BlogPathComponents = [
 
 const BlogDetails = () => {
   const dispatch = useAppDispatch();
-  const { post } = useSelector(selectPost);
+  const { postDetails } = useSelector(selectPost);
   const { postId } = useParams();
-  const currentPost = post && post?.posts[0] ? post.posts[0] : null;
+  console.log(postDetails);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {
@@ -29,14 +29,14 @@ const BlogDetails = () => {
 
   return (
     <div>
-      {currentPost && (
+      {postDetails && (
         <div className="container mx-auto max-w-5xl flex flex-col px-5 py-5">
           <article className="flex-1">
             <BlogPathComponent data={BlogPathComponents} />
             <div>
-              {currentPost?.images &&
-                Array.isArray(currentPost.images) &&
-                currentPost.images.map((image: any, index: number) => (
+              {postDetails[0].images &&
+                Array.isArray(postDetails[0].images) &&
+                postDetails[0].images.map((image: any, index: number) => (
                   <img
                     key={index}
                     className={`rounded-xl cursor-pointer mx-2 max-h-full`}
@@ -50,22 +50,22 @@ const BlogDetails = () => {
                 ))}
 
               <div className="flex mt-4">
-                {currentPost.tags.map((tag: any, index: number) => (
-                  <h3 key={index} className="mr-2">
+                {postDetails[0].tags.map((tag: any) => (
+                  <h3 key={tag.id} className="mr-2">
                     #{tag.name}
                   </h3>
                 ))}
               </div>
               <Author
-                authorName={post.user.username}
-                profile_picture={post.user.profile_picture}
-                createdAt={currentPost.createdAt}
+                authorName={postDetails[0].username}
+                profile_picture={postDetails[0].profile_picture}
+                createdAt={postDetails[0]?.createdAt}
               />
               <h1 className="text-xl font-medium font-roboto mt-4 text-custom-color3">
-                {currentPost.title}
+                {postDetails[0]?.title}
               </h1>
               <div className="mt-4 text-custom-color3">
-                <p>{currentPost.description}</p>
+                <p>{postDetails[0]?.description}</p>
               </div>
             </div>
           </article>
