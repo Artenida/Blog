@@ -8,6 +8,7 @@ import { Dialog } from "../../components/Dialog";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../components/Loading";
 import Error from "../../components/Error";
+import EmptyPage from "../../components/EmptyPage";
 
 interface BlogPost {
   id: string;
@@ -19,8 +20,7 @@ interface BlogPost {
 const MyPosts = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { myPost, loading, deleteError, deleteSuccessful } =
-    useSelector(selectPost);
+  const { myPost, loading, deleteError } = useSelector(selectPost);
   const { currentUser, token } = useSelector(selectUser);
   const userId = currentUser?.user?.id;
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -46,7 +46,7 @@ const MyPosts = () => {
     if (selectedPostId) {
       dispatch(deletePost(selectedPostId)).then(() => {
         setIsDeleteDialogOpen(false);
-        dispatch(getMyPosts({ userId: userId, token: token }))
+        dispatch(getMyPosts({ userId: userId, token: token }));
       });
     }
   };
@@ -55,19 +55,21 @@ const MyPosts = () => {
     dispatch(getSinglePost(postId));
     navigate(`/blog/${postId}`);
   };
-  
+
   const handleEditClick = (postId: string) => {
-    navigate(`/updatePost/${postId}`)
-  }
+    navigate(`/updatePost/${postId}`);
+  };
 
   if (loading) {
     return <Loading />;
   }
 
-  if(deleteError){
-    return (
-      <Error />
-    )
+  if (deleteError) {
+    return <Error />;
+  }
+
+  if (postsArray.length === 0) {
+    return <EmptyPage />;
   }
 
   return (
@@ -90,9 +92,10 @@ const MyPosts = () => {
             </p>
           </div>
           <div className="flex gap-2">
-            <button 
-            onClick={() => handleEditClick(post.id)}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+            <button
+              onClick={() => handleEditClick(post.id)}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            >
               Edit
             </button>
             <button
