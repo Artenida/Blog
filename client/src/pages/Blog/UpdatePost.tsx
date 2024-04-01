@@ -24,7 +24,7 @@ const UpdatePost = () => {
   const { updateError } = useSelector(selectPost);
   const { postId } = useParams();
   const { errors, hasError, validateForm, displayErrors } = useValidateUpdate();
-  const { post } = useSelector(selectPost);
+  const { postDetails } = useSelector(selectPost);
   const [postSuccess, setPostSuccess] = useState(false);
   const [isFormChanged, setIsFormChanged] = useState(false);
   const [message, setMessage] = useState(false);
@@ -42,8 +42,8 @@ const UpdatePost = () => {
   }, [dispatch, postId, tags]);
 
   useEffect(() => {
-    if (post && post.posts.length > 0) {
-      const postData = post.posts[0];
+    if (postDetails && postDetails.length > 0) {
+      const postData = postDetails[0];
       setData({
         postId: postId ?? "",
         title: postData.title,
@@ -51,7 +51,7 @@ const UpdatePost = () => {
         tags: postData.tags.map((tag: any) => tag?.id.toString()),
       });
     }
-  }, [post, postId]);
+  }, [postDetails, postId]);
 
   const handlePostSuccessClose = () => {
     setPostSuccess(false);
