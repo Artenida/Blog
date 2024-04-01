@@ -51,25 +51,7 @@ class Post {
           if (error) {
             reject(error);
           } else {
-            const postsWithImagesAndTags = result.map((post: any) => {
-              const tagIds = post.tag_Id ? post.tag_Id.split(",") : [];
-              const tagNames = post.tags ? post.tags.split(",") : [];
-
-              const tags = tagIds.map((tagId: string, index: number) => ({
-                id: tagId,
-                name: tagNames[index].trim(),
-              }));
-
-              return {
-                ...post,
-                tags: tags,
-                images: post.images
-                  ? post.images
-                      .split(",")
-                      .map((image: string) => ({ url: image.trim() }))
-                  : [],
-              };
-            });
+            const postsWithImagesAndTags = this.structurePostResult(result);
             resolve(postsWithImagesAndTags);
           }
         });
@@ -117,29 +99,33 @@ class Post {
             reject(new Error("Post does not exist"));
             connection.closeConnection();
           } else {
-            const postsWithImagesAndTags = result.map((post: any) => {
-              const tagIds = post.tag_Id ? post.tag_Id.split(",") : [];
-              const tagNames = post.tags ? post.tags.split(",") : [];
-
-              const tags = tagIds.map((tagId: string, index: number) => ({
-                id: tagId,
-                name: tagNames[index].trim(),
-              }));
-
-              return {
-                ...post,
-                tags: tags,
-                images: post.images
-                  ? post.images
-                      .split(",")
-                      .map((image: string) => ({ url: image.trim() }))
-                  : [],
-              };
-            });
+            const postsWithImagesAndTags = this.structurePostResult(result);
             resolve(postsWithImagesAndTags);
           }
         }
       });
+    });
+  }
+
+  static structurePostResult(result: any[]) {
+    return result.map((post: any) => {
+      const tagIds = post.tag_Id ? post.tag_Id.split(",") : [];
+      const tagNames = post.tags ? post.tags.split(",") : [];
+
+      const tags = tagIds.map((tagId: string, index: number) => ({
+        id: tagId,
+        name: tagNames[index].trim(),
+      }));
+
+      return {
+        ...post,
+        tags: tags,
+        images: post.images
+          ? post.images
+              .split(",")
+              .map((image: string) => ({ url: image.trim() }))
+          : [],
+      };
     });
   }
 
