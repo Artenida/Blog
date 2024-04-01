@@ -63,7 +63,7 @@ const UpdatePost = () => {
     if (hasError) {
       return;
     }
-    if(isFormChanged) {
+    if (isFormChanged) {
       setMessage(false);
       dispatch(updatePost(data)).then(() => setPostSuccess(true));
     } else {
@@ -109,6 +109,7 @@ const UpdatePost = () => {
                       id={`tag-${tag.id}`}
                       className="mr-2"
                       onChange={() => handleTagChange(String(tag.id))}
+                      checked={data.tags.includes(String(tag.id))}
                     />
                     <label htmlFor={`tag-${tag.id}`}>{tag.name}</label>
                   </li>
@@ -156,7 +157,7 @@ const UpdatePost = () => {
             >
               {errors.description}
             </span>
-           
+
             {postSuccess && (
               <Alert
                 onClose={handlePostSuccessClose}
@@ -165,7 +166,7 @@ const UpdatePost = () => {
                 Post is updated successfully
               </Alert>
             )}
-            {updateError  && (
+            {updateError && (
               <div className="mt-10">
                 <Alert className="bg-red-200 py-2 px-6 text-red-600">
                   {updateError}
@@ -173,7 +174,7 @@ const UpdatePost = () => {
               </div>
             )}
 
-              {message  && (
+            {message && (
               <div className="mt-10">
                 <Alert className="bg-red-200 py-2 px-6 text-red-600">
                   "You haven't made any changes to the post"
