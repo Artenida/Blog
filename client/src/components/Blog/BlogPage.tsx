@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { selectPost } from "../../store/posts/postSlice";
 import Searchbar from "../Searchbar";
 import PaginationButtons from "../../components/pagination/PaginationButtons";
+import Loading from "../Loading";
 
 interface Tag {
   id: number;
@@ -102,7 +103,7 @@ const BlogPage = () => {
 
       <div className="relative max-w-7xl mx-auto flex-1">
         {loading ? (
-          <div>Loading...</div>
+          <div><Loading /></div>
         ) : retrieveError ? (
           <div>Error: {retrieveError}</div>
         ) : (
