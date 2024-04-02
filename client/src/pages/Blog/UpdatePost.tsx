@@ -116,13 +116,13 @@ const UpdatePost = () => {
                 ))}
               </ul>
             )}
-            {/* <span
+            <span
               className={`text-sm text-red-600 pl-1 pt-1${
                 errors.tags ? "block" : "hidden"
               } mt-1`}
             >
               {errors.tags}
-            </span> */}
+            </span>
           </div>
 
           <div className="w-2/3 flex flex-col">

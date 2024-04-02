@@ -6,9 +6,11 @@ interface ButtonProps {
 }
 
 // Small Button Component
-const SmallButton: React.FC<ButtonProps> = ({ children }) => {
+const SmallButton: React.FC<ButtonProps> = ({ children, onClick }) => {
   return (
-    <button className="block w-full rounded bg-custom-color3 px-7 py-2 text-lg font-medium text-custom-color1 hover:bg-custom-color1 hover:text-custom-color3 hover:border-2 hover:border-custom-color3 active:bg-custom-color1 sm:w-auto">
+    <button className="block w-full rounded bg-custom-color3 px-7 py-2 text-lg font-medium text-custom-color1 hover:bg-custom-color1 hover:text-custom-color3 hover:border-2 hover:border-custom-color3 active:bg-custom-color1 sm:w-auto" 
+    onClick={onClick}
+    >
       {children}
     </button>
   );
