@@ -63,9 +63,11 @@ const CreatePost = () => {
 
   useEffect(() => {
     if (!hasError) {
+      const cleanedDescription = data.description.replace(/<[^>]+>/g, '');
+
       const formData = new FormData();
       formData.append("title", data.title);
-      formData.append("description", data.description);
+      formData.append("description", cleanedDescription);
       formData.append("user_id", userId || "");
       for (let tag of data.tags) {
         formData.append("tags", tag);
