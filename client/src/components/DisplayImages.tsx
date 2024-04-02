@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 interface PostDetails {
@@ -28,24 +28,29 @@ interface BlogCardProps {
 }
 
 const DisplayImages: React.FC<BlogCardProps> = ({ posts }) => {
-  const initialMainImage =
-    posts.length > 0 && posts[0].images.length > 0
-      ? posts[0].images[0].url
-      : undefined;
-  const [mainImage, setMainImage] = useState<string | undefined>(
-    initialMainImage
-  );
+  const [mainImage, setMainImage] = useState<string | undefined>(() => {
+    const post = posts.find((post) => post.images.length > 0);
+    return post ? post.images[0].url : undefined;
+  });
+    const initialMainImage =
+      posts.length > 0 && posts[0].images.length > 0
+        ? posts[0].images[0].url
+        : undefined;
 
   const handleClick = (image: string) => {
     setMainImage(image);
   };
 
+  useEffect(() => {
+    setMainImage(initialMainImage);
+  }, [posts]);
+
   return (
     <div className="flex justify-center flex-col gap-3 items-center">
-        <div>
+      <div>
         {mainImage && (
           <img
-            className="rounded-xl w-[500px] h-[500px]"
+            className="rounded-xl w-[700px] h-[500px]"
             src={`http://localhost:5000/${mainImage.replace(/\\/g, "/")}`}
             alt="Main Image"
           />
