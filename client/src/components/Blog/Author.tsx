@@ -4,7 +4,7 @@ import moment from "moment";
 interface AuthorProps {
   authorName: string;
   profile_picture: string | undefined;
-  createdAt: Date;
+  createdAt: Date; // Change the type to Date
 }
 
 const Author: React.FC<AuthorProps> = ({
@@ -12,8 +12,7 @@ const Author: React.FC<AuthorProps> = ({
   profile_picture,
   createdAt,
 }) => {
-  const formattedRelativeTime = moment(createdAt).fromNow();
-  // const formattedDate = moment(createdAt).format("MMMM Do YYYY");
+  const formattedDate = moment(createdAt).format("MMMM Do YYYY");
   const imagePath = profile_picture ? profile_picture.replace(/\\/g, "/") : "";
 
   return (
@@ -28,7 +27,7 @@ const Author: React.FC<AuthorProps> = ({
           <h4 className="font-bold italic text-custom-color3 text-sm">
             {authorName}
           </h4>
-          <h3 className="text-gray-500 text-sm">{formattedRelativeTime}</h3>
+          <h3 className="text-gray-500 text-sm">{formattedDate}</h3>
         </div>
       </div>
     </div>

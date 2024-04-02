@@ -77,7 +77,7 @@ interface PostState {
   isUpdated: boolean;
   myPost: BlogPost;
   postNr: number | null;
-  postDetails: PostDetails[] | null;
+  postDetails: PostDetails[];
 }
 
 const initialState: PostState = {

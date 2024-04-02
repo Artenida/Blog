@@ -7,7 +7,7 @@ interface PostInterface {
   post_id: string;
   title: string;
   description: string;
-  post_createdAt: Date;
+  createdAt: Date;
   tags: Tag[];
   images: [];
 }
@@ -76,7 +76,7 @@ class Post {
         p.id AS post_id,
         p.title,
         p.description,
-        p.createdAt AS post_createdAt,
+        p.createdAt AS createdAt,
         GROUP_CONCAT(DISTINCT i.image) AS images,
         GROUP_CONCAT(DISTINCT t.name) AS tags,
         GROUP_CONCAT(DISTINCT pt.tag_id) AS tag_Id
