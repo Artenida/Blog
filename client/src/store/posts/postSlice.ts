@@ -29,7 +29,7 @@ interface PostDetails {
   title: string;
   description: string;
   createdAt: Date;
-  images: string[];
+  images: Image[];
   tags: Tag[];
   tag_Id: string;
 }

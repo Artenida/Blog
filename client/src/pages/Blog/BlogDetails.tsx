@@ -4,10 +4,11 @@ import Author from "../../components/Blog/Author";
 import { useAppDispatch } from "../../store/hooks";
 import { useSelector } from "react-redux";
 import { selectPost } from "../../store/posts/postSlice";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getSinglePost } from "../../api/postThunk";
 import Error from "../../components/Error";
 import Loading from "../../components/Loading";
+import DisplayImages from "../../components/DisplayImages";
 
 const BlogPathComponents = [
   { id: 1, name: "Home", link: "/" },
@@ -18,24 +19,17 @@ const BlogDetails = () => {
   const dispatch = useAppDispatch();
   const { postDetails, retrieveError, loading } = useSelector(selectPost);
   const { postId } = useParams();
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {
     dispatch(getSinglePost(postId ?? ""));
   }, [dispatch, postId]);
 
-  const handleImageClick = (index: any) => {
-    setSelectedImageIndex(index);
-  };
-
-  if(loading) {
-    <Loading/>
+  if (loading) {
+    return <Loading />;
   }
 
-  if(retrieveError){
-    return (
-      <Error />
-    )
+  if (retrieveError) {
+    return <Error />;
   }
 
   return (
@@ -45,21 +39,8 @@ const BlogDetails = () => {
           <article className="flex-1">
             <BlogPathComponent data={BlogPathComponents} />
             <div>
-              {postDetails[0]?.images &&
-                Array.isArray(postDetails[0].images) &&
-                postDetails[0]?.images.map((image: any, index: number) => (
-                  <img
-                    key={index}
-                    className={`rounded-xl cursor-pointer mx-2 max-h-full`}
-                    src={`http://localhost:5000/${image.url.replace(
-                      /\\/g,
-                      "/"
-                    )}`}
-                    alt={`Image ${index + 1}`}
-                    onClick={() => handleImageClick(index)}
-                  />
-                ))}
-
+              <DisplayImages posts={postDetails} />
+             
               <div className="flex mt-4">
                 {postDetails[0]?.tags.map((tag: any) => (
                   <h3 key={tag.id} className="mr-2">
