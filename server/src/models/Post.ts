@@ -315,18 +315,36 @@ class Post {
   static async getUsersPost(userId: number) {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
-    const query = "SELECT * FROM posts WHERE user_id = ?";
+    const query = `SELECT 
+    u.id AS user_id,
+    u.username,
+    u.profile_picture,
+    p.id,
+    p.title,
+    p.description,
+    p.createdAt AS createdAt,
+    GROUP_CONCAT(DISTINCT i.image) AS images,
+    GROUP_CONCAT(DISTINCT t.name) AS tags,
+    GROUP_CONCAT(DISTINCT pt.tag_id) AS tag_Id
+FROM users u 
+INNER JOIN posts p ON u.id = p.user_id
+LEFT JOIN post_tags pt ON p.id = pt.post_id 
+LEFT JOIN tags t ON pt.tag_id = t.id
+LEFT JOIN images i ON p.id = i.post_id
+WHERE u.id = ?
+GROUP BY p.id, u.id, u.username, u.profile_picture, p.title, p.description, p.createdAt;
+`;
     const values = [userId];
 
     try {
       return new Promise((resolve, reject) => {
         db.query(query, values, (error, result) => {
           connection.closeConnection();
-
           if (error) {
             reject(error);
           } else {
-            resolve(result);
+            const postsWithImagesAndTags = this.structurePostResult(result);
+            resolve(postsWithImagesAndTags);
           }
         });
       });

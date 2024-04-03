@@ -75,7 +75,7 @@ interface PostState {
   updateError: string | null;
   deleteSuccessful: string | null;
   isUpdated: boolean;
-  myPost: BlogPost;
+  myPost: [];
   postNr: number | null;
   postDetails: PostDetails[];
 }
@@ -97,12 +97,7 @@ const initialState: PostState = {
   successfulUpdate: false,
   isUpdated: false,
   postNr: null,
-  myPost: {
-    id: "",
-    title: "",
-    description: "",
-    createdAt: new Date(),
-  },
+  myPost: [],
   postDetails: [],
 };
 

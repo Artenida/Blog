@@ -1,7 +1,14 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { MdReadMore } from "react-icons/md";
 import Author from "./Author";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { selectPost } from "../../store/posts/postSlice";
+import { deletePost, getMyPosts, getSinglePost } from "../../api/postThunk";
+import { selectUser } from "../../store/user/userSlice";
+import { useAppDispatch } from "../../store/hooks";
+import { Dialog } from "../../components/Dialog";
+import { useNavigate } from "react-router-dom";
 
 interface Tag {
   id: number;
@@ -39,6 +46,42 @@ interface BlogPost {
 }
 
 const BlogCard: React.FC<BlogCardProps> = ({ posts }) => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { myPost, loading, deleteError } = useSelector(selectPost);
+  const { currentUser, token } = useSelector(selectUser);
+  const userId = currentUser?.user?.id;
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+
+  const handleDeleteAccount = (postId: string) => {
+    setSelectedPostId(postId);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleCancelDelete = () => {
+    setSelectedPostId(null);
+    setIsDeleteDialogOpen(false);
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedPostId) {
+      dispatch(deletePost(selectedPostId)).then(() => {
+        setIsDeleteDialogOpen(false);
+        dispatch(getMyPosts({ userId: userId, token: token }));
+      });
+    }
+  };
+
+  const handlePostClick = (postId: string) => {
+    dispatch(getSinglePost(postId));
+    navigate(`/blog/${postId}`);
+  };
+
+  const handleEditClick = (postId: string) => {
+    navigate(`/updatePost/${postId}`);
+  };
+
   return (
     <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 w-full mt-12 gap-12">
       {posts &&
@@ -97,9 +140,29 @@ const BlogCard: React.FC<BlogCardProps> = ({ posts }) => {
                   </Link>
                 </div>
               </div>
+              <div className="flex gap-2">
+            <button
+              onClick={() => handleEditClick(post.id)}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => handleDeleteAccount(post.id)}
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+            >
+              Delete
+            </button>
+          </div>
             </div>
           </div>
         ))}
+         <Dialog
+        isOpen={isDeleteDialogOpen}
+        message="Are you sure you want to delete this post?"
+        onCancel={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 };

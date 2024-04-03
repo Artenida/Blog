@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import Loading from "../../components/Loading";
 import Error from "../../components/Error";
 import EmptyPage from "../../components/EmptyPage";
+import BlogCard from "../../components/Blog/BlogCard";
 
 interface BlogPost {
   id: string;
@@ -19,46 +20,15 @@ interface BlogPost {
 
 const MyPosts = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const { myPost, loading, deleteError } = useSelector(selectPost);
   const { currentUser, token } = useSelector(selectUser);
   const userId = currentUser?.user?.id;
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
-
+console.log(myPost)
   useEffect(() => {
     dispatch(getMyPosts({ userId: userId, token: token }));
   }, [dispatch, userId, token]);
 
   const postsArray: BlogPost[] = Object.values(myPost);
-
-  const handleDeleteAccount = (postId: string) => {
-    setSelectedPostId(postId);
-    setIsDeleteDialogOpen(true);
-  };
-
-  const handleCancelDelete = () => {
-    setSelectedPostId(null);
-    setIsDeleteDialogOpen(false);
-  };
-
-  const handleConfirmDelete = () => {
-    if (selectedPostId) {
-      dispatch(deletePost(selectedPostId)).then(() => {
-        setIsDeleteDialogOpen(false);
-        dispatch(getMyPosts({ userId: userId, token: token }));
-      });
-    }
-  };
-
-  const handlePostClick = (postId: string) => {
-    dispatch(getSinglePost(postId));
-    navigate(`/blog/${postId}`);
-  };
-
-  const handleEditClick = (postId: string) => {
-    navigate(`/updatePost/${postId}`);
-  };
 
   if (loading) {
     return <Loading />;
@@ -74,7 +44,7 @@ const MyPosts = () => {
 
   return (
     <div className="flex flex-col gap-4 p-8 px-[10%]">
-      {postsArray.map((post: BlogPost) => (
+      {/* {postsArray.map((post: BlogPost) => (
         <div
           key={post.id}
           className="bg-gray-100 p-4 rounded shadow-md flex justify-between items-start"
@@ -112,7 +82,8 @@ const MyPosts = () => {
         message="Are you sure you want to delete this post?"
         onCancel={handleCancelDelete}
         onConfirm={handleConfirmDelete}
-      />
+      /> */}
+      <BlogCard posts={myPost}/>
     </div>
   );
 };
