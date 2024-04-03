@@ -9,6 +9,7 @@ import { selectUser } from "../../store/user/userSlice";
 import { useAppDispatch } from "../../store/hooks";
 import { Dialog } from "../../components/Dialog";
 import { useNavigate } from "react-router-dom";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 interface Tag {
   id: number;
@@ -25,7 +26,7 @@ interface BlogCardProps {
 
 interface Paginated {
   id: string;
-  images: Image[]; 
+  images: Image[];
   title: string;
   tags: Tag[];
   username: string;
@@ -36,7 +37,7 @@ interface Paginated {
 
 interface BlogPost {
   id: string;
-  images: Image[]; 
+  images: Image[];
   title: string;
   tags: Tag[];
   username: string;
@@ -73,11 +74,6 @@ const BlogCard: React.FC<BlogCardProps> = ({ posts }) => {
     }
   };
 
-  const handlePostClick = (postId: string) => {
-    dispatch(getSinglePost(postId));
-    navigate(`/blog/${postId}`);
-  };
-
   const handleEditClick = (postId: string) => {
     navigate(`/updatePost/${postId}`);
   };
@@ -85,16 +81,19 @@ const BlogCard: React.FC<BlogCardProps> = ({ posts }) => {
   return (
     <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 w-full mt-12 gap-12">
       {posts &&
-         posts.map((post) => (
+        posts.map((post) => (
           <div
             key={post.id}
             className="shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] p-3 transform transition-transform hover:scale-105 bg-custom-color1 rounded-xl"
           >
             <div className="rounded-xl overflow-hidden">
-              {post.images && post.images.length > 0 && ( 
+              {post.images && post.images.length > 0 && (
                 <Link to={`/blog/${post.id}`}>
                   <img
-                    src={`http://localhost:5000/${post.images[0].url.replace(/\\/g, "/")}`}
+                    src={`http://localhost:5000/${post.images[0].url.replace(
+                      /\\/g,
+                      "/"
+                    )}`}
                     alt="blogPicture"
                     className="w-full object-cover object-center h-64"
                   />
@@ -140,24 +139,23 @@ const BlogCard: React.FC<BlogCardProps> = ({ posts }) => {
                   </Link>
                 </div>
               </div>
-              <div className="flex gap-2">
-            <button
-              onClick={() => handleEditClick(post.id)}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-            >
-              Edit
-            </button>
-            <button
-              onClick={() => handleDeleteAccount(post.id)}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-            >
-              Delete
-            </button>
-          </div>
+
+              {currentUser && post.username === currentUser.user?.username && (
+                <div className="flex justify-center gap-5">
+                  <FaEdit
+                    onClick={() => handleEditClick(post.id)}
+                    className="text-custom-color3 hover:text-custom-color2 cursor-pointer"
+                  />
+                  <FaTrash
+                    onClick={() => handleDeleteAccount(post.id)}
+                    className="text-red-500 hover:text-red-200 cursor-pointer"
+                  />
+                </div>
+              )}
             </div>
           </div>
         ))}
-         <Dialog
+      <Dialog
         isOpen={isDeleteDialogOpen}
         message="Are you sure you want to delete this post?"
         onCancel={handleCancelDelete}
