@@ -14,6 +14,7 @@ const AuthorsPage = () => {
   const dispatch = useAppDispatch();
   const [authors, setAuthors] = useState<Authors[]>([]);
   const { currentAuthor } = useSelector(selectPost);
+  
   useEffect(() => {
     dispatch(retrieveAllAuthors());
   }, [dispatch]);

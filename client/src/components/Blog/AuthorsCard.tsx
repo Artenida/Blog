@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 interface Author {
   id: string;
@@ -16,6 +17,7 @@ const AuthorsCard: React.FC<AuthorsProp> = ({ authors }) => {
     <div className="grid grid-cols-3 gap-6">
       {authors.length > 0 ? (
         authors.map((author) => (
+          <Link to={`/bloggers/${author.id}`}>
           <div
             key={author.id}
             className="border cursor-pointer border-gray-200 rounded-md p-2 hover:border-blue-500 hover:shadow-md transition duration-300 flex flex-col items-center mt-3"
@@ -38,6 +40,7 @@ const AuthorsCard: React.FC<AuthorsProp> = ({ authors }) => {
               <h6 className="text-sm mt-1">{author.bio}</h6>  {/* Use author.bio */}
             </div>
           </div>
+          </Link>
         ))
       ) : (
         <h2 className="text-xl font-semibold text-gray-800">
