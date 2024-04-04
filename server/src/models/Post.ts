@@ -593,6 +593,51 @@ GROUP BY p.id, u.id, u.username, u.profile_picture, p.title, p.description, p.cr
       throw error;
     }
   }
+
+  static async retrieveBlogsByUser(userId: string) {
+    const connection = createDatabaseConnection();
+    const db = connection.getConnection();
+
+    const query = `SELECT 
+    u.id AS user_id,
+    u.username,
+    u.profile_picture,
+    p.id AS post_id,
+    p.title,
+    p.description,
+    p.createdAt AS created_at,
+    GROUP_CONCAT(DISTINCT i.image) AS images,
+    GROUP_CONCAT(DISTINCT t.name) AS tags,
+    GROUP_CONCAT(DISTINCT pt.tag_id) AS tag_Id
+FROM 
+    posts p 
+    LEFT JOIN users u ON p.user_id = u.id 
+    LEFT JOIN post_tags pt ON p.id = pt.post_id 
+    LEFT JOIN tags t ON pt.tag_id = t.id
+    LEFT JOIN images i ON p.id = i.post_id
+WHERE 
+    u.id = ?  -- Filter posts by the selected user ID
+GROUP BY 
+    u.id, u.username, u.profile_picture, p.id, p.title, p.description, p.createdAt;`;
+    
+    try {
+      return new Promise((resolve, reject) => {
+        db.query(query, [userId], (error, result) => {
+          connection.closeConnection();
+          if (error) {
+            reject(error);
+          } else {
+            const postsWithImagesAndTags = this.structurePostResult(result);
+            resolve(postsWithImagesAndTags);
+          }
+        });
+      });
+    } catch (error) {
+      console.error("Error in getUsersPost", error);
+      connection.closeConnection();
+      throw error;
+    }
+  }
 }
 
 export default Post;
