@@ -10,8 +10,7 @@ import background from "../../assets/about1.avif";
 import FormInputs from "../../components/FormInputs";
 import { useAppDispatch } from "../../store/hooks";
 import { selectUser } from "../../store/user/userSlice";
-import { validateLoginForm } from "../../utils/validations"; // Import validateForm and FormErrors from errors.tsx
-
+import { validateLoginForm } from "../../utils/validations";
 interface FormData {
   username: string;
   password: string;

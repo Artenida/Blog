@@ -7,7 +7,8 @@ interface NavLinksProps {
 
 const NavLinks: React.FC<NavLinksProps> = ({ closeMobileMenu }) => {
   const active = "md:my-0 my-7 text-xl font-bold text-custom-color3";
-  const inActive = "md:my-0 my-7 text-xl text-custom-color3 hover:border-b hover:border-custom-color3";
+  const inActive =
+    "md:my-0 my-7 text-xl text-custom-color3 hover:border-b hover:border-custom-color3";
 
   return (
     <>

@@ -14,7 +14,10 @@ const Account = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const imagePath = user.length > 0 && user[0]?.profile_picture ? user[0].profile_picture.replace(/\\/g, "/") : '';
+  const imagePath =
+    user.length > 0 && user[0]?.profile_picture
+      ? user[0].profile_picture.replace(/\\/g, "/")
+      : "";
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);

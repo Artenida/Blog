@@ -1,18 +1,14 @@
-import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
-// Define types for the slide object
 interface Slide {
   title: string;
   subtitle: string;
   content: string;
   image: string;
 }
-
-// Define props interface
 interface MySwiperComponentProps {
   slides: Slide[];
 }
@@ -28,14 +24,12 @@ const MySwiperComponent = ({ slides }: MySwiperComponentProps) => {
     >
       {slides.map((slide, index) => (
         <SwiperSlide key={index}>
-          <div className="grid gap-4 md:grid-cols-2 md:items-center md:text-left
-                          bg-custom-color2 md:p-24 lg:p-24 mt-12">
+          <div
+            className="grid gap-4 md:grid-cols-2 md:items-center md:text-left
+                          bg-custom-color2 md:p-24 lg:p-24 mt-12"
+          >
             <div className="flex justify-center items-center p-4">
-              <img
-                src={slide.image}
-                alt=""
-                className="w-96 h-96 rounded-lg"
-              />
+              <img src={slide.image} alt="" className="w-96 h-96 rounded-lg" />
             </div>
             <div className="p-4">
               <h3 className="text-4xl font-medium mb-2">{slide.title}</h3>

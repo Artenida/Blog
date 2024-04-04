@@ -35,17 +35,6 @@ interface Paginated {
   createdAt: Date;
 }
 
-interface BlogPost {
-  id: string;
-  images: Image[];
-  title: string;
-  tags: Tag[];
-  username: string;
-  profile_picture: string | undefined;
-  description: string;
-  createdAt: Date;
-}
-
 const BlogCard: React.FC<BlogCardProps> = ({ posts }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();

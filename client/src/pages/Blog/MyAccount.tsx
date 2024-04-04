@@ -2,7 +2,7 @@ import Sidebar from "../../components/Sidebar";
 import { selectUser } from "../../store/user/userSlice";
 import { UpdateUserForm } from "../../components/UpdateUserForm";
 import { useEffect, useState } from "react";
-import { MediumButton, SmallButton } from "../../components/ButtonComponent";
+import { SmallButton } from "../../components/ButtonComponent";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { getUser, updateProfilePicture } from "../../api/userThunk";
 import profile from "../../assets/userProfile.jpg";

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { FaRegUserCircle } from "react-icons/fa";
 import { useAppSelector } from "../store/hooks";
 import { selectUser } from "../store/user/userSlice";
@@ -6,17 +5,20 @@ import { SideLinks } from "./SideLinks";
 
 const Sidebar = () => {
   const { currentUser, user } = useAppSelector(selectUser);
-  const imagePath = user.length > 0 && user[0]?.profile_picture ? user[0].profile_picture.replace(/\\/g, "/") : '';
+  const imagePath =
+    user.length > 0 && user[0]?.profile_picture
+      ? user[0].profile_picture.replace(/\\/g, "/")
+      : "";
 
   return (
     <div className="sm:max-h-screen md:h-[900px] md:w-96 flex flex-col md:flex-row ">
-      <div
-        className={`opacity-90 p-5 pt-8 duration-300 relative`}
-      >
+      <div className={`opacity-90 p-5 pt-8 duration-300 relative`}>
         <div className="inline-flex justify-center items-center gap-2">
           {user[0]?.profile_picture === null ? (
             <FaRegUserCircle
-              className={"text-custom-color3 text-4xl rounded cursor-pointer block float-left mr-2 duration-500"}
+              className={
+                "text-custom-color3 text-4xl rounded cursor-pointer block float-left mr-2 duration-500"
+              }
             />
           ) : (
             <img
@@ -36,9 +38,9 @@ const Sidebar = () => {
           </h1>
         </div>
 
-          <ul className="pt-2">
-            <SideLinks/>
-          </ul>
+        <ul className="pt-2">
+          <SideLinks />
+        </ul>
       </div>
     </div>
   );

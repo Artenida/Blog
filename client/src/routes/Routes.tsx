@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -23,8 +22,8 @@ const routes = [
   { path: "/signIn", element: <SignIn /> },
   { path: "/signUp", element: <SignUp /> },
   { path: "/blog", element: <Blog /> },
-  { path: "/authors", element: <AuthorsPage/> },
-  { path: "/blog/:postId", element: <BlogDetails/> },
+  { path: "/authors", element: <AuthorsPage /> },
+  { path: "/blog/:postId", element: <BlogDetails /> },
   { path: "*", element: <Home /> },
 ];
 

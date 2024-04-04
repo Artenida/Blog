@@ -1,19 +1,13 @@
 import Banner from "../../components/Banner";
 import BlogPage from "../../components/Blog/BlogPage";
-import { useState} from "react";
 
 const Blog = () => {
-    return (
-        <div>
-            {/* Banner */}
-            <Banner />
-            
-            {/* Blog Page */}
-            <div className="">
-            <BlogPage/>
-            </div>
-        </div>
-    )
-}
+  return (
+    <div>
+      <Banner />
+      <BlogPage />
+    </div>
+  );
+};
 
 export default Blog;

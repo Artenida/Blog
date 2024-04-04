@@ -32,10 +32,10 @@ const DisplayImages: React.FC<BlogCardProps> = ({ posts }) => {
     const post = posts.find((post) => post.images.length > 0);
     return post ? post.images[0].url : undefined;
   });
-    const initialMainImage =
-      posts.length > 0 && posts[0].images.length > 0
-        ? posts[0].images[0].url
-        : undefined;
+  const initialMainImage =
+    posts.length > 0 && posts[0].images.length > 0
+      ? posts[0].images[0].url
+      : undefined;
 
   const handleClick = (image: string) => {
     setMainImage(image);
@@ -62,10 +62,7 @@ const DisplayImages: React.FC<BlogCardProps> = ({ posts }) => {
             <div key={index} className="mt-5">
               <Link to={`/blog/${post.post_id}`} key={index}>
                 <img
-                  src={`http://localhost:5000/${image.url.replace(
-                    /\\/g,
-                    "/"
-                  )}`}
+                  src={`http://localhost:5000/${image.url.replace(/\\/g, "/")}`}
                   alt="blogPicture"
                   className="w-44 h-44 rounded-lg"
                   onClick={() => handleClick(image.url)}

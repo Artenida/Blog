@@ -6,7 +6,7 @@ import Logo from "./Logo";
 import NavLinks from "./Navlink";
 import Account from "./Account";
 import { useLocation } from "react-router-dom";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 import { SmallButton } from "./ButtonComponent";
 
 const Navbar = () => {

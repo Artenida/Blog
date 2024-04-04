@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "../../store/store";
 import { deleteUser, getUser, loginUser, updateProfilePicture, updateUser } from "../../api/userThunk";
 import { registerUser } from "../../api/userThunk";
@@ -100,7 +100,6 @@ const userSlice = createSlice({
       .addCase(updateProfilePicture.fulfilled, (state, action) => {
         state.isUpdated = true;
       })
-
       
       .addCase(getUser.fulfilled, (state, action) => {
         state.user = action.payload;

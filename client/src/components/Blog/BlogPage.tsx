@@ -103,7 +103,9 @@ const BlogPage = () => {
 
       <div className="relative max-w-7xl mx-auto flex-1">
         {loading ? (
-          <div><Loading /></div>
+          <div>
+            <Loading />
+          </div>
         ) : retrieveError ? (
           <div>Error: {retrieveError}</div>
         ) : (

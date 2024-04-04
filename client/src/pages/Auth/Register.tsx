@@ -18,7 +18,7 @@ interface FormData {
   username: string;
   email: string;
   password: string;
-  confirmPassword: string; // Add confirmPassword property
+  confirmPassword: string;
 }
 
 const Register = () => {
@@ -63,7 +63,6 @@ const Register = () => {
       console.log(error.message);
     }
   };
-
 
   return (
     <div

@@ -34,13 +34,6 @@ interface PostDetails {
   tag_Id: string;
 }
 
-interface BlogPost {
-  id: string;
-  title: string;
-  description: string;
-  createdAt: Date;
-}
-
 interface Paginated {
   id: string;
   images: Image[];

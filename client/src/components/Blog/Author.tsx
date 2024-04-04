@@ -4,7 +4,7 @@ import moment from "moment";
 interface AuthorProps {
   authorName: string;
   profile_picture: string | undefined;
-  createdAt: Date; // Change the type to Date
+  createdAt: Date;
 }
 
 const Author: React.FC<AuthorProps> = ({

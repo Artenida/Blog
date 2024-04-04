@@ -1,11 +1,10 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { Alert } from "@material-tailwind/react";
 import { FaEdit } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { selectUser } from "../store/user/userSlice";
 import { updateUser } from "../api/userThunk";
-import FormInputs from "../components/FormInputs"
+import FormInputs from "../components/FormInputs";
 import { MediumButton } from "./ButtonComponent";
 import { validateUpdateForm } from "../utils/validations";
 
@@ -18,7 +17,7 @@ interface FormData {
 }
 
 export const UpdateUserForm = () => {
-  const dispatch = useAppDispatch(); 
+  const dispatch = useAppDispatch();
   const { currentUser, updateError, token } = useAppSelector(selectUser);
 
   const [formDataErrors, setFormDataErrors] = useState<FormData>({
@@ -26,7 +25,7 @@ export const UpdateUserForm = () => {
     email: "",
     bio: "",
     password: "",
-    profile_picture: ""
+    profile_picture: "",
   });
 
   const [data, setData] = useState({
@@ -37,22 +36,23 @@ export const UpdateUserForm = () => {
     profile_picture: "",
   });
 
-  const handleInputChange = useCallback( (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = event.target;
-    setData((prevData) => ({
-      ...prevData,
-      [id]: value,
-    }));
-    const updatedErrors = validateUpdateForm(id, value, formDataErrors);
-    setFormDataErrors(updatedErrors);
-  },
-  [formDataErrors]
+  const handleInputChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { id, value } = event.target;
+      setData((prevData) => ({
+        ...prevData,
+        [id]: value,
+      }));
+      const updatedErrors = validateUpdateForm(id, value, formDataErrors);
+      setFormDataErrors(updatedErrors);
+    },
+    [formDataErrors]
   );
 
   const hasErrors = Object.values(formDataErrors).some((error) => error !== "");
   const handleUpdate = useCallback(() => {
-    if(hasErrors) {
-      console.log("Form has errors. Please fix them before updating")
+    if (hasErrors) {
+      console.log("Form has errors. Please fix them before updating");
     } else {
       const newUser = {
         username: data.username,
@@ -62,9 +62,9 @@ export const UpdateUserForm = () => {
         profile_picture: data.profile_picture,
         userId: currentUser?.user?.id,
       };
-      dispatch(updateUser({body: newUser, token: token}));
+      dispatch(updateUser({ body: newUser, token: token }));
     }
-},[hasErrors, data, currentUser, dispatch]);
+  }, [hasErrors, data, currentUser, dispatch]);
 
   return (
     <div className="flex flex-col gap-3 p-4 border-2 rounded-xl border-custom-color2">
