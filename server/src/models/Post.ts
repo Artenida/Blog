@@ -602,7 +602,7 @@ GROUP BY p.id, u.id, u.username, u.profile_picture, p.title, p.description, p.cr
     u.id AS user_id,
     u.username,
     u.profile_picture,
-    p.id AS post_id,
+    p.id,
     p.title,
     p.description,
     p.createdAt AS created_at,

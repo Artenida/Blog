@@ -25,7 +25,7 @@ const routes = [
   { path: "/signUp", element: <SignUp /> },
   { path: "/blog", element: <Blog /> },
   { path: "/bloggers", element: <Bloggers /> },
-  { path: "/bloggerPosts/:userId", element: <BloggerPosts /> },
+  { path: "/bloggers/:userId", element: <BloggerPosts /> },
   { path: "/authors", element: <AuthorsPage /> },
   { path: "/blog/:postId", element: <BlogDetails /> },
   { path: "*", element: <Home /> },

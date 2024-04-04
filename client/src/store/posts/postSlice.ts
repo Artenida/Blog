@@ -62,7 +62,7 @@ interface Authors {
 interface PostState {
   currentPost: [] | null;
   searchedPost: [] | null;
-  bloggerPosts: [] | null;
+  bloggerPosts: [];
   filterSearch: string | null;
   paginatedPost: PaginatedPosts | null;
   currentAuthor: Authors[];
