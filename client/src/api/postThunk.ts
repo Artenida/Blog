@@ -253,3 +253,21 @@ async ({ keyword }: { keyword: string }, { rejectWithValue, getState }) => {
     return error.message;
   }
 })
+
+export const getBloggerPosts = createAsyncThunk(
+  "api/posts/users",
+  async (userId: string | undefined, { rejectWithValue }) => {
+    try {
+      const response = await createAPI(`api/posts/users/${userId}`, {
+        method: "GET",
+      })();
+      if (!response.ok) {
+        throw new Error("Failed to retrieve single post");
+      }
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
