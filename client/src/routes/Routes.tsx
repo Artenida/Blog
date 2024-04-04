@@ -14,6 +14,7 @@ import AuthorsPage from "../pages/Blog/AuthorsPage";
 import CreatePost from "../pages/Blog/CreatePost";
 import MyPosts from "../pages/Blog/MyPosts";
 import UpdatePost from "../pages/Blog/UpdatePost";
+import Bloggers from "../pages/Blog/Bloggers";
 
 const routes = [
   { path: "/", element: <Home /> },
@@ -22,6 +23,7 @@ const routes = [
   { path: "/signIn", element: <SignIn /> },
   { path: "/signUp", element: <SignUp /> },
   { path: "/blog", element: <Blog /> },
+  { path: "/bloggers", element: <Bloggers /> },
   { path: "/authors", element: <AuthorsPage /> },
   { path: "/blog/:postId", element: <BlogDetails /> },
   { path: "*", element: <Home /> },

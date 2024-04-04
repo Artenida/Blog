@@ -51,13 +51,19 @@ interface PaginatedPosts {
   next: { pageAsNumber: number };
   prev: { pageAsNumber: number };
 }
+interface Authors {
+  id: string;
+  username: string;
+  profile_picture: string;
+  bio: string;
+}
 
 interface PostState {
   currentPost: [] | null;
   searchedPost: [] | null;
   filterSearch: string | null;
   paginatedPost: PaginatedPosts | null;
-  currentAuthor: [] | null;
+  currentAuthor: Authors[];
   postTags: [] | null;
   loading: boolean;
   successful: boolean;

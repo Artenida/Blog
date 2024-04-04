@@ -1,15 +1,13 @@
 import { IoHome } from "react-icons/io5";
 import { GrBlog } from "react-icons/gr";
-import { FaRegQuestionCircle } from "react-icons/fa";
+import { FaRegQuestionCircle, FaUser } from "react-icons/fa";
 import { ReactNode } from "react";
 import { FaSignOutAlt } from "react-icons/fa";
 import { PiCardsFill } from "react-icons/pi";
 import { MdAddBox } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
-import { FaEdit } from "react-icons/fa";
 import { IoLogoInstagram } from "react-icons/io";
 import { FaTiktok, FaYoutube } from "react-icons/fa";
-import profile from "../assets/posts/profile.webp";
 import carousel1 from "../assets/photo4.webp";
 import carousel2 from "../assets/carousel3.webp";
 import carousel3 from "../assets/carousel2.jpg";
@@ -35,6 +33,11 @@ export const navBarRoutes: NavBarRoutes[] = [
     path: "/blog",
     name: "Blog",
     icon: <GrBlog />,
+  },
+  {
+    path: "/bloggers",
+    name: "Bloggers",
+    icon: <FaUser />,
   },
 ];
 
