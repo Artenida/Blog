@@ -10,7 +10,6 @@ import MyAccount from "../pages/Blog/MyAccount";
 import BlogDetails from "../pages/Blog/BlogDetails";
 import PrivateRoutes from "./PrivateRoute";
 import Blog from "../pages/Blog/Blog";
-import AuthorsPage from "../pages/Blog/AuthorsPage";
 import CreatePost from "../pages/Blog/CreatePost";
 import MyPosts from "../pages/Blog/MyPosts";
 import UpdatePost from "../pages/Blog/UpdatePost";
@@ -26,7 +25,6 @@ const routes = [
   { path: "/blog", element: <Blog /> },
   { path: "/bloggers", element: <Bloggers /> },
   { path: "/bloggers/:userId", element: <BloggerPosts /> },
-  { path: "/authors", element: <AuthorsPage /> },
   { path: "/blog/:postId", element: <BlogDetails /> },
   { path: "*", element: <Home /> },
 ];
