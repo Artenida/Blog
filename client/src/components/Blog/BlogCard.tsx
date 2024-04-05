@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { MdReadMore } from "react-icons/md";
 import Author from "./Author";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectPost } from "../../store/posts/postSlice";
 import { deletePost, getMyPosts, getSinglePost } from "../../api/postThunk";
@@ -38,7 +38,6 @@ interface Paginated {
 const BlogCard: React.FC<BlogCardProps> = ({ posts }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { myPost, loading, deleteError } = useSelector(selectPost);
   const { currentUser, token } = useSelector(selectUser);
   const userId = currentUser?.user?.id;
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -54,14 +53,14 @@ const BlogCard: React.FC<BlogCardProps> = ({ posts }) => {
     setIsDeleteDialogOpen(false);
   };
 
-  const handleConfirmDelete = () => {
-    if (selectedPostId) {
-      dispatch(deletePost(selectedPostId)).then(() => {
-        setIsDeleteDialogOpen(false);
-        dispatch(getMyPosts({ userId: userId, token: token }));
-      });
-    }
-  };
+const handleConfirmDelete = () => {
+  if (selectedPostId) {
+    dispatch(deletePost(selectedPostId)).then(() => {
+      setIsDeleteDialogOpen(false);
+      dispatch(getMyPosts({ userId: userId, token: token }));
+    });
+  }
+};
 
   const handleEditClick = (postId: string) => {
     navigate(`/updatePost/${postId}`);
