@@ -38,11 +38,14 @@ export const login = async (
   next: NextFunction
 ) => {
   try {
+    // Fetch user data from the database
     const userData: any[] = await User.findByUsername(req.body.username);
     if (userData.length === 0) {
       const customError = new CustomError(400, "User not found");
       return next(customError);
     }
+    
+    // Compare password with the hashed password from the database
     const isPasswordCorrect = bcrypt.compareSync(
       req.body.password,
       userData[0].password

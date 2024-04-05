@@ -15,7 +15,7 @@ const Account = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const imagePath =
-    user.length > 0 && user[0]?.profile_picture
+    user && user.length > 0 && user[0]?.profile_picture
       ? user[0].profile_picture.replace(/\\/g, "/")
       : "";
 
@@ -56,7 +56,9 @@ const Account = () => {
               ref={dropdownRef}
             >
               <div>
-                {user[0].profile_picture !== null ? (
+                {user &&
+                user.length > 0 &&
+                user[0]?.profile_picture !== null ? (
                   <img
                     className="rounded-full w-14 h-14"
                     src={
@@ -74,6 +76,7 @@ const Account = () => {
                   />
                 )}
               </div>
+
               <div>
                 <div className="text-custom-color3 font-semibold text-xl cursor-pointer">
                   {currentUser?.user?.username}

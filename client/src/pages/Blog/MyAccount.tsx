@@ -15,7 +15,7 @@ const MyAccount = () => {
   const { user } = useAppSelector(selectUser);
   const userId = currentUser?.user?.id;
   const imagePath =
-    user.length > 0 && user[0]?.profile_picture
+    user && user.length > 0 && user[0]?.profile_picture
       ? user[0].profile_picture.replace(/\\/g, "/")
       : "";
 
@@ -59,7 +59,9 @@ const MyAccount = () => {
                 <img
                   src={
                     selectedImage ||
-                    (user[0]?.profile_picture &&
+                    (user &&
+                      user.length > 0 &&
+                      user[0]?.profile_picture &&
                       `http://localhost:5000/${imagePath}`) ||
                     profile
                   }
@@ -74,6 +76,7 @@ const MyAccount = () => {
                 />
               </label>
             </div>
+
             <div className="pt-4 pl-1">
               <SmallButton onClick={handleUpload}>Update</SmallButton>
             </div>
