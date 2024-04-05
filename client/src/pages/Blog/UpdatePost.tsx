@@ -12,6 +12,7 @@ import { Alert } from "@material-tailwind/react";
 import { selectPost } from "../../store/posts/postSlice";
 import { useParams } from "react-router-dom";
 import { useValidateUpdate } from "../../utils/validateUpdate";
+import Sidebar from "../../components/Sidebar";
 
 interface Tag {
   id: number;
@@ -91,99 +92,103 @@ const UpdatePost = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col gap-8">
-        <div className="flex justify-between items-start gap-8">
-          <div className="w-1/3">
-            <h3 className="mb-4 text-lg font-semibold">Select Tags:</h3>
-            {loading ? (
-              <p>Loading...</p>
-            ) : retrieveError ? (
-              <p>Error: {retrieveError}</p>
-            ) : (
-              <ul>
-                {tags?.map((tag: Tag) => (
-                  <li key={tag.id} className="mb-2">
-                    <input
-                      type="checkbox"
-                      id={`tag-${tag.id}`}
-                      className="mr-2"
-                      onChange={() => handleTagChange(String(tag.id))}
-                      checked={data.tags.includes(String(tag.id))}
-                    />
-                    <label htmlFor={`tag-${tag.id}`}>{tag.name}</label>
-                  </li>
-                ))}
-              </ul>
-            )}
-            <span
-              className={`text-sm text-red-600 pl-1 pt-1${
-                errors.tags ? "block" : "hidden"
-              } mt-1`}
-            >
-              {errors.tags}
-            </span>
-          </div>
-
-          <div className="w-2/3 flex flex-col">
-            <FormInputs
-              label="Title"
-              id="title"
-              type="text"
-              placeholder="Title"
-              name="file"
-              value={data.title}
-              errorMessage={errors.title}
-              updateValue={(value) => setData({ ...data, title: value })}
-              onChange={handleTitleChange}
-            />
-            <label
-              htmlFor="description"
-              className="block mb-2 mt-12 pl-1 font-semibold"
-            >
-              Description
-            </label>
-            <ReactQuill
-              theme="snow"
-              style={{ height: "300px" }}
-              className="mb-4"
-              value={data.description}
-              onChange={handleDescriptionChange}
-            />
-            <span
-              className={`text-red-600 text-sm pl-1 pt-1 ${
-                errors.description ? "block" : "hidden"
-              } mt-4`}
-            >
-              {errors.description}
-            </span>
-
-            {postSuccess && (
-              <Alert
-                onClose={handlePostSuccessClose}
-                className="bg-green-200 py-2 px-6 text-green-500"
+    <div className="flex flex-col md:flex-row -z-50">
+      <Sidebar />
+      <div className="border-r-4 border-opacity-50 my-12 ml-4 border-custom-color2"></div>
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex flex-col gap-8">
+          <div className="flex justify-between items-start gap-8">
+            <div className="w-1/3">
+              <h3 className="mb-4 text-lg font-semibold">Select Tags:</h3>
+              {loading ? (
+                <p>Loading...</p>
+              ) : retrieveError ? (
+                <p>Error: {retrieveError}</p>
+              ) : (
+                <ul>
+                  {tags?.map((tag: Tag) => (
+                    <li key={tag.id} className="mb-2">
+                      <input
+                        type="checkbox"
+                        id={`tag-${tag.id}`}
+                        className="mr-2"
+                        onChange={() => handleTagChange(String(tag.id))}
+                        checked={data.tags.includes(String(tag.id))}
+                      />
+                      <label htmlFor={`tag-${tag.id}`}>{tag.name}</label>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <span
+                className={`text-sm text-red-600 pl-1 pt-1${
+                  errors.tags ? "block" : "hidden"
+                } mt-1`}
               >
-                Post is updated successfully
-              </Alert>
-            )}
-            {updateError && (
-              <div className="mt-10">
-                <Alert className="bg-red-200 py-2 px-6 text-red-600">
-                  {updateError}
-                </Alert>
-              </div>
-            )}
+                {errors.tags}
+              </span>
+            </div>
 
-            {message && (
-              <div className="mt-10">
-                <Alert className="bg-red-200 py-2 px-6 text-red-600">
-                  "You haven't made any changes to the post"
-                </Alert>
-              </div>
-            )}
+            <div className="w-2/3 flex flex-col">
+              <FormInputs
+                label="Title"
+                id="title"
+                type="text"
+                placeholder="Title"
+                name="file"
+                value={data.title}
+                errorMessage={errors.title}
+                updateValue={(value) => setData({ ...data, title: value })}
+                onChange={handleTitleChange}
+              />
+              <label
+                htmlFor="description"
+                className="block mb-2 mt-12 pl-1 font-semibold"
+              >
+                Description
+              </label>
+              <ReactQuill
+                theme="snow"
+                style={{ height: "300px" }}
+                className="mb-4"
+                value={data.description}
+                onChange={handleDescriptionChange}
+              />
+              <span
+                className={`text-red-600 text-sm pl-1 pt-1 ${
+                  errors.description ? "block" : "hidden"
+                } mt-4`}
+              >
+                {errors.description}
+              </span>
 
-            <div className="mt-8">
-              <MediumButton onClick={handleSubmit}>Save changes</MediumButton>
+              {postSuccess && (
+                <Alert
+                  onClose={handlePostSuccessClose}
+                  className="bg-green-200 py-2 px-6 text-green-500"
+                >
+                  Post is updated successfully
+                </Alert>
+              )}
+              {updateError && (
+                <div className="mt-10">
+                  <Alert className="bg-red-200 py-2 px-6 text-red-600">
+                    {updateError}
+                  </Alert>
+                </div>
+              )}
+
+              {message && (
+                <div className="mt-10">
+                  <Alert className="bg-red-200 py-2 px-6 text-red-600">
+                    "You haven't made any changes to the post"
+                  </Alert>
+                </div>
+              )}
+
+              <div className="mt-8">
+                <MediumButton onClick={handleSubmit}>Save changes</MediumButton>
+              </div>
             </div>
           </div>
         </div>

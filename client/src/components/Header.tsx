@@ -24,7 +24,7 @@ const Navbar = () => {
   return (
     <>
       <header className="mx-auto bg-custom-color1 max-w-7xl sticky top-0 z-50">
-        <nav className="flex justify-between items-center p-3">
+        <nav className="flex justify-between items-center p-3 pl-8">
           <Logo />
           <div className="hidden md:flex ">
             <ul className="flex space-x-8 gap-8">

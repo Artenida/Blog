@@ -29,7 +29,7 @@ const BloggerPosts = () => {
   return (
     <div>
       {bloggerPosts.length === 0 && !loading && !retrieveError && <Empty />}
-      <div className="relative max-w-7xl mx-auto flex-1">
+      <div className="relative max-w-7xl mx-auto flex-1 h-screen">
         {bloggerPosts.length > 0 && <BlogCard posts={bloggerPosts} />}
       </div>
     </div>

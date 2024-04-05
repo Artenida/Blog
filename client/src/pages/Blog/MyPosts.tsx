@@ -8,6 +8,7 @@ import Loading from "../../components/Loading";
 import Error from "../../components/Error";
 import EmptyPage from "../../components/EmptyPage";
 import BlogCard from "../../components/Blog/BlogCard";
+import Sidebar from "../../components/Sidebar";
 
 const MyPosts = () => {
   const dispatch = useAppDispatch();
@@ -38,8 +39,12 @@ const MyPosts = () => {
   }
 
   return (
+    <div className="flex flex-col md:flex-row -z-50">
+    <Sidebar />
+    <div className="border-r-4 border-opacity-50 my-12 ml-4 border-custom-color2"></div>
     <div className="flex flex-col gap-4 p-8 px-[10%]">
       <BlogCard posts={myPost}/>
+    </div>
     </div>
   );
 };
