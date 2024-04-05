@@ -10,9 +10,7 @@ export const register = async (
   next: NextFunction
 ) => {
   try {
-    const existingUser = (await User.findByUsername(
-      req.body.username
-    )) as User[];
+    const existingUser = await User.findByUsername(req.body.username);
     if (existingUser.length > 0) {
       const customError = new CustomError(409, "User already exists");
       return next(customError);
@@ -32,6 +30,7 @@ export const register = async (
     return next(error);
   }
 };
+
 
 export const login = async (
   req: Request,
