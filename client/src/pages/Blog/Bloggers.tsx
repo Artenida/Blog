@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { selectPost } from "../../store/posts/postSlice";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../store/hooks";
@@ -13,21 +13,14 @@ interface Authors {
 }
 const Bloggers = () => {
   const dispatch = useAppDispatch();
-  const [authors, setAuthors] = useState<Authors[]>([]);
   const { currentAuthor } = useSelector(selectPost);
   
   useEffect(() => {
     dispatch(retrieveAllAuthors());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (currentAuthor) {
-      setAuthors(currentAuthor);
-    }
-  }, [currentAuthor]);
-
   return (
-    <div className="container mx-auto px-4 sm:px-2 lg:px-4 gap-6 mt-12">
+    <div className="container mx-auto px-4 sm:px-2 lg:px-4 gap-6 mt-12 h-screen">
       <AuthorsCard authors={currentAuthor}/>
     </div>
   );
