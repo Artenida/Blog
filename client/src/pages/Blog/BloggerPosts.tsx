@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 import { selectPost } from "../../store/posts/postSlice";
 import Loading from "../../components/Loading";
 import Error from "../../components/Error";
-import Empty from "../../components/Empty";
 
 const BloggerPosts = () => {
   const dispatch = useAppDispatch();
@@ -28,7 +27,15 @@ const BloggerPosts = () => {
 
   return (
     <div>
-      {bloggerPosts.length === 0 && !loading && !retrieveError && <Empty />}
+      {bloggerPosts.length === 0 && !loading && !retrieveError && (
+        <Error
+          message1={"404"}
+          message2={"Oooops!"}
+          message3={
+            "This user isn't a blogger or he hasn't posted anything yet!"
+          }
+        />
+      )}
       <div className="relative max-w-7xl mx-auto flex-1">
         {bloggerPosts.length > 0 && <BlogCard posts={bloggerPosts} />}
       </div>

@@ -29,7 +29,15 @@ const BlogDetails = () => {
   }
 
   if (retrieveError) {
-    return <Error />;
+    return (
+      <Error
+        message1={"404"}
+        message2={"Oooops"!}
+        message3={"Page Not Found"}
+        message4={"This page doesn't exist or was removed"}
+        message5={"We suggest you go back to home!"}
+      />
+    );
   }
 
   return (
@@ -40,7 +48,7 @@ const BlogDetails = () => {
             <BlogPathComponent data={BlogPathComponents} />
             <div>
               <DisplayImages posts={postDetails} />
-             
+
               <div className="flex mt-4">
                 {postDetails[0]?.tags.map((tag: any) => (
                   <h3 key={tag.id} className="mr-2">
