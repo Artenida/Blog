@@ -6,9 +6,9 @@ import { useSelector } from "react-redux";
 import { selectPost } from "../../store/posts/postSlice";
 import { useEffect } from "react";
 import { getSinglePost } from "../../api/postThunk";
-import Error from "../../components/Error";
-import Loading from "../../components/Loading";
-import DisplayImages from "../../components/DisplayImages";
+import Error from "../../components/Blog/Error";
+import Loading from "../../components/Blog/Loading";
+import DisplayImages from "../../components/Blog/DisplayImages";
 
 const BlogPathComponents = [
   { id: 1, name: "Home", link: "/" },

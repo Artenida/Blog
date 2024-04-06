@@ -6,7 +6,7 @@ import { useAppDispatch } from "../store/hooks";
 import { useAppSelector } from "../store/hooks";
 import { selectUser } from "../store/user/userSlice";
 import { useState } from "react";
-import { Dialog } from "../components/Dialog";
+import { Dialog } from "./Blog/Dialog";
 
 export const SideLinks = () => {
   const dispatch = useAppDispatch();

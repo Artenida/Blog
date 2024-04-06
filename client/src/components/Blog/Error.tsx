@@ -1,4 +1,4 @@
-import error from "../assets/error3.png";
+import error from "../../assets/error3.png";
 import { Link } from "react-router-dom";
 
 interface Error {

@@ -1,4 +1,4 @@
-import emptyPage from "../assets/photographer4.webp";
+import emptyPage from "../../assets/photographer4.webp";
 import { Link } from "react-router-dom";
 
 const EmptyPage = () => {

@@ -9,8 +9,8 @@ import {
 import { useSelector } from "react-redux";
 import { selectPost } from "../../store/posts/postSlice";
 import Searchbar from "../Searchbar";
-import PaginationButtons from "../../components/pagination/PaginationButtons";
-import Loading from "../Loading";
+import PaginationButtons from "../PaginationButtons";
+import Loading from "./Loading";
 
 interface Tag {
   id: number;

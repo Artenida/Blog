@@ -4,9 +4,9 @@ import { selectPost } from "../../store/posts/postSlice";
 import { getMyPosts } from "../../api/postThunk";
 import { selectUser } from "../../store/user/userSlice";
 import { useAppDispatch } from "../../store/hooks";
-import Loading from "../../components/Loading";
-import Error from "../../components/Error";
-import EmptyPage from "../../components/EmptyPage";
+import Loading from "../../components/Blog/Loading";
+import Error from "../../components/Blog/Error";
+import EmptyPage from "../../components/Blog/EmptyPage";
 import BlogCard from "../../components/Blog/BlogCard";
 import Sidebar from "../../components/Sidebar";
 

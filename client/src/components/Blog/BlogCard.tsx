@@ -7,7 +7,7 @@ import { selectPost } from "../../store/posts/postSlice";
 import { deletePost, getMyPosts, getSinglePost } from "../../api/postThunk";
 import { selectUser } from "../../store/user/userSlice";
 import { useAppDispatch } from "../../store/hooks";
-import { Dialog } from "../../components/Dialog";
+import { Dialog } from "./Dialog";
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
