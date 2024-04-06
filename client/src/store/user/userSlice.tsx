@@ -40,6 +40,8 @@ const userSlice = createSlice({
       state.loginError = null;
       state.loading = false;
       state.token = undefined;
+      state.success = false;
+      state.registerError = null;
     },
   },
 
@@ -68,15 +70,15 @@ const userSlice = createSlice({
         state.registerError = null;
         state.success = false;
       })
-      .addCase(registerUser.rejected, (state, action) => {
-        state.loading = false;
-        state.registerError = action.payload as string;
-        state.success = false;
-      })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
         state.registerError = null;
         state.success = true;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.registerError = action.payload as string;
+        state.success = false;
       })
       .addCase(deleteUser.pending, (state) => {
         state.deleteError = null;

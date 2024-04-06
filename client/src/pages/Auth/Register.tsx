@@ -35,15 +35,15 @@ const Register = () => {
     confirmPassword: "",
   });
 
-  const { loading, registerError, success } = useAppSelector(selectUser);
+  const { isLoggedIn, loading, registerError, success } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (success) {
-      navigate("/signIn");
+    if (isLoggedIn) {
+      navigate('/');
     }
-  }, [success, navigate]);
+  }, [isLoggedIn, navigate]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
@@ -52,10 +52,18 @@ const Register = () => {
     setFormDataErrors(updatedErrors);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const { username, email, password, confirmPassword } = formData;
-    dispatch(registerUser({ username, email, password, confirmPassword }));
+
+    const resultAction = await dispatch(
+      registerUser({ username, email, password, confirmPassword })
+    );
+    if (registerUser.fulfilled.match(resultAction)) {
+      navigate("/signIn");
+    } else if (registerUser.rejected.match(resultAction)) {
+      console.error(resultAction.error.message);
+    }
   };
 
   return (
