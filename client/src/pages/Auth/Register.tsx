@@ -35,20 +35,36 @@ const Register = () => {
     confirmPassword: "",
   });
 
-  const { isLoggedIn, loading, registerError, success } = useAppSelector(selectUser);
+  const { isLoggedIn, loading, registerError } =
+    useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [message, setMessage] = useState(false);
 
   useEffect(() => {
     if (isLoggedIn) {
-      navigate('/');
+      navigate("/");
     }
   }, [isLoggedIn, navigate]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
-    const updatedErrors = validateRegisterForm(id, value, formDataErrors);
-    setFormData({ ...formData, [id]: value.trim() });
+    let updatedErrors = { ...formDataErrors };
+
+    const updatedFormData = { ...formData, [id]: value.trim() };
+
+    if (id === "confirmPassword") {
+      if (value !== formData.password) {
+        updatedErrors = {
+          ...updatedErrors,
+          confirmPassword: "Passwords do not match",
+        };
+      } else {
+        updatedErrors = { ...updatedErrors, confirmPassword: "" };
+      }
+    }
+
+    setFormData(updatedFormData);
     setFormDataErrors(updatedErrors);
   };
 
@@ -56,13 +72,22 @@ const Register = () => {
     event.preventDefault();
     const { username, email, password, confirmPassword } = formData;
 
-    const resultAction = await dispatch(
-      registerUser({ username, email, password, confirmPassword })
+    const hasErrors = Object.values(formDataErrors).some(
+      (error) => error !== ""
     );
-    if (registerUser.fulfilled.match(resultAction)) {
-      navigate("/signIn");
-    } else if (registerUser.rejected.match(resultAction)) {
-      console.error(resultAction.error.message);
+
+    if (!hasErrors) {
+      setMessage(false);
+      const resultAction = await dispatch(
+        registerUser({ username, email, password, confirmPassword })
+      );
+      if (registerUser.fulfilled.match(resultAction)) {
+        navigate("/signIn");
+      } else if (registerUser.rejected.match(resultAction)) {
+        console.error(resultAction.error.message);
+      }
+    } else {
+      setMessage(true);
     }
   };
 
@@ -145,6 +170,11 @@ const Register = () => {
         {registerError && (
           <Alert className="mt-3 bg-red-200 py-2 px-6 text-red-500">
             {JSON.stringify(registerError)}
+          </Alert>
+        )}
+        {message && (
+          <Alert className="mt-3 bg-red-200 py-2 px-6 text-red-500">
+            "Fix errors before register!"
           </Alert>
         )}
       </form>

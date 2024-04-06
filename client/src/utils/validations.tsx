@@ -56,10 +56,11 @@ export const validateRegisterForm = (
     errors.username = validateUsername(value);
   } else if (id === "email") {
     errors.email = validateEmail(value);
+  } else if (id === "password") {
+    errors.password = validatePassword(value);
   }
   return errors;
 };
-
 
 export const validateLoginForm = (
   id: string,
