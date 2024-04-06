@@ -19,6 +19,8 @@ interface FormData {
 export const UpdateUserForm = () => {
   const dispatch = useAppDispatch();
   const { currentUser, updateError, token } = useAppSelector(selectUser);
+  const [message, setMessage] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const [formDataErrors, setFormDataErrors] = useState<FormData>({
     username: "",
@@ -52,8 +54,11 @@ export const UpdateUserForm = () => {
   const hasErrors = Object.values(formDataErrors).some((error) => error !== "");
   const handleUpdate = useCallback(() => {
     if (hasErrors) {
-      console.log("Form has errors. Please fix them before updating");
+      setMessage(true);
+      setSuccess(false);
     } else {
+      setMessage(false);
+      setSuccess(true);
       const newUser = {
         username: data.username,
         email: data.email,
@@ -126,14 +131,21 @@ export const UpdateUserForm = () => {
         />
       </div>
       <MediumButton onClick={handleUpdate}>Update</MediumButton>
-      {!hasErrors && updateError && (
+
+      {updateError && (
         <Alert className="mt-3 bg-red-200 py-2 px-6 text-red-500">
           {JSON.stringify(updateError)}
         </Alert>
       )}
-      {hasErrors && (
+
+      {message && (
         <Alert className="mt-3 bg-red-200 py-2 px-6 text-red-500">
           Form has errors. Please fix them before updating.
+        </Alert>
+      )}
+      {success && (
+        <Alert className="bg-green-200 py-2 px-6 text-green-500 mt-12">
+          User is updated successfully!
         </Alert>
       )}
     </div>
