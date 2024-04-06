@@ -3,7 +3,7 @@ import { FaUser } from "react-icons/fa";
 import { FaUserAstronaut } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Alert } from "@material-tailwind/react";
 import { ImSpinner11 } from "react-icons/im";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
@@ -11,7 +11,6 @@ import background from "../../assets/about1.avif";
 import FormInputs from "../../components/FormInputs";
 import { selectUser } from "../../store/user/userSlice";
 import { registerUser } from "../../api/userThunk";
-import { useEffect } from "react";
 import { validateRegisterForm } from "../../utils/validations";
 
 interface FormData {
@@ -36,9 +35,15 @@ const Register = () => {
     confirmPassword: "",
   });
 
-  const { currentUser, loading, registerError } = useAppSelector(selectUser);
+  const { loading, registerError, success } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (success) {
+      navigate("/signIn");
+    }
+  }, [success, navigate]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
@@ -47,21 +52,10 @@ const Register = () => {
     setFormDataErrors(updatedErrors);
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      const { username, email, password, confirmPassword } = formData;
-      const resultAction = await dispatch(
-        registerUser({ username, email, password, confirmPassword })
-      );
-      if (registerUser.fulfilled.match(resultAction)) {
-        navigate("/signIn");
-      } else if (registerUser.rejected.match(resultAction)) {
-        console.error(resultAction.error.message);
-      }
-    } catch (error: any) {
-      console.log(error.message);
-    }
+    const { username, email, password, confirmPassword } = formData;
+    dispatch(registerUser({ username, email, password, confirmPassword }));
   };
 
   return (

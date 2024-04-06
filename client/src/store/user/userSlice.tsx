@@ -13,6 +13,7 @@ interface UserState {
   isLoggedIn: boolean;
   isUpdated: boolean;
   user: any;
+  success: boolean;
 }
 
 const initialState: UserState = {
@@ -26,6 +27,7 @@ const initialState: UserState = {
   isLoggedIn: false,
   isUpdated: false,
   user: null,
+  success: false,
 };
 
 const userSlice = createSlice({
@@ -61,9 +63,20 @@ const userSlice = createSlice({
         state.isLoggedIn = false;
         state.token = undefined;
       })
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
+        state.registerError = null;
+        state.success = false;
+      })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.registerError = action.payload as string;
+        state.success = false;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.registerError = null;
+        state.success = true;
       })
       .addCase(deleteUser.pending, (state) => {
         state.deleteError = null;
