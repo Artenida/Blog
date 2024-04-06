@@ -26,6 +26,10 @@ type UserEndpointType = {
   token?: string;
   body: UserBodyTypeUpdate;
 };
+type RegisterUserResponse = {
+  data: any;
+  error?: string;
+};
 
 export const loginUser = createAsyncThunk(
   "api/auth/login",
@@ -41,11 +45,6 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
-
-type RegisterUserResponse = {
-  data: any;
-  error?: string;
-};
 
 export const registerUser = createAsyncThunk<
   RegisterUserResponse,
@@ -118,15 +117,12 @@ export const updateProfilePicture = createAsyncThunk(
       const state: RootState = getState() as RootState;
       const token: string = state.user.token ?? "";
 
-      const response = await createAPI(
-        `api/users/updatePicture`,
-        {
-          method: "PUT",
-          token: token,
-          body: JSON.stringify(formData),
-        }
-      )(formData);
-      
+      const response = await createAPI(`api/users/updatePicture`, {
+        method: "PUT",
+        token: token,
+        body: JSON.stringify(formData),
+      })(formData);
+
       const data = await response.json();
       return !response.ok ? rejectWithValue(data.message) : data;
     } catch (error: any) {

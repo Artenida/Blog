@@ -1,5 +1,5 @@
 import createDatabaseConnection from "../config";
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 
 interface UserData {
   id: number;
@@ -27,11 +27,10 @@ export class User {
       const checkQuery = "SELECT * FROM users WHERE username = ?";
       const data = await new Promise<UserData[]>((resolve, reject) => {
         db.query(checkQuery, [username], (error, data) => {
+          connection.closeConnection();
           if (error) {
-            connection.closeConnection();
             reject(error);
           } else {
-            connection.closeConnection();
             resolve(data as UserData[]);
           }
         });
@@ -47,17 +46,17 @@ export class User {
   static async createUser(username: string, email: string, password: string) {
     const connection = createDatabaseConnection();
     const db = connection.getConnection();
-  
+
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
-  
+
       const insertQuery =
         "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
       const values = [username, email, hashedPassword];
-  
+
       await db.query(insertQuery, values);
       connection.closeConnection();
-  
+
       return true;
     } catch (error) {
       connection.closeConnection();
@@ -71,14 +70,18 @@ export class User {
 
     try {
       const data = await new Promise<any[]>((resolve, reject) => {
-        db.query("SELECT * FROM users WHERE id = ?", [userId], (error, result) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(result);
+        db.query(
+          "SELECT * FROM users WHERE id = ?",
+          [userId],
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+            connection.closeConnection();
           }
-          connection.closeConnection();
-        });
+        );
       });
 
       return data;
@@ -86,7 +89,7 @@ export class User {
       console.error("Error in getAllUserData:", error);
       throw error;
     }
-}
+  }
 
   static async updateUser(
     id: string,
@@ -104,19 +107,20 @@ export class User {
 
       if (password.trim() === "") {
         query =
-          "UPDATE users SET username = ?, email = ?, bio = ?, WHERE id = ?";
+          "UPDATE users SET username = ?, email = ?, bio = ? WHERE id = ?";
         queryParams = [username, email, bio, id];
       } else {
+        const hashedPassword = await bcrypt.hash(password, 10);
         query =
           "UPDATE users SET username = ?, email = ?, password = ?, bio = ? WHERE id = ?";
-        queryParams = [username, email, password, bio, id];
+        queryParams = [username, email, hashedPassword, bio, id];
       }
 
       const result: any = await new Promise((resolve, reject) => {
         db.query(query, queryParams, (error, result) => {
           if (error) {
             console.error("Error updating user:", error);
-            reject("Internal Server Error");
+            reject("Error updating user");
           } else if (result.changedRows === 1) {
             resolve({
               success: true,
