@@ -7,6 +7,7 @@ import image from "../assets/userProfile.jpg";
 import { MdDashboard } from "react-icons/md";
 import { FaSignOutAlt } from "react-icons/fa";
 import profile from "../assets/userProfile.jpg";
+import { getUser } from "../api/userThunk";
 
 const Account = () => {
   const { currentUser, user } = useAppSelector(selectUser);
@@ -14,6 +15,7 @@ const Account = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const userId = currentUser?.user?.id;
   const imagePath =
     user && user.length > 0 && user[0]?.profile_picture
       ? user[0].profile_picture.replace(/\\/g, "/")
@@ -22,6 +24,10 @@ const Account = () => {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+
+  useEffect(() => {
+    dispatch(getUser(userId));
+  }, [dispatch, userId]);
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
