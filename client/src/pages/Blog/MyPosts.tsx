@@ -18,13 +18,13 @@ const MyPosts = () => {
 
   useEffect(() => {
     dispatch(getMyPosts({ userId: userId, token: token }));
-  }, [dispatch, userId, token]); // Dispatch getMyPosts when userId or token changes
+  }, [dispatch, userId, token]); 
 
   useEffect(() => {
     if (!deleteError) {
       dispatch(getMyPosts({ userId: userId, token: token }));
     }
-  }, [dispatch, userId, token, deleteError]); // Dispatch getMyPosts when deleteError changes
+  }, [dispatch, userId, token, deleteError]);
 
   if (loading) {
     return <Loading />;
@@ -39,12 +39,14 @@ const MyPosts = () => {
   }
 
   return (
-    <div className="flex flex-col md:flex-row -z-50">
-    <Sidebar />
-    <div className="border-r-4 border-opacity-50 my-12 ml-4 border-custom-color2"></div>
-    <div className="flex flex-col gap-4 p-8 px-[10%]">
-      <BlogCard posts={myPost}/>
-    </div>
+    <div className="flex flex-col md:flex-row">
+      <Sidebar />
+      <div className="border-r-4 border-opacity-50 my-12 ml-4 border-custom-color2 h-[900px]"></div>
+      <div className="flex flex-col flex-grow">
+        <div className="px-12">
+          <BlogCard posts={myPost}/>
+        </div>
+      </div>
     </div>
   );
 };

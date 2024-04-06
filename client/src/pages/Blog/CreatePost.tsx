@@ -102,7 +102,7 @@ const CreatePost = () => {
   return (
     <div className="flex flex-col md:flex-row -z-50">
       <Sidebar />
-      <div className="border-r-4 border-opacity-50 my-12 ml-4 border-custom-color2"></div>
+      <div className="border-r-4 border-opacity-50 my-12 ml-4 border-custom-color2 h-[900px]"></div>
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col gap-8">
           <div

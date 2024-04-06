@@ -20,7 +20,7 @@ const Bloggers = () => {
   }, [dispatch]);
 
   return (
-    <div className="container mx-auto px-4 sm:px-2 lg:px-4 gap-6 mt-12 h-screen">
+    <div className="container mx-auto px-4 sm:px-2 lg:px-4 gap-6 mt-12">
       <AuthorsCard authors={currentAuthor}/>
     </div>
   );

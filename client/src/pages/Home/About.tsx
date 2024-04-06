@@ -7,7 +7,7 @@ const About = () => {
     <div
       className="min-h-screen pb-14 pt-14 relative bg-custom-color2"
     >
-      <h1 className="text-4xl text-center font-semibold z-10 relative text-black">
+      <h1 className="text-4xl text-center font-playfairDisplay font-semibold z-10 relative text-black">
         In the Photosphere
       </h1>
       <div className="flex flex-col lg:flex-row items-center justify-center mt-10 z-10 relative">

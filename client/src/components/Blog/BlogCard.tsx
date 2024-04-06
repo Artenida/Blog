@@ -53,14 +53,14 @@ const BlogCard: React.FC<BlogCardProps> = ({ posts }) => {
     setIsDeleteDialogOpen(false);
   };
 
-const handleConfirmDelete = () => {
-  if (selectedPostId) {
-    dispatch(deletePost(selectedPostId)).then(() => {
-      setIsDeleteDialogOpen(false);
-      dispatch(getMyPosts({ userId: userId, token: token }));
-    });
-  }
-};
+  const handleConfirmDelete = () => {
+    if (selectedPostId) {
+      dispatch(deletePost(selectedPostId)).then(() => {
+        setIsDeleteDialogOpen(false);
+        dispatch(getMyPosts({ userId: userId, token: token }));
+      });
+    }
+  };
 
   const handleEditClick = (postId: string) => {
     navigate(`/updatePost/${postId}`);
@@ -72,7 +72,7 @@ const handleConfirmDelete = () => {
         posts.map((post) => (
           <div
             key={post.id}
-            className="shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] p-3 transform transition-transform hover:scale-105 bg-custom-color1 rounded-xl"
+            className="h-[580px] w-[400px] shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] p-3 transform transition-transform hover:scale-105 bg-custom-color1 rounded-xl"
           >
             <div className="rounded-xl overflow-hidden">
               {post.images && post.images.length > 0 && (
@@ -89,7 +89,7 @@ const handleConfirmDelete = () => {
               )}
             </div>
             <div className="flex flex-col">
-              <div className="flex">
+              <div className="flex h-[20px]">
                 {post.tags.map((tag) => (
                   <h3 key={tag.id} className="mr-2">
                     #{tag.name}
@@ -103,7 +103,7 @@ const handleConfirmDelete = () => {
                     : post.title}
                 </h2>
               </Link>
-              <p className="text-custom-color3 mt-3 text-sm md:text-base lg:text-lg">
+              <p className="h-[70px] text-custom-color3 mt-3 text-sm md:text-base lg:text-lg">
                 {post.description.length > 145
                   ? post.description.substring(0, 100) + "..."
                   : post.description}
@@ -115,7 +115,7 @@ const handleConfirmDelete = () => {
                 createdAt={post.createdAt}
               />
 
-              <div className="flex justify-end mx-2 mt-1">
+              <div className="flex justify-end mx-2 mt-4">
                 <div className="flex justify-center gap-1 items-center">
                   <Link to={`/blog/${post.id}`}>
                     <MdReadMore />

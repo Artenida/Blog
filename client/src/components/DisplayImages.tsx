@@ -50,7 +50,7 @@ const DisplayImages: React.FC<BlogCardProps> = ({ posts }) => {
       <div>
         {mainImage && (
           <img
-            className="rounded-xl w-[700px] h-[500px]"
+            className="rounded-xl w-[900px] h-[600px]"
             src={`http://localhost:5000/${mainImage.replace(/\\/g, "/")}`}
             alt="Main Image"
           />

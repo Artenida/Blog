@@ -11,13 +11,13 @@ const Sidebar = () => {
       : "";
 
   return (
-    <div className="sm:max-h-screen md:h-[900px] flex flex-col md:flex-row ">
+    <div className="sm:max-h-screen md:h-[900px] md:w-80 flex flex-col md:flex-row ">
       <div className={`opacity-90 p-5 pt-8 duration-300 relative`}>
         <div className="inline-flex justify-center items-center gap-2">
           {user && user.length > 0 && user[0]?.profile_picture === null ? (
             <FaRegUserCircle
               className={
-                "text-custom-color3 text-4xl rounded cursor-pointer block float-left mr-2 duration-500"
+                "text-custom-color3 text-4xl rounded block float-left mr-2 duration-500"
               }
             />
           ) : (

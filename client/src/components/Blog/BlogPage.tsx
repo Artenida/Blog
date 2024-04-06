@@ -109,9 +109,9 @@ const BlogPage = () => {
         ) : retrieveError ? (
           <div>Error: {retrieveError}</div>
         ) : (
-          <>
+          <div className="mx-8">
             <BlogCard posts={currentBlogs} />
-          </>
+          </div>
         )}
 
         {!searching && (
