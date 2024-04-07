@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import profile from "../../assets/userProfile.jpg";
+
 interface Author {
   id: string;
   username: string;
@@ -12,7 +13,7 @@ interface AuthorsProp {
   authors: Author[];
 }
 
-const AuthorsCard: React.FC<AuthorsProp> = ({ authors }) => {
+const BloggersCard: React.FC<AuthorsProp> = ({ authors }) => {
   return (
     <div className="grid grid-cols-3 gap-6">
       {authors.length > 0 ? (
@@ -59,4 +60,4 @@ const AuthorsCard: React.FC<AuthorsProp> = ({ authors }) => {
   );
 };
 
-export default AuthorsCard;
+export default BloggersCard;

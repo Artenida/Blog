@@ -4,7 +4,6 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { MediumButton } from "../../components/ButtonComponent";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { useSelector } from "react-redux";
 import { selectTags } from "../../store/tags/tagsSlice";
 import { retrieveAllTags } from "../../api/tagsThunk";
 import { getSinglePost, updatePost } from "../../api/postThunk";

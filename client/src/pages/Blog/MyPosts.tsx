@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
 import { selectPost } from "../../store/posts/postSlice";
 import { getMyPosts } from "../../api/postThunk";
 import { selectUser } from "../../store/user/userSlice";

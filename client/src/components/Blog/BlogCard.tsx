@@ -1,12 +1,10 @@
 import { Link } from "react-router-dom";
 import { MdReadMore } from "react-icons/md";
 import Author from "./Author";
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectPost } from "../../store/posts/postSlice";
+import React, { useState } from "react";
 import { deletePost, getMyPosts, getSinglePost } from "../../api/postThunk";
 import { selectUser } from "../../store/user/userSlice";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { Dialog } from "./Dialog";
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
@@ -38,7 +36,7 @@ interface Paginated {
 const BlogCard: React.FC<BlogCardProps> = ({ posts }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { currentUser, token } = useSelector(selectUser);
+  const { currentUser, token } = useAppSelector(selectUser);
   const userId = currentUser?.user?.id;
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);

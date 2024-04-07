@@ -3,7 +3,6 @@ import BlogCard from "../../components/Blog/BlogCard";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useEffect } from "react";
 import { getBloggerPosts } from "../../api/postThunk";
-import { useSelector } from "react-redux";
 import { selectPost } from "../../store/posts/postSlice";
 import Loading from "../../components/Blog/Loading";
 import Error from "../../components/Blog/Error";

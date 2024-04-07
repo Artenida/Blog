@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import BlogPathComponent from "../../components/Blog/BlogPathComponent";
 import Author from "../../components/Blog/Author";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { useSelector } from "react-redux";
 import { selectPost } from "../../store/posts/postSlice";
 import { useEffect } from "react";
 import { getSinglePost } from "../../api/postThunk";
