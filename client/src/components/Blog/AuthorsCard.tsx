@@ -17,9 +17,8 @@ const AuthorsCard: React.FC<AuthorsProp> = ({ authors }) => {
     <div className="grid grid-cols-3 gap-6">
       {authors.length > 0 ? (
         authors.map((author) => (
-          <Link to={`/bloggers/${author.id}`}>
+          <Link key={author.id} to={`/bloggers/${author.id}`}>
             <div
-              key={author.id}
               className="h-32 border cursor-pointer border-gray-200 rounded-md p-2 hover:border-blue-500 hover:shadow-md transition duration-300 flex flex-col items-center mt-3"
             >
               <div className="w-12 h-12 overflow-hidden rounded-full">
@@ -43,12 +42,10 @@ const AuthorsCard: React.FC<AuthorsProp> = ({ authors }) => {
               <div>
                 <h4 className="text-md font-semibold mt-1">
                   {author.username}
-                </h4>{" "}
-                {/* Use author.username */}
+                </h4>
               </div>
               <div>
-                <h6 className="text-sm mt-1">{author.bio}</h6>{" "}
-                {/* Use author.bio */}
+                <h6 className="text-sm mt-1">{author.bio}</h6>
               </div>
             </div>
           </Link>

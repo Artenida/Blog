@@ -14,7 +14,7 @@ interface Authors {
 const Bloggers = () => {
   const dispatch = useAppDispatch();
   const { currentAuthor } = useSelector(selectPost);
-  
+
   useEffect(() => {
     dispatch(retrieveAllAuthors());
   }, [dispatch]);
