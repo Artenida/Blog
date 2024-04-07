@@ -17,7 +17,6 @@ import {
 } from "../middleware/validationMiddleware";
 import { verifyToken } from "../middleware/verifyToken";
 import multer from "multer";
-import { authenticateToken } from "../middleware/authenticationToken";
 
 const storage = multer.diskStorage({
   destination: function (req, files, cb) {
@@ -40,7 +39,6 @@ router.put("/update/:id", verifyToken, validateUpdatePost, updatePost);
 router.get("/user/:userId", verifyToken, getUsersPost);
 router.get("/users/:userId", getBloggersPost);
 router.get("/authors", getAuthors);
-// router.get("/nrOfPosts", getNumberOfPosts);
 router.get("/paginatedPosts", getPaginatedPosts);
 router.get("/search", searchPosts);
 

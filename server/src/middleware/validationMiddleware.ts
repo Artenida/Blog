@@ -45,7 +45,6 @@ export const validateCreatePost = (
   if (!title || !description) {
     return res.status(400).json("Please fill out all fields");
   }
-  const createdAtRegex = /^\d{4}\.\d{2}\.\d{2}$/;
   next();
 };
 
@@ -55,7 +54,6 @@ export const validateUpdatePost = (
   next: NextFunction
 ) => {
   const { title, description } = req.body;
-  const postId = req.params.id;
   if (!title || !description) {
     return res.status(400).json("Cannot send empty values");
   }

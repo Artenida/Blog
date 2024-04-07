@@ -7,11 +7,7 @@ import { getUser } from "./controllers/userControllers";
 import postRoutes from "./routes/postRoutes"
 import tagRoutes from "./routes/tagRoutes"
 import dotenv from 'dotenv';
-import cookieParser from "cookie-parser";
-// import multer from 'multer';
 import path from "path";
-import bodyParser from "body-parser";
-
 
 dotenv.config();
 
@@ -20,7 +16,6 @@ const base_url = process.env.BASE_URL;
 
 app.use(cors());
 app.use(express.json());
-app.use(cookieParser());
 
 const Path = path.join(__dirname, '../uploads');
 app.use('/uploads', express.static(Path));
