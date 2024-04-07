@@ -90,9 +90,9 @@ class Post {
 `;
 
     return new Promise((resolve, reject) => {
-      db.query(query, [postId], (err, result) => {
-        if (err) {
-          reject(err);
+      db.query(query, [postId], (error, result) => {
+        if (error) {
+          reject(error);
           connection.closeConnection();
         } else {
           if (result.length === 0) {
@@ -619,7 +619,7 @@ WHERE
     u.id = ?  -- Filter posts by the selected user ID
 GROUP BY 
     u.id, u.username, u.profile_picture, p.id, p.title, p.description, p.createdAt;`;
-    
+
     try {
       return new Promise((resolve, reject) => {
         db.query(query, [userId], (error, result) => {
