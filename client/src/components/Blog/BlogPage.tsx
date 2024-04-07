@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import BlogCard from "./BlogCard";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
   filterPosts,
   retrieveAllPosts,
   retrievePaginatedPosts,
 } from "../../api/postThunk";
-import { useSelector } from "react-redux";
 import { selectPost } from "../../store/posts/postSlice";
 import Searchbar from "../Searchbar";
 import PaginationButtons from "../PaginationButtons";
@@ -19,7 +18,6 @@ interface Tag {
 interface Image {
   url: string;
 }
-
 interface Paginated {
   id: string;
   images: Image[];
@@ -33,12 +31,12 @@ interface Paginated {
 
 const BlogPage = () => {
   const dispatch = useAppDispatch();
-  const { paginatedPost, loading, retrieveError } = useSelector(selectPost);
-  const { currentPost } = useSelector(selectPost);
+  const { paginatedPost, loading, retrieveError } = useAppSelector(selectPost);
+  const { currentPost } = useAppSelector(selectPost);
   const [currentBlogs, setCurrentBlogs] = useState<Paginated[]>([]);
   const [allPosts, setAllPosts] = useState<Paginated[]>([]);
   const currentPageRef = useRef<number>(1);
-  const [limit, setLimit] = useState<number>(9);
+  const limit = 9;
   const [pageCount, setPageCount] = useState(1);
   const [keyword, setKeyword] = useState("New");
   const [searching, setSearching] = useState(false);

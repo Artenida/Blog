@@ -3,7 +3,7 @@ import FormInputs from "../../components/FormInputs";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { MediumButton } from "../../components/ButtonComponent";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useSelector } from "react-redux";
 import { selectTags } from "../../store/tags/tagsSlice";
 import { retrieveAllTags } from "../../api/tagsThunk";
@@ -28,12 +28,11 @@ type CreatePost = {
 
 const CreatePost = () => {
   const dispatch = useAppDispatch();
-  const { tags, loading, retrieveError } = useSelector(selectTags);
-  const { createError } = useSelector(selectPost);
-  const { currentUser } = useSelector(selectUser);
+  const { tags, loading, retrieveError } = useAppSelector(selectTags);
+  const { createError } = useAppSelector(selectPost);
+  const { currentUser } = useAppSelector(selectUser);
   const userId = currentUser?.user?.id;
-  const { errors, hasError, validateForm, displayErrors } =
-    useValidateBlogForm();
+  const { errors, hasError, validateForm, displayErrors } = useValidateBlogForm();
   const [success, setSuccess] = useState(false);
 
   const [data, setData] = useState<CreatePost>({

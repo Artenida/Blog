@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { selectPost } from "../../store/posts/postSlice";
 import { getMyPosts } from "../../api/postThunk";
 import { selectUser } from "../../store/user/userSlice";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import Loading from "../../components/Blog/Loading";
 import Error from "../../components/Blog/Error";
 import EmptyPage from "../../components/Blog/EmptyPage";
@@ -12,8 +12,8 @@ import Sidebar from "../../components/Sidebar";
 
 const MyPosts = () => {
   const dispatch = useAppDispatch();
-  const { myPost, loading, deleteError } = useSelector(selectPost);
-  const { currentUser, token } = useSelector(selectUser);
+  const { myPost, loading, deleteError } = useAppSelector(selectPost);
+  const { currentUser, token } = useAppSelector(selectUser);
   const userId = currentUser?.user?.id;
 
   useEffect(() => {

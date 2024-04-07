@@ -6,7 +6,6 @@ import {
   filterPosts,
   getBloggerPosts,
   getMyPosts,
-  getNrOfPosts,
   getSinglePost,
   retrieveAllAuthors,
   retrieveAllPosts,
@@ -124,6 +123,10 @@ const postSlice = createSlice({
         state.retrieveError = action.payload as string;
       })
 
+      .addCase(getSinglePost.pending, (state) => {
+        state.retrieveError = null;
+        state.loading = true;
+      })
       .addCase(getSinglePost.fulfilled, (state, action) => {
         state.retrieveError = null;
         state.loading = false;
@@ -147,6 +150,7 @@ const postSlice = createSlice({
         state.loading = false;
         state.retrieveError = action.payload as string;
       })
+
       .addCase(deletePost.pending, (state) => {
         state.deleteError = null;
         state.loading = true;
@@ -159,6 +163,7 @@ const postSlice = createSlice({
         state.loading = false;
         state.deleteError = action.payload as string;
       })
+
       .addCase(retrieveAllAuthors.pending, (state) => {
         state.loading = true;
         state.retrieveError = null;
@@ -172,6 +177,7 @@ const postSlice = createSlice({
         state.loading = false;
         state.retrieveError = action.payload as string;
       })
+
       .addCase(retrievePostTags.pending, (state) => {
         state.loading = true;
         state.retrieveError = null;
@@ -213,13 +219,6 @@ const postSlice = createSlice({
         state.successfulUpdate = false;
         state.loading = false;
         state.updateError = action.payload as string;
-      })
-
-      .addCase(getNrOfPosts.fulfilled, (state, action) => {
-        state.postNr = action.payload;
-      })
-      .addCase(getNrOfPosts.rejected, (state, action) => {
-        state.postNr = null;
       })
 
       .addCase(retrievePaginatedPosts.pending, (state) => {

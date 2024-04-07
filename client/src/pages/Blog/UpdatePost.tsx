@@ -3,7 +3,7 @@ import FormInputs from "../../components/FormInputs";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { MediumButton } from "../../components/ButtonComponent";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useSelector } from "react-redux";
 import { selectTags } from "../../store/tags/tagsSlice";
 import { retrieveAllTags } from "../../api/tagsThunk";
@@ -21,11 +21,11 @@ interface Tag {
 
 const UpdatePost = () => {
   const dispatch = useAppDispatch();
-  const { tags, loading, retrieveError } = useSelector(selectTags);
-  const { updateError } = useSelector(selectPost);
+  const { tags, loading, retrieveError } = useAppSelector(selectTags);
+  const { updateError } = useAppSelector(selectPost);
   const { postId } = useParams();
   const { errors, hasError, validateForm, displayErrors } = useValidateUpdate();
-  const { postDetails } = useSelector(selectPost);
+  const { postDetails } = useAppSelector(selectPost);
   const [postSuccess, setPostSuccess] = useState(false);
   const [isFormChanged, setIsFormChanged] = useState(false);
   const [message, setMessage] = useState(false);

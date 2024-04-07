@@ -35,8 +35,7 @@ const Register = () => {
     confirmPassword: "",
   });
 
-  const { isLoggedIn, loading, registerError } =
-    useAppSelector(selectUser);
+  const { isLoggedIn, loading, registerError } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [message, setMessage] = useState(false);

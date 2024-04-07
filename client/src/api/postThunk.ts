@@ -192,21 +192,6 @@ export const updatePost = createAsyncThunk(
   }
 );
 
-export const getNrOfPosts = createAsyncThunk(
-  "api/posts/nrOfPosts",
-  async () => {
-    try {
-      const response = await createAPI("api/posts/nrOfPosts", {
-        method: "GET",
-      })();
-      const data = await response.json();
-      return data;
-    } catch (error: any) {
-      return error.message;
-    }
-  }
-)
-
 export const retrievePaginatedPosts = createAsyncThunk(
   "posts/posts/paginatedPosts",
   async ({ currentPage, limit }: { currentPage: number; limit: number }, { rejectWithValue, getState }) => {

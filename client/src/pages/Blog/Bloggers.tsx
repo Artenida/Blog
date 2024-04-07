@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { selectPost } from "../../store/posts/postSlice";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { retrieveAllAuthors } from "../../api/postThunk";
 import AuthorsCard from "../../components/Blog/AuthorsCard";
 
@@ -13,7 +13,7 @@ interface Authors {
 }
 const Bloggers = () => {
   const dispatch = useAppDispatch();
-  const { currentAuthor } = useSelector(selectPost);
+  const { currentAuthor } = useAppSelector(selectPost);
 
   useEffect(() => {
     dispatch(retrieveAllAuthors());

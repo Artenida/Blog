@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import BlogCard from "../../components/Blog/BlogCard";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useEffect } from "react";
 import { getBloggerPosts } from "../../api/postThunk";
 import { useSelector } from "react-redux";
@@ -10,7 +10,7 @@ import Error from "../../components/Blog/Error";
 
 const BloggerPosts = () => {
   const dispatch = useAppDispatch();
-  const { bloggerPosts, retrieveError, loading } = useSelector(selectPost);
+  const { bloggerPosts, retrieveError, loading } = useAppSelector(selectPost);
   const { userId } = useParams();
 
   useEffect(() => {
