@@ -1,11 +1,6 @@
 import React from "react";
 import moment from "moment";
 import profile from "../../assets/userProfile.jpg"
-interface AuthorProps {
-  authorName: string;
-  profile_picture: string | undefined;
-  createdAt: Date;
-}
 
 const Author: React.FC<AuthorProps> = ({
   authorName,

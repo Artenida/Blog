@@ -8,30 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { Dialog } from "./Dialog";
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
-
-interface Tag {
-  id: number;
-  name: string;
-}
-
-interface Image {
-  url: string;
-}
-
-interface BlogCardProps {
-  posts: Paginated[] | null;
-}
-
-interface Paginated {
-  id: string;
-  images: Image[];
-  title: string;
-  tags: Tag[];
-  username: string;
-  profile_picture: string | undefined;
-  description: string;
-  createdAt: Date;
-}
+import { BlogCardProps } from "../../types/postTypes"
 
 const BlogCard: React.FC<BlogCardProps> = ({ posts }) => {
   const dispatch = useAppDispatch();

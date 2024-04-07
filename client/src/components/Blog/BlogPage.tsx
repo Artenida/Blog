@@ -10,24 +10,7 @@ import { selectPost } from "../../store/posts/postSlice";
 import Searchbar from "../Searchbar";
 import PaginationButtons from "../PaginationButtons";
 import Loading from "./Loading";
-
-interface Tag {
-  id: number;
-  name: string;
-}
-interface Image {
-  url: string;
-}
-interface Paginated {
-  id: string;
-  images: Image[];
-  title: string;
-  tags: Tag[];
-  username: string;
-  profile_picture: string | undefined;
-  description: string;
-  createdAt: Date;
-}
+import {Paginated} from "../../types/postTypes"
 
 const BlogPage = () => {
   const dispatch = useAppDispatch();

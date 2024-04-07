@@ -1,14 +1,5 @@
 import { Link } from "react-router-dom";
-
-interface BlogDetailsItem {
-  id: number;
-  name: string;
-  link: string;
-}
-
-interface BlogDetailsComponentsProps {
-  data: BlogDetailsItem[];
-}
+import {BlogDetailsComponentsProps} from "../../types/postTypes"
 
 const BlogPathComponent = ({ data }: BlogDetailsComponentsProps) => {
   return (

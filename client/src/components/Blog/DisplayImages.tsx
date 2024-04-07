@@ -1,33 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import {ImagesCardProps} from "../../types/postTypes"
 
-interface PostDetails {
-  user_id: string;
-  username: string;
-  profile_picture: string;
-  post_id: string;
-  title: string;
-  description: string;
-  createdAt: Date;
-  images: Image[];
-  tags: Tag[];
-  tag_Id: string;
-}
-
-interface Tag {
-  id: number;
-  name: string;
-}
-
-interface Image {
-  url: string;
-}
-
-interface BlogCardProps {
-  posts: PostDetails[];
-}
-
-const DisplayImages: React.FC<BlogCardProps> = ({ posts }) => {
+const DisplayImages: React.FC<ImagesCardProps> = ({ posts }) => {
   const [mainImage, setMainImage] = useState<string | undefined>(() => {
     const post = posts.find((post) => post.images.length > 0);
     return post ? post.images[0].url : undefined;
