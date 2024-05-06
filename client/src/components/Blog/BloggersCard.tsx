@@ -2,7 +2,18 @@ import React from "react";
 import { Link } from "react-router-dom";
 import profile from "../../assets/userProfile.jpg";
 
-const BloggersCard: React.FC<BloggersProp> = ({ authors }) => {
+interface Author {
+  id: string;
+  username: string;
+  profile_picture: string;
+  bio: string;
+}
+
+interface AuthorsProp {
+  authors: Author[];
+}
+
+const BloggersCard: React.FC<AuthorsProp> = ({ authors }) => {
   return (
     <div className="grid grid-cols-3 gap-6">
       {authors.length > 0 ? (
