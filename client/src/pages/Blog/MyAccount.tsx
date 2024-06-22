@@ -47,7 +47,6 @@ const MyAccount = () => {
   return (
     <div className="flex flex-col md:flex-row -z-50">
       <Sidebar />
-      <div className="border-r-4 border-opacity-50 my-12 ml-4 border-custom-color2 h-[900px]"></div>
       <div className="mx-auto flex flex-col gap-4 px-12 pt-12 w-full">
         <h2 className="text-custom-color3 text-lg font-semibold pl-2">
           My profile

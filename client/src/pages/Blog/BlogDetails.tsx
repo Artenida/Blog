@@ -49,7 +49,7 @@ const BlogDetails = () => {
               <DisplayImages posts={postDetails} />
 
               <div className="flex mt-4">
-                {postDetails[0]?.tags.map((tag: any) => (
+                {postDetails[0]?.tags && postDetails[0]?.tags.map((tag: any) => (
                   <h3 key={tag.id} className="mr-2">
                     #{tag.name}
                   </h3>

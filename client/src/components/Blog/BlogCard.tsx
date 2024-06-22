@@ -44,13 +44,13 @@ const BlogCard: React.FC<BlogCardProps> = ({ posts }) => {
   return (
     <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 w-full mt-12 gap-12">
       {posts &&
-        posts.map((post) => (
+        posts?.map((post) => (
           <div
             key={post.id}
             className="h-[580px] w-[400px] shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] p-3 transform transition-transform hover:scale-105 bg-custom-color1 rounded-xl"
           >
             <div className="rounded-xl overflow-hidden">
-              {post.images && post.images.length > 0 && (
+              {post?.images && post.images.length > 0 && (
                 <Link to={`/blog/${post.id}`}>
                   <img
                     src={`http://localhost:5000/${post.images[0].url.replace(
@@ -65,15 +65,15 @@ const BlogCard: React.FC<BlogCardProps> = ({ posts }) => {
             </div>
             <div className="flex flex-col">
               <div className="flex h-[20px]">
-                {post.tags.map((tag) => (
+                {post?.tags.map((tag) => (
                   <h3 key={tag.id} className="mr-2">
                     #{tag.name}
                   </h3>
                 ))}
               </div>
-              <Link to={`/blog/${post.id}`}>
+              <Link to={`/blog/${post?.id}`}>
                 <h2 className="mt-4 mb-2 font-bold hover:text-custom-color3 text-lg">
-                  {post.title.length > 30
+                  {post?.title.length > 30
                     ? post.title.substring(0, 30) + "..."
                     : post.title}
                 </h2>

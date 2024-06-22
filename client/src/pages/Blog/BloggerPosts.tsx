@@ -26,7 +26,7 @@ const BloggerPosts = () => {
 
   return (
     <div>
-      {bloggerPosts.length === 0 && !loading && !retrieveError && (
+      {bloggerPosts && bloggerPosts.length === 0 && !loading && !retrieveError && (
         <Error
           message1={"404"}
           message2={"Oooops!"}
@@ -36,7 +36,7 @@ const BloggerPosts = () => {
         />
       )}
       <div className="relative max-w-7xl mx-auto flex-1">
-        {bloggerPosts.length > 0 && <BlogCard posts={bloggerPosts} />}
+        {bloggerPosts && bloggerPosts.length > 0 && <BlogCard posts={bloggerPosts} />}
       </div>
     </div>
   );

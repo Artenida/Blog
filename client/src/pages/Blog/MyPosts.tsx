@@ -33,7 +33,7 @@ const MyPosts = () => {
     return <Error />;
   }
 
-  if (myPost.length === 0) {
+  if (myPost && myPost.length === 0) {
     return <EmptyPage />;
   }
 

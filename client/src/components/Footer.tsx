@@ -3,7 +3,7 @@ import { footerCategories } from "../constants/constants";
 
 const Footer = () => {
   return (
-    <footer className="bg-custom-color3 py-8 mt-12">
+    <footer className="bg-custom-color3 py-8">
       <div className="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-4">
         <div className="grid grid-cols-2 gap-5 lg:col-span-4 md:grid-cols-4">
           {footerCategories.map((category, index) => (

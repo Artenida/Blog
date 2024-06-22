@@ -10,7 +10,8 @@ import { selectPost } from "../../store/posts/postSlice";
 import Searchbar from "../Searchbar";
 import PaginationButtons from "../PaginationButtons";
 import Loading from "./Loading";
-import {Paginated} from "../../types/postTypes"
+import { Paginated } from "../../types/postTypes";
+import EmptyPage from "./EmptyPage";
 
 const BlogPage = () => {
   const dispatch = useAppDispatch();
@@ -91,7 +92,11 @@ const BlogPage = () => {
           <div>Error: {retrieveError}</div>
         ) : (
           <div className="mx-8">
-            <BlogCard posts={currentBlogs} />
+            {currentBlogs.length === 0 ? (
+              <EmptyPage />
+            ) : (
+              <BlogCard posts={currentBlogs} />
+            )}
           </div>
         )}
 
